@@ -217,6 +217,13 @@ class UiE2eTest {
                 "Error message should indicate quantity must be positive. Actual: " + errorMessageText);
     }
 
+    private static Stream<Arguments> provideInvalidQuantityValues() {
+        return Stream.of(
+                Arguments.of("3.5"),   // Decimal value
+                Arguments.of("lala")   // String value
+        );
+    }
+
     @ParameterizedTest
     @MethodSource("provideInvalidQuantityValues")
     void shouldRejectOrderWithNonIntegerQuantity(String quantityValue) {
@@ -243,10 +250,10 @@ class UiE2eTest {
                 "Error message should be 'Quantity must be an integer' for quantity: " + quantityValue + ". Actual: " + errorMessageText);
     }
 
-    private static Stream<Arguments> provideInvalidQuantityValues() {
+    private static Stream<Arguments> provideInvalidProductIdValues() {
         return Stream.of(
-                Arguments.of("3.5"),   // Decimal value
-                Arguments.of("lala")   // String value
+                Arguments.of("10.5"),  // Decimal value
+                Arguments.of("xyz")    // String value
         );
     }
 
@@ -274,12 +281,5 @@ class UiE2eTest {
         // Assert
         assertTrue(errorMessageText.contains("Product ID must be an integer"),
                 "Error message should be 'Product ID must be an integer' for productId: " + productIdValue + ". Actual: " + errorMessageText);
-    }
-
-    private static Stream<Arguments> provideInvalidProductIdValues() {
-        return Stream.of(
-                Arguments.of("10.5"),  // Decimal value
-                Arguments.of("xyz")    // String value
-        );
     }
 }

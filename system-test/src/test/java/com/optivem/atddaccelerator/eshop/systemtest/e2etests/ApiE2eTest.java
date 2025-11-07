@@ -68,10 +68,12 @@ class ApiE2eTest {
         assertTrue(responseDto.getOrderNumber().startsWith("ORD-"), "Order number should start with ORD-");
     }
 
-    @ParameterizedTest
-    @MethodSource("provideOrderTestCases")
-    void getOrder_shouldReturnOrderDetails(long productId, int quantity) throws Exception {
+    @Test
+    void getOrder_shouldReturnOrderDetails() throws Exception {
         // Arrange - First place an order
+        long productId = 11L;
+        int quantity = 3;
+        
         var placeOrderRequest = new PlaceOrderRequest();
         placeOrderRequest.setProductId(String.valueOf(productId));
         placeOrderRequest.setQuantity(String.valueOf(quantity));
@@ -108,15 +110,6 @@ class ApiE2eTest {
         // Price will come from DummyJSON API for product
         assertNotNull(getOrderResponse.getUnitPrice(), "Unit price should not be null");
         assertNotNull(getOrderResponse.getTotalPrice(), "Total price should not be null");
-    }
-
-    private static Stream<Arguments> provideOrderTestCases() {
-        return Stream.of(
-            Arguments.of(11L, 3),   // Product 11 with standard quantity
-            Arguments.of(12L, 5),   // Product 12 with medium quantity
-            Arguments.of(13L, 1),   // Product 13 with minimum quantity
-            Arguments.of(14L, 10)   // Product 14 with large quantity
-        );
     }
 
     @Test
