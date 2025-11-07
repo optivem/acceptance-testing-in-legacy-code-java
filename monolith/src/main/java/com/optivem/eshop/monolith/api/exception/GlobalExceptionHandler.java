@@ -23,7 +23,6 @@ public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
     private static final Pattern CLASS_NAME_PATTERN = Pattern.compile("(com\\.optivem\\.eshop\\.monolith\\.core\\.dtos\\.[^\\[\\]\"\\s\\)]+)");
-    private static final String DTOS_PACKAGE = "com.optivem.eshop.monolith.core.dtos";
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(ValidationException ex) {
