@@ -249,37 +249,4 @@ class UiE2eTest {
         assertTrue(errorMessageText.contains("Quantity must be an integer"),
                 "Error message should be 'Quantity must be an integer' for quantity: " + quantityValue + ". Actual: " + errorMessageText);
     }
-
-    private static Stream<Arguments> provideInvalidSkuValues() {
-        return Stream.of(
-                Arguments.of("10.5"),  // Decimal value
-                Arguments.of("xyz")    // String value
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideInvalidSkuValues")
-    void shouldRejectOrderWithNonIntegerSku(String skuValue) {
-        // Act
-        page.navigate(baseUrl + "/shop.html");
-
-        var productIdInput = page.locator("[aria-label='Product ID']");
-        productIdInput.fill(skuValue);
-
-        var quantityInput = page.locator("[aria-label='Quantity']");
-        quantityInput.fill("5");
-
-        var placeOrderButton = page.locator("[aria-label='Place Order']");
-        placeOrderButton.click();
-
-        // Wait for error message to appear
-        var errorMessage = page.locator("[role='alert']");
-        errorMessage.waitFor(new Locator.WaitForOptions().setTimeout(TestConfiguration.getWaitSeconds() * 1000));
-
-        var errorMessageText = errorMessage.textContent();
-
-        // Assert
-        assertTrue(errorMessageText.contains("SKU must be an integer"),
-                "Error message should be 'SKU must be an integer' for sku: " + skuValue + ". Actual: " + errorMessageText);
-    }
 }

@@ -142,7 +142,7 @@ function Test-System {
     Write-Host "Running tests..." -ForegroundColor Cyan
 
     Set-Location system-test
-    & .\gradlew.bat test
+    & .\gradlew.bat clean test
     $testResult = $LASTEXITCODE
     Set-Location ..
 

@@ -116,10 +116,10 @@ The system includes:
 
 ### Test Data
 
-Tests use the following product SKUs (defined in `json-server-db.erp-api.json`):
-- **SKU 10**: HP Pavilion Laptop - $109.95
-- **SKU 11**: Samsung Galaxy Book - $499.99
-- **SKU 12**: Huawei P30 - $679.99
+Tests use the following SKUs (string identifiers defined in `json-server-db.erp-api.json`):
+- **SKU "10"**: HP Pavilion Laptop - $109.95
+- **SKU "11"**: Samsung Galaxy Book - $499.99
+- **SKU "12"**: Huawei P30 - $679.99
 
 ### Test Configuration
 

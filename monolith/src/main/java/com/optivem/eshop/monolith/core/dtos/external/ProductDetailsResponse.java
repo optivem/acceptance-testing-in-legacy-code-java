@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ProductPriceResponse {
+public class ProductDetailsResponse {
     private long id;
     private BigDecimal price;
 }

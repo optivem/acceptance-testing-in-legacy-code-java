@@ -71,11 +71,11 @@ class ApiE2eTest {
     @Test
     void getOrder_shouldReturnOrderDetails() throws Exception {
         // Arrange - First place an order
-        long sku = 11L;
+        String sku = "11";
         int quantity = 3;
         
         var placeOrderRequest = new PlaceOrderRequest();
-        placeOrderRequest.setSku(String.valueOf(sku));
+        placeOrderRequest.setSku(sku);
         placeOrderRequest.setQuantity(String.valueOf(quantity));
 
         var requestBody = objectMapper.writeValueAsString(placeOrderRequest);
@@ -197,39 +197,6 @@ class ApiE2eTest {
         );
     }
 
-    @ParameterizedTest
-    @MethodSource("provideInvalidSkuValues")
-    void shouldRejectOrderWithNonIntegerSku(String skuValue) throws Exception {
-        // Arrange
-        var requestDto = new PlaceOrderRequest();
-        requestDto.setSku(skuValue);
-        requestDto.setQuantity("5");
-
-        var requestBody = objectMapper.writeValueAsString(requestDto);
-
-        var request = HttpRequest.newBuilder()
-                .uri(new URI(BASE_URL + "/api/orders"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .build();
-
-        // Act
-        var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-        // Assert
-        assertEquals(400, response.statusCode(), "Response status should be 400 Bad Request for sku: " + skuValue);
-
-        var responseBody = response.body();
-        assertTrue(responseBody.contains("SKU must be an integer"),
-                "Error message should be 'SKU must be an integer'. Actual: " + responseBody);
-    }
-
-    private static Stream<Arguments> provideInvalidSkuValues() {
-        return Stream.of(
-                Arguments.of("10.5"),
-                Arguments.of("xyz")
-        );
-    }
 
     @ParameterizedTest
     @MethodSource("provideInvalidQuantityValues")
@@ -277,7 +244,7 @@ class ApiE2eTest {
     @JsonIgnoreProperties(ignoreUnknown = true)
     static class GetOrderResponse {
         private String orderNumber;
-        private long sku;
+        private String sku;
         private int quantity;
         private BigDecimal unitPrice;
         private BigDecimal totalPrice;

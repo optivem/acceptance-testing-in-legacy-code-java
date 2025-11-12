@@ -35,15 +35,21 @@ public class OrderService {
         var sku = request.getSku();
         var quantity = request.getQuantity();
         
-        if (sku <= 0) {
-            throw new ValidationException("SKU must be greater than 0, received: " + sku);
+        if (sku == null || sku.trim().isEmpty()) {
+            throw new ValidationException("SKU must not be empty");
         }
         if (quantity <= 0) {
             throw new ValidationException("Quantity must be greater than 0, received: " + quantity);
         }
         
+        // Validate product exists in ERP and get its price
+        var productDetails = erpGateway.getProductDetails(sku);
+        if (productDetails == null) {
+            throw new ValidationException("Product does not exist for SKU: " + sku);
+        }
+
         var orderNumber = orderRepository.nextOrderNumber();
-        var unitPrice = erpGateway.getUnitPrice(sku);
+        var unitPrice = productDetails.getPrice();
         var totalPrice = unitPrice.multiply(BigDecimal.valueOf(quantity));
         var order = new Order(orderNumber, sku, quantity, unitPrice, totalPrice, OrderStatus.PLACED);
 
