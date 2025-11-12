@@ -10,6 +10,64 @@ param(
 
 $ComposeFile = if ($Mode -eq "pipeline") { "docker-compose.pipeline.yml" } else { "docker-compose.local.yml" }
 
+function Wait-ForServices {
+    Write-Host "Checking if services are healthy..." -ForegroundColor Cyan
+
+    $maxAttempts = 30
+    $attempt = 0
+    $erpApiReady = $false
+    $monolithReady = $false
+
+    Write-Host "Waiting for ERP API on port 3000..." -ForegroundColor Yellow
+    while (-not $erpApiReady -and $attempt -lt $maxAttempts) {
+        try {
+            $response = Invoke-WebRequest -Uri "http://localhost:3000" -UseBasicParsing -TimeoutSec 2
+            if ($response.StatusCode -eq 200) {
+                $erpApiReady = $true
+                Write-Host "[OK] ERP API is responding!" -ForegroundColor Green
+            }
+        } catch {
+            $attempt++
+            Write-Host "  Attempt $attempt/$maxAttempts - ERP API not ready yet..." -ForegroundColor Gray
+            Start-Sleep -Seconds 1
+        }
+    }
+
+    if (-not $erpApiReady) {
+        Write-Host "[FAIL] ERP API failed to become ready" -ForegroundColor Red
+        Write-Host "  Checking ERP API logs..." -ForegroundColor Yellow
+        docker compose logs erp-api --tail=20
+        return $false
+    }
+
+    $attempt = 0
+    Write-Host "Waiting for Monolith API on port 8080..." -ForegroundColor Yellow
+    while (-not $monolithReady -and $attempt -lt $maxAttempts) {
+        try {
+            $response = Invoke-WebRequest -Uri "http://localhost:8080" -UseBasicParsing -TimeoutSec 2 -ErrorAction SilentlyContinue
+            if ($response.StatusCode -eq 200 -or $response.StatusCode -eq 404) {
+                $monolithReady = $true
+                Write-Host "[OK] Monolith API is responding!" -ForegroundColor Green
+            }
+        } catch {
+            $attempt++
+            Write-Host "  Attempt $attempt/$maxAttempts - Monolith API not ready yet..." -ForegroundColor Gray
+            Start-Sleep -Seconds 1
+        }
+    }
+
+    if (-not $monolithReady) {
+        Write-Host "[FAIL] Monolith API failed to become ready" -ForegroundColor Red
+        Write-Host "  Checking Monolith logs..." -ForegroundColor Yellow
+        docker compose logs monolith --tail=50
+        return $false
+    }
+
+    Write-Host ""
+    Write-Host "All services are healthy and ready for testing!" -ForegroundColor Green
+    return $true
+}
+
 function Start-System {
     if ($Mode -eq "local") {
         Write-Host "Building monolith application..." -ForegroundColor Cyan
@@ -52,13 +110,13 @@ function Start-System {
     Write-Host "http://localhost:8080" -ForegroundColor Yellow
     Write-Host ""
     Write-Host "To view logs: " -NoNewline
-    Write-Host ".\run.ps1 logs $Mode" -ForegroundColor Cyan
+    $servicesReady = Wait-ForServices
     Write-Host "To stop: " -NoNewline
-    Write-Host ".\run.ps1 stop $Mode" -ForegroundColor Cyan
+    if (-not $servicesReady) {
 }
 
 function Test-System {
-    Write-Host "Running tests..." -ForegroundColor Cyan
+        exit 1
 
     Set-Location system-test
     & .\gradlew.bat test
