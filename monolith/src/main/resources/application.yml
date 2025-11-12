@@ -4,14 +4,13 @@ spring:
   jackson:
     deserialization:
       ACCEPT_FLOAT_AS_INT: false
-
 ---
 spring:
   config:
     activate:
-      on-profile: prod
+      on-profile: e2e
 erp:
-  url: https://dummyjson.com
+  url: http://json-server:3000
 
 ---
 spring:
@@ -19,21 +18,12 @@ spring:
     activate:
       on-profile: qa
 erp:
-  url: https://dummyjson.com
+  url: http://json-server:3000
 
 ---
 spring:
   config:
     activate:
-      on-profile: e2e
+      on-profile: prod
 erp:
-  url: https://dummyjson.com
-
----
-spring:
-  config:
-    activate:
-      on-profile: acc
-
-erp:
-  url: http://localhost:8089
+  url: http://json-server:3000

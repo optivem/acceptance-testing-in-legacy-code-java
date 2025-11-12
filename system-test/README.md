@@ -1,5 +1,11 @@
 # System Test (Java)
 
+## Architecture
+
+The system test environment uses Docker Compose to run:
+- **monolith**: The main e-shop application
+- **json-server**: An external ERP API server that provides product pricing data
+
 ## Instructions
 
 Open up the 'system-test' folder
@@ -14,10 +20,10 @@ Check that you have Powershell 7
 $PSVersionTable.PSVersion
 ```
 
-Start Docker Containers
+Start System
 
 ```shell
-docker compose up -d
+.\start.ps1
 ```
 
 Run All Tests
@@ -32,8 +38,19 @@ Run Smoke Tests Only
 ./gradlew test --tests com.optivem.eshop.systemtest.smoketests.*
 ```
 
-Stop Docker Containers
+Stop System
 
 ```shell
-docker compose down
+.\stop.ps1
+```
+
+View Logs
+
+```shell
+# View all logs
+.\logs.ps1
+
+# View specific service logs
+.\logs.ps1 monolith
+.\logs.ps1 json-server
 ```
