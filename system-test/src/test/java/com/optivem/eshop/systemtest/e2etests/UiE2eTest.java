@@ -3,7 +3,6 @@ package com.optivem.eshop.systemtest.e2etests;
 import com.microsoft.playwright.*;
 import com.optivem.eshop.systemtest.TestConfiguration;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -219,6 +218,76 @@ class UiE2eTest {
         // Assert
         assertTrue(errorMessageText.contains("Quantity must be positive"),
                 "Error message should indicate quantity must be positive. Actual: " + errorMessageText);
+    }
+
+    private static Stream<Arguments> provideEmptySkuValues() {
+        return Stream.of(
+                Arguments.of(""),      // Empty string
+                Arguments.of("   ")    // Whitespace string
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideEmptySkuValues")
+    void shouldRejectOrderWithEmptySku(String skuValue) {
+        // Act
+        page.navigate(baseUrl + "/shop.html");
+
+        var productIdInput = page.locator("[aria-label='Product ID']");
+        productIdInput.fill(skuValue);
+
+        var quantityInput = page.locator("[aria-label='Quantity']");
+        quantityInput.fill("5");
+
+        var placeOrderButton = page.locator("[aria-label='Place Order']");
+        placeOrderButton.click();
+
+        // Wait for error message to appear and become visible
+        var errorMessage = page.locator("[role='alert']");
+        errorMessage.waitFor(new Locator.WaitForOptions()
+                .setTimeout(TestConfiguration.getWaitSeconds() * 1000)
+                .setState(com.microsoft.playwright.options.WaitForSelectorState.VISIBLE));
+
+        var errorMessageText = errorMessage.textContent();
+
+        // Assert
+        assertTrue(errorMessageText.contains("SKU must not be empty"),
+                "Error message should be 'SKU must not be empty' for SKU: '" + skuValue + "'. Actual: " + errorMessageText);
+    }
+
+    private static Stream<Arguments> provideEmptyQuantityValues() {
+        return Stream.of(
+                Arguments.of(""),      // Empty string
+                Arguments.of("   ")    // Whitespace string
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideEmptyQuantityValues")
+    void shouldRejectOrderWithEmptyQuantity(String quantityValue) {
+        // Act
+        page.navigate(baseUrl + "/shop.html");
+
+        var productIdInput = page.locator("[aria-label='Product ID']");
+        productIdInput.fill("HP-15");
+
+        var quantityInput = page.locator("[aria-label='Quantity']");
+        quantityInput.fill(quantityValue);
+
+        var placeOrderButton = page.locator("[aria-label='Place Order']");
+        placeOrderButton.click();
+
+        // Wait for error message to appear and become visible
+        var errorMessage = page.locator("[role='alert']");
+        errorMessage.waitFor(new Locator.WaitForOptions()
+                .setTimeout(TestConfiguration.getWaitSeconds() * 1000)
+                .setState(com.microsoft.playwright.options.WaitForSelectorState.VISIBLE));
+
+        var errorMessageText = errorMessage.textContent();
+
+        // Assert
+        assertTrue(errorMessageText.contains("Quantity must be an integer") || errorMessageText.contains("Quantity must be greater than 0"),
+                "Error message should indicate quantity validation error for quantity: '" + quantityValue + "'. Actual: " + errorMessageText);
     }
 
     private static Stream<Arguments> provideInvalidQuantityValues() {

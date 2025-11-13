@@ -34,14 +34,7 @@ public class OrderService {
     public PlaceOrderResponse placeOrder(PlaceOrderRequest request) {
         var sku = request.getSku();
         var quantity = request.getQuantity();
-        
-        if (sku == null || sku.trim().isEmpty()) {
-            throw new ValidationException("SKU must not be empty");
-        }
-        if (quantity <= 0) {
-            throw new ValidationException("Quantity must be greater than 0, received: " + quantity);
-        }
-        
+
         // Validate product exists in ERP and get its price
         var productDetails = erpGateway.getProductDetails(sku);
         if (productDetails.isEmpty()) {

@@ -1,14 +1,18 @@
 package com.optivem.eshop.monolith.core.dtos;
 
 import com.optivem.eshop.monolith.core.validation.TypeValidationMessage;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
 @Data
 public class PlaceOrderRequest {
+    @NotBlank(message = "SKU must not be empty")
     private String sku;
 
-    @TypeValidationMessage("Quantity must be an integer")
+    @NotNull(message = "Quantity must not be empty")
     @Positive(message = "Quantity must be positive")
-    private int quantity;
+    @TypeValidationMessage("Quantity must be an integer")
+    private Integer quantity;
 }

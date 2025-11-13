@@ -214,10 +214,6 @@ function Run-All {
     Write-Host "All tasks completed successfully!" -ForegroundColor Green
     Write-Host "================================================" -ForegroundColor Green
     Write-Host ""
-    Write-Host "Starting log view..." -ForegroundColor Cyan
-    Start-Sleep -Seconds 2
-
-    Show-Logs
 }
 
 # Main execution

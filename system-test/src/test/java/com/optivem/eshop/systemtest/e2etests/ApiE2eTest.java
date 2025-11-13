@@ -190,7 +190,78 @@ class ApiE2eTest {
                 "Error message should be 'Quantity must be positive'. Actual: " + responseBody);
     }
 
-    private static Stream<Arguments> provideInvalidQuantityValues() {
+    private static Stream<Arguments> provideEmptySkuValues() {
+        return Stream.of(
+                Arguments.of((String) null),  // Null value
+                Arguments.of(""),             // Empty string
+                Arguments.of("   ")           // Whitespace string
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideEmptySkuValues")
+    void shouldRejectOrderWithEmptySku(String skuValue) throws Exception {
+        // Arrange
+        var requestDto = new PlaceOrderRequest();
+        requestDto.setSku(skuValue);
+        requestDto.setQuantity("5");
+
+        var requestBody = objectMapper.writeValueAsString(requestDto);
+
+        var request = HttpRequest.newBuilder()
+                .uri(new URI(BASE_URL + "/api/orders"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
+
+        // Act
+        var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        // Assert
+        assertEquals(422, response.statusCode(), "Response status should be 422 Unprocessable Entity for SKU: " + skuValue);
+
+        var responseBody = response.body();
+        assertTrue(responseBody.contains("SKU must not be empty"),
+                "Error message should be 'SKU must not be empty'. Actual: " + responseBody);
+    }
+
+    private static Stream<Arguments> provideEmptyQuantityValues() {
+        return Stream.of(
+                Arguments.of((String) null),  // Null value
+                Arguments.of(""),             // Empty string
+                Arguments.of("   ")           // Whitespace string
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideEmptyQuantityValues")
+    void shouldRejectOrderWithEmptyQuantity(String quantityValue) throws Exception {
+        // Arrange
+        var requestDto = new PlaceOrderRequest();
+        requestDto.setSku("HP-15");
+        requestDto.setQuantity(quantityValue);
+
+        var requestBody = objectMapper.writeValueAsString(requestDto);
+
+        var request = HttpRequest.newBuilder()
+                .uri(new URI(BASE_URL + "/api/orders"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
+
+        // Act
+        var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+
+        // Assert
+        assertEquals(422, response.statusCode(), "Response status should be 422 Unprocessable Entity for Quantity: " + quantityValue);
+
+        var responseBody = response.body();
+        assertTrue(responseBody.contains("Quantity must not be empty"),
+                "Error message should be 'Quantity must not be empty'. Actual: " + responseBody);
+    }
+
+    private static Stream<Arguments> provideNonIntegerQuantityValues() {
         return Stream.of(
                 Arguments.of("3.5"),    // Decimal value
                 Arguments.of("lala")    // String value
@@ -199,7 +270,7 @@ class ApiE2eTest {
 
 
     @ParameterizedTest
-    @MethodSource("provideInvalidQuantityValues")
+    @MethodSource("provideNonIntegerQuantityValues")
     void shouldRejectOrderWithNonIntegerQuantity(String quantityValue) throws Exception {
         // Arrange
         var requestDto = new PlaceOrderRequest();

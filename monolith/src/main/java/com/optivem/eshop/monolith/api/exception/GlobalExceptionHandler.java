@@ -24,6 +24,7 @@ public class GlobalExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
     private static final Pattern CLASS_NAME_PATTERN = Pattern.compile("(com\\.optivem\\.eshop\\.monolith\\.core\\.dtos\\.[^\\[\\]\"\\s\\)]+)");
 
+
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(ValidationException ex) {
         var errorResponse = new ErrorResponse(ex.getMessage());
