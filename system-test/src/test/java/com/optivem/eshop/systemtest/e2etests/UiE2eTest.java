@@ -120,15 +120,29 @@ class UiE2eTest {
         // Verify order details in read-only textboxes
         var displayOrderNumber = page.locator("[aria-label='Display Order Number']");
         var displayProductId = page.locator("[aria-label='Display Product ID']");
+        var displayCountry = page.locator("[aria-label='Display Country']");
         var displayQuantity = page.locator("[aria-label='Display Quantity']");
         var displayUnitPrice = page.locator("[aria-label='Display Unit Price']");
         var displayOriginalPrice = page.locator("[aria-label='Display Original Price']");
+        var displayDiscountRate = page.locator("[aria-label='Display Discount Rate']");
+        var displayDiscountAmount = page.locator("[aria-label='Display Discount Amount']");
+        var displaySubtotalPrice = page.locator("[aria-label='Display Subtotal Price']");
+        var displayTaxRate = page.locator("[aria-label='Display Tax Rate']");
+        var displayTaxAmount = page.locator("[aria-label='Display Tax Amount']");
+        var displayTotalPrice = page.locator("[aria-label='Display Total Price']");
 
         assertTrue(displayOrderNumber.inputValue().equals(orderNumber), "Should display the order number: " + orderNumber);
-        assertTrue(displayProductId.inputValue().equals("SAM-2020"), "Should display SKU 11");
+        assertTrue(displayProductId.inputValue().equals("SAM-2020"), "Should display SKU SAM-2020");
+        assertTrue(displayCountry.inputValue().equals("US"), "Should display country US");
         assertTrue(displayQuantity.inputValue().equals("3"), "Should display quantity 3");
         assertTrue(displayUnitPrice.inputValue().startsWith("$"), "Should display unit price with $ symbol");
         assertTrue(displayOriginalPrice.inputValue().startsWith("$"), "Should display original price with $ symbol");
+        assertTrue(displayDiscountRate.inputValue().endsWith("%"), "Should display discount rate with % symbol");
+        assertTrue(displayDiscountAmount.inputValue().startsWith("$"), "Should display discount amount with $ symbol");
+        assertTrue(displaySubtotalPrice.inputValue().startsWith("$"), "Should display subtotal price with $ symbol");
+        assertTrue(displayTaxRate.inputValue().endsWith("%"), "Should display tax rate with % symbol");
+        assertTrue(displayTaxAmount.inputValue().startsWith("$"), "Should display tax amount with $ symbol");
+        assertTrue(displayTotalPrice.inputValue().startsWith("$"), "Should display total price with $ symbol");
     }
 
     @Test
