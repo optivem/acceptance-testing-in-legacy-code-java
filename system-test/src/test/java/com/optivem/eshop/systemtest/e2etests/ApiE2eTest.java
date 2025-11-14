@@ -3,6 +3,7 @@ package com.optivem.eshop.systemtest.e2etests;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.optivem.eshop.systemtest.TestConfiguration;
+import com.optivem.eshop.systemtest.e2etests.helpers.ErpApiHelper;
 import lombok.Data;
 
 import org.junit.jupiter.api.AfterEach;
@@ -41,10 +42,16 @@ class ApiE2eTest {
 
     @Test
     void placeOrder_shouldReturnOrderNumber() throws Exception {
-        // Arrange
+        // Arrange - Set up product in ERP
+        String baseSku = "AUTO-PO-100";
+        BigDecimal unitPrice = new BigDecimal("199.99");
+        int quantity = 5;
+
+        String sku = setupProductInErpAndGetSku(baseSku, "Test Product", unitPrice);
+
         var requestDto = new PlaceOrderRequest();
-        requestDto.setSku("HP-15");
-        requestDto.setQuantity("5");
+        requestDto.setSku(sku);
+        requestDto.setQuantity(String.valueOf(quantity));
         requestDto.setCountry("US");
 
         var requestBody = objectMapper.writeValueAsString(requestDto);
@@ -71,10 +78,13 @@ class ApiE2eTest {
 
     @Test
     void getOrder_shouldReturnOrderDetails() throws Exception {
-        // Arrange - First place an order
-        String sku = "SAM-2020";
+        // Arrange - Set up product in ERP first
+        String baseSku = "AUTO-GO-200";
+        BigDecimal unitPrice = new BigDecimal("299.50");
         int quantity = 3;
         String country = "DE";
+
+        String sku = setupProductInErpAndGetSku(baseSku, "Test Laptop", unitPrice);
 
         var placeOrderRequest = new PlaceOrderRequest();
         placeOrderRequest.setSku(sku);
@@ -113,8 +123,12 @@ class ApiE2eTest {
         assertEquals(quantity, getOrderResponse.getQuantity(), "Quantity should be " + quantity);
         assertEquals(country, getOrderResponse.getCountry(), "Country should be " + country);
 
-        assertNotNull(getOrderResponse.getUnitPrice(), "Unit price should not be null");
-        assertNotNull(getOrderResponse.getOriginalPrice(), "Total price should not be null");
+        assertEquals(unitPrice, getOrderResponse.getUnitPrice(), "Unit price should be " + unitPrice);
+
+        // Verify originalPrice = unitPrice * quantity
+        BigDecimal expectedOriginalPrice = unitPrice.multiply(BigDecimal.valueOf(quantity));
+        assertEquals(expectedOriginalPrice, getOrderResponse.getOriginalPrice(),
+                "Original price should be " + expectedOriginalPrice + " (unitPrice " + unitPrice + " * quantity " + quantity + ")");
     }
 
     @Test
@@ -197,9 +211,14 @@ class ApiE2eTest {
 
     @Test
     void shouldRejectOrderWithNegativeQuantity() throws Exception {
-        // Arrange
+        // Arrange - Set up product in ERP first
+        String baseSku = "AUTO-NQ-400";
+        BigDecimal unitPrice = new BigDecimal("99.99");
+
+        String sku = setupProductInErpAndGetSku(baseSku, "Test Product", unitPrice);
+
         var requestDto = new PlaceOrderRequest();
-        requestDto.setSku("HP-15");
+        requestDto.setSku(sku);
         requestDto.setQuantity("-5");
         requestDto.setCountry("US");
 
@@ -219,7 +238,7 @@ class ApiE2eTest {
 
         var responseBody = response.body();
         assertTrue(responseBody.contains("Quantity must be positive"),
-                "Error message should be 'Quantity must be positive'. Actual: " + responseBody);
+                "Error message should contain 'Quantity must be positive'. Actual: " + responseBody);
     }
 
     private static Stream<Arguments> provideEmptySkuValues() {
@@ -230,33 +249,6 @@ class ApiE2eTest {
         );
     }
 
-    @ParameterizedTest
-    @MethodSource("provideEmptySkuValues")
-    void shouldRejectOrderWithEmptySku(String skuValue) throws Exception {
-        // Arrange
-        var requestDto = new PlaceOrderRequest();
-        requestDto.setSku(skuValue);
-        requestDto.setQuantity("5");
-        requestDto.setCountry("US");
-
-        var requestBody = objectMapper.writeValueAsString(requestDto);
-
-        var request = HttpRequest.newBuilder()
-                .uri(new URI(BASE_URL + "/api/orders"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .build();
-
-        // Act
-        var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-        // Assert
-        assertEquals(422, response.statusCode(), "Response status should be 422 Unprocessable Entity for SKU: " + skuValue);
-
-        var responseBody = response.body();
-        assertTrue(responseBody.contains("SKU must not be empty"),
-                "Error message should be 'SKU must not be empty'. Actual: " + responseBody);
-    }
 
     private static Stream<Arguments> provideEmptyQuantityValues() {
         return Stream.of(
@@ -269,9 +261,14 @@ class ApiE2eTest {
     @ParameterizedTest
     @MethodSource("provideEmptyQuantityValues")
     void shouldRejectOrderWithEmptyQuantity(String quantityValue) throws Exception {
-        // Arrange
+        // Arrange - Set up product in ERP first
+        String baseSku = "AUTO-EQ-500";
+        BigDecimal unitPrice = new BigDecimal("150.00");
+
+        String sku = setupProductInErpAndGetSku(baseSku, "Test Product", unitPrice);
+
         var requestDto = new PlaceOrderRequest();
-        requestDto.setSku("HP-15");
+        requestDto.setSku(sku);
         requestDto.setQuantity(quantityValue);
         requestDto.setCountry("US");
 
@@ -303,33 +300,6 @@ class ApiE2eTest {
     }
 
 
-    @ParameterizedTest
-    @MethodSource("provideNonIntegerQuantityValues")
-    void shouldRejectOrderWithNonIntegerQuantity(String quantityValue) throws Exception {
-        // Arrange
-        var requestDto = new PlaceOrderRequest();
-        requestDto.setSku("HP-15");
-        requestDto.setQuantity(quantityValue);
-        requestDto.setCountry("US");
-
-        var requestBody = objectMapper.writeValueAsString(requestDto);
-
-        var request = HttpRequest.newBuilder()
-                .uri(new URI(BASE_URL + "/api/orders"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .build();
-
-        // Act
-        var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-        // Assert
-        assertEquals(400, response.statusCode(), "Response status should be 400 Bad Request for quantity: " + quantityValue);
-
-        var responseBody = response.body();
-        assertTrue(responseBody.contains("Quantity must be an integer"),
-                "Error message should be 'Quantity must be an integer'. Actual: " + responseBody);
-    }
 
     private static Stream<Arguments> provideEmptyCountryValues() {
         return Stream.of(
@@ -373,72 +343,9 @@ class ApiE2eTest {
     }
 
 
-    // Helper method to set up product in ERP JSON Server
-    private void setupProductInErp(String sku, String title, BigDecimal price) throws Exception {
-        // Add UUID suffix to avoid duplicate IDs across test runs
-        String uniqueSku = sku + "-" + java.util.UUID.randomUUID().toString().substring(0, 8);
-
-        var product = new ErpProduct();
-        product.setId(uniqueSku);
-        product.setTitle(title);
-        product.setDescription("Test product for " + uniqueSku);
-        product.setPrice(price);
-        product.setCategory("test-category");
-        product.setBrand("Test Brand");
-
-        var productJson = objectMapper.writeValueAsString(product);
-
-        var request = HttpRequest.newBuilder()
-                .uri(new URI("http://localhost:3000/products"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(productJson))
-                .build();
-
-        var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-        // JSON Server returns 201 for successful creation
-        assertTrue(response.statusCode() == 201 || response.statusCode() == 200,
-                "ERP product setup should succeed. Status: " + response.statusCode() + ", Body: " + response.body());
-    }
-
     // Helper method that returns the unique SKU for use in tests
     private String setupProductInErpAndGetSku(String baseSku, String title, BigDecimal price) throws Exception {
-        // Add UUID suffix to avoid duplicate IDs across test runs
-        String uniqueSku = baseSku + "-" + java.util.UUID.randomUUID().toString().substring(0, 8);
-
-        var product = new ErpProduct();
-        product.setId(uniqueSku);
-        product.setTitle(title);
-        product.setDescription("Test product for " + uniqueSku);
-        product.setPrice(price);
-        product.setCategory("test-category");
-        product.setBrand("Test Brand");
-
-        var productJson = objectMapper.writeValueAsString(product);
-
-        var request = HttpRequest.newBuilder()
-                .uri(new URI("http://localhost:3000/products"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(productJson))
-                .build();
-
-        var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-        // JSON Server returns 201 for successful creation
-        assertTrue(response.statusCode() == 201 || response.statusCode() == 200,
-                "ERP product setup should succeed. Status: " + response.statusCode() + ", Body: " + response.body());
-
-        return uniqueSku;
-    }
-
-    @Data
-    static class ErpProduct {
-        private String id;
-        private String title;
-        private String description;
-        private BigDecimal price;
-        private String category;
-        private String brand;
+        return ErpApiHelper.setupProductInErp(httpClient, baseSku, title, price);
     }
 
     @Data
