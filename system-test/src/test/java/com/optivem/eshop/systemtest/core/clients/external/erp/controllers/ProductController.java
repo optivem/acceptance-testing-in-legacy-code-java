@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ProductController extends BaseController {
     public ProductController(HttpClient httpClient, String baseUrl) {
-        super(httpClient, baseUrl);
+        super(httpClient, baseUrl, "products");
     }
 
     public String create(String baseSku, String title, BigDecimal price) {
@@ -31,7 +31,7 @@ public class ProductController extends BaseController {
             product.setCategory("Test Category");
             product.setBrand("Test Brand");
 
-            var response = post("products", product);
+            var response = post(product);
 
             assertEquals(HttpStatus.CREATED.value(), response.statusCode(), "ERP product setup should succeed. Status: " + response.statusCode() + ", Body: " + response.body());
 

@@ -18,10 +18,12 @@ public abstract class BaseController {
 
     protected final HttpClient httpClient;
     private final String baseUrl;
+    private final String controllerEndpoint;
 
-    public BaseController(HttpClient httpClient, String baseUrl) {
+    public BaseController(HttpClient httpClient, String baseUrl, String controllerEndpoint) {
         this.httpClient = httpClient;
         this.baseUrl = baseUrl;
+        this.controllerEndpoint = controllerEndpoint;
     }
 
     protected HttpResponse<String> get(String endpoint) {
@@ -32,6 +34,10 @@ public abstract class BaseController {
                 .build();
 
         return sendRequest(request);
+    }
+
+    protected HttpResponse<String> get() {
+        return get(null);
     }
 
     protected HttpResponse<String> post(String endpoint, Object requestBody) {
@@ -45,6 +51,10 @@ public abstract class BaseController {
                 .build();
 
         return sendRequest(request);
+    }
+
+    protected  HttpResponse<String> post(Object requestBody) {
+        return post(null, requestBody);
     }
 
     protected HttpResponse<String> post(String endpoint) {
@@ -83,11 +93,19 @@ public abstract class BaseController {
 
     private URI getUri(String path) {
         try {
-            var fullUri = baseUrl + "/" + path;
-            return new URI(fullUri);
+            var uriString = getUriString(path);
+            return new URI(uriString);
         } catch (Exception ex) {
             throw new RuntimeException("Failed to get uri for " + path, ex);
         }
+    }
+
+    private String getUriString(String path) {
+        if(path == null) {
+            return baseUrl + "/" + controllerEndpoint;
+        }
+
+        return baseUrl + "/" + controllerEndpoint + "/" + path;
     }
 
     protected <T> T readBody(HttpResponse<String> httpResponse, Class<T> responseType) {

@@ -7,14 +7,12 @@ import java.net.http.HttpResponse;
 
 public class EchoController extends BaseController {
 
-    public static final String CONTROLLER_ENDPOINT = "api/echo";
-
     public EchoController(HttpClient client, String baseUrl) {
-        super(client, baseUrl);
+        super(client, baseUrl, "echo");
     }
 
     public HttpResponse<String> echo() {
-        return get(CONTROLLER_ENDPOINT);
+        return get();
     }
 
     public void assertEchoSuccessful(HttpResponse<String> httpResponse) {

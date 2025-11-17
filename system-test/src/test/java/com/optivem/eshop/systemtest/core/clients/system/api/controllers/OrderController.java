@@ -10,10 +10,8 @@ import java.net.http.HttpResponse;
 
 public class OrderController extends BaseController {
 
-    public static final String CONTROLLER_ENDPOINT = "api/orders";
-
     public OrderController(HttpClient client, String baseUrl) {
-        super(client, baseUrl);
+        super(client, baseUrl, "orders");
     }
 
     public HttpResponse<String> placeOrder(String sku, String quantity, String country) {
@@ -22,7 +20,7 @@ public class OrderController extends BaseController {
         request.setQuantity(quantity);
         request.setCountry(country);
 
-        return post(CONTROLLER_ENDPOINT, request);
+        return post(request);
     }
 
     public PlaceOrderResponse assertOrderPlacedSuccessfully(HttpResponse<String> httpResponse) {
@@ -39,8 +37,7 @@ public class OrderController extends BaseController {
     }
 
     public HttpResponse<String> viewOrder(String orderNumber) {
-        var endpoint = CONTROLLER_ENDPOINT + "/" + orderNumber;
-        return get(endpoint);
+        return get(orderNumber);
     }
 
     public GetOrderResponse assertOrderViewedSuccessfully(HttpResponse<String> httpResponse) {
@@ -49,8 +46,7 @@ public class OrderController extends BaseController {
     }
 
     public HttpResponse<String> cancelOrder(String orderNumber) {
-        var endpoint = CONTROLLER_ENDPOINT + "/" + orderNumber + "/cancel";
-        return post(endpoint);
+        return post(orderNumber + "/cancel");
     }
 
     public void assertOrderCancelledSuccessfully(HttpResponse<String> httpResponse) {

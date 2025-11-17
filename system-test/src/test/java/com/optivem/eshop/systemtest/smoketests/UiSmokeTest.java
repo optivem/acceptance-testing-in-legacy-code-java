@@ -1,6 +1,7 @@
 package com.optivem.eshop.systemtest.smoketests;
 
 import com.optivem.eshop.systemtest.TestConfiguration;
+import com.optivem.eshop.systemtest.core.clients.ClientCloser;
 import com.optivem.eshop.systemtest.core.clients.ClientFactory;
 import com.optivem.eshop.systemtest.core.clients.system.ui.ShopUiClient;
 import org.junit.jupiter.api.*;
@@ -16,9 +17,7 @@ public class UiSmokeTest {
 
     @AfterEach
     void tearDown() {
-        if (shopUiClient != null) {
-            shopUiClient.close();
-        }
+        ClientCloser.close(shopUiClient);
     }
 
     @Test

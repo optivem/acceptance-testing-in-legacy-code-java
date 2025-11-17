@@ -1,6 +1,7 @@
 package com.optivem.eshop.systemtest.e2etests;
 
 import com.optivem.eshop.systemtest.TestConfiguration;
+import com.optivem.eshop.systemtest.core.clients.ClientCloser;
 import com.optivem.eshop.systemtest.core.clients.ClientFactory;
 import com.optivem.eshop.systemtest.core.clients.external.erp.ErpApiClient;
 import com.optivem.eshop.systemtest.core.clients.system.api.ShopApiClient;
@@ -32,13 +33,8 @@ class ApiE2eTest {
 
     @AfterEach
     void tearDown() {
-        if (shopApiClient != null) {
-            shopApiClient.close();
-        }
-
-        if (erpApiClient != null) {
-            erpApiClient.close();
-        }
+        ClientCloser.close(shopApiClient);
+        ClientCloser.close(erpApiClient);
     }
 
     @Test
