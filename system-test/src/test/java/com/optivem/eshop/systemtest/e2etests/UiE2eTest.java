@@ -1,6 +1,5 @@
 package com.optivem.eshop.systemtest.e2etests;
 
-import com.optivem.eshop.systemtest.TestConfiguration;
 import com.optivem.eshop.systemtest.core.clients.ClientCloser;
 import com.optivem.eshop.systemtest.core.clients.ClientFactory;
 import com.optivem.eshop.systemtest.core.clients.external.erp.ErpApiClient;
@@ -14,7 +13,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.Arguments;
 
 import java.math.BigDecimal;
-import java.net.http.HttpClient;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -197,7 +195,7 @@ class UiE2eTest {
         var baseSku = "AUTO-EQ-500";
         var unitPrice = new BigDecimal("175.00");
 
-        var sku = setupProductInErp(baseSku, "Test Product", unitPrice);
+        var sku = erpApiClient.products().createProduct(baseSku, unitPrice);
 
         var homePage = shopUiClient.openHomePage();
         var newOrderPage = homePage.clickNewOrder();
@@ -254,7 +252,7 @@ class UiE2eTest {
         var baseSku = "AUTO-EC-700";
         var unitPrice = new BigDecimal("245.50");
 
-        var sku = setupProductInErp(baseSku, "Test Product", unitPrice);
+        var sku = erpApiClient.products().createProduct(baseSku, unitPrice);
 
         var homePage = shopUiClient.openHomePage();
         var newOrderPage = homePage.clickNewOrder();
@@ -270,11 +268,6 @@ class UiE2eTest {
         // Assert
         assertTrue(errorMessageText.contains("Country must not be empty"),
                 "Error message should be 'Country must not be empty' for country: '" + countryValue + "'. Actual: " + errorMessageText);
-    }
-
-    // Helper method to set up product in ERP JSON Server
-    private String setupProductInErp(String baseSku, String title, BigDecimal price) {
-        return erpApiClient.products().create(baseSku, title, price);
     }
 
     private String createNewOrder(String productId, String quantity, String country) {

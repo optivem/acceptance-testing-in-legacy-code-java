@@ -1,6 +1,5 @@
 package com.optivem.eshop.systemtest.e2etests;
 
-import com.optivem.eshop.systemtest.TestConfiguration;
 import com.optivem.eshop.systemtest.core.clients.ClientCloser;
 import com.optivem.eshop.systemtest.core.clients.ClientFactory;
 import com.optivem.eshop.systemtest.core.clients.external.erp.ErpApiClient;
@@ -39,12 +38,12 @@ class ApiE2eTest {
 
     @Test
     void placeOrder_shouldReturnOrderNumber() {
-        // Arrange - Set up product in ERP
+        // Arrange
         var baseSku = "AUTO-PO-100";
         var unitPrice = new BigDecimal("199.99");
         var quantity = 5;
 
-        var sku = setupProductInErpAndGetSku(baseSku, "Test Product", unitPrice);
+        var sku = erpApiClient.products().createProduct(baseSku, unitPrice);
 
         // Act
         var httpResponse = shopApiClient.orders().placeOrder(sku, String.valueOf(quantity), "US");
@@ -65,7 +64,7 @@ class ApiE2eTest {
         var quantity = 3;
         var country = "DE";
 
-        var sku = setupProductInErpAndGetSku(baseSku, "Test Laptop", unitPrice);
+        var sku = erpApiClient.products().createProduct(baseSku, unitPrice);
 
         // Place order
         var orderNumber = placeOrderAndGetOrderNumber(sku, quantity, country);
@@ -141,7 +140,7 @@ class ApiE2eTest {
         var baseSku = "AUTO-NQ-400";
         var unitPrice = new BigDecimal("99.99");
 
-        var sku = setupProductInErpAndGetSku(baseSku, "Test Product", unitPrice);
+        var sku = erpApiClient.products().createProduct(baseSku, unitPrice);
 
         // Act
         var httpResponse = shopApiClient.orders().placeOrder(sku, "-5", "US");
@@ -178,7 +177,7 @@ class ApiE2eTest {
         var baseSku = "AUTO-EQ-500";
         var unitPrice = new BigDecimal("150.00");
 
-        var sku = setupProductInErpAndGetSku(baseSku, "Test Product", unitPrice);
+        var sku = erpApiClient.products().createProduct(baseSku, unitPrice);
 
         // Act
         var httpResponse = shopApiClient.orders().placeOrder(sku, quantityValue, "US");
@@ -215,7 +214,7 @@ class ApiE2eTest {
         var baseSku = "AUTO-EC-700";
         var unitPrice = new BigDecimal("225.00");
 
-        var sku = setupProductInErpAndGetSku(baseSku, "Test Product", unitPrice);
+        var sku = erpApiClient.products().createProduct(baseSku, unitPrice);
 
         // Act
         var httpResponse = shopApiClient.orders().placeOrder(sku, "5", countryValue);
@@ -228,12 +227,6 @@ class ApiE2eTest {
                 "Error message should be 'Country must not be empty'. Actual: " + errorMessage);
     }
 
-
-    // Helper method that returns the unique SKU for use in tests
-    private String setupProductInErpAndGetSku(String baseSku, String title, BigDecimal price) {
-        return erpApiClient.products().create(baseSku, title, price);
-    }
-
     private String placeOrderAndGetOrderNumber(String sku, int quantity, String country) {
         var httpResponse = shopApiClient.orders().placeOrder(sku, String.valueOf(quantity), country);
         var placeOrderResponse = shopApiClient.orders().assertOrderPlacedSuccessfully(httpResponse);
@@ -244,4 +237,6 @@ class ApiE2eTest {
         var httpResponse = shopApiClient.orders().viewOrder(orderNumber);
         return shopApiClient.orders().assertOrderViewedSuccessfully(httpResponse);
     }
+
+
 }
