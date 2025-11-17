@@ -1,10 +1,11 @@
 package com.optivem.eshop.systemtest.e2etests;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.playwright.*;
 import com.optivem.eshop.systemtest.TestConfiguration;
+import com.optivem.eshop.systemtest.core.clients.ui.UiClient;
+import com.optivem.eshop.systemtest.core.clients.ui.pages.NewOrderPage;
+import com.optivem.eshop.systemtest.core.clients.ui.pages.OrderHistoryPage;
 import com.optivem.eshop.systemtest.e2etests.helpers.ErpApiHelper;
-import lombok.Data;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,43 +14,28 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.Arguments;
 
 import java.math.BigDecimal;
-import java.net.URI;
 import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class UiE2eTest {
     
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-    private Playwright playwright;
-    private Browser browser;
-    private Page page;
+    private UiClient uiClient;
     private String baseUrl;
-    private HttpClient httpClient;
+    private HttpClient httpClient; // For ERP API helper
 
     @BeforeEach
     void setUp() {
-        playwright = Playwright.create();
-        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(true));
-        page = browser.newPage();
         baseUrl = TestConfiguration.getBaseUrl();
-        httpClient = HttpClient.newHttpClient();
+        uiClient = new UiClient(baseUrl);
+        httpClient = HttpClient.newHttpClient(); // For ERP API helper
     }
 
     @AfterEach
     void tearDown() {
-        if (page != null) {
-            page.close();
-        }
-        if (browser != null) {
-            browser.close();
-        }
-        if (playwright != null) {
-            playwright.close();
+        if (uiClient != null) {
+            uiClient.close();
         }
         if (httpClient != null) {
             httpClient.close();
@@ -58,193 +44,101 @@ class UiE2eTest {
 
     @Test
     void shouldCalculateOriginalOrderPrice() {
+        // Arrange
+        var homePage = uiClient.openHomePage();
+        var newOrderPage = homePage.clickNewOrder();
+
         // Act
-        page.navigate(baseUrl + "/shop.html");
+        newOrderPage.inputProductId("HP-15");
+        newOrderPage.inputQuantity("5");
+        newOrderPage.clickPlaceOrder();
 
-        var productIdInput = page.locator("[aria-label='Product ID']");
-        productIdInput.fill("HP-15");
+        var originalPrice = newOrderPage.extractOriginalPrice();
 
-        var quantityInput = page.locator("[aria-label='Quantity']");
-        quantityInput.fill("5");
-
-        var placeOrderButton = page.locator("[aria-label='Place Order']");
-        placeOrderButton.click();
-
-        // Wait for confirmation message to appear
-        var confirmationMessage = page.locator("[role='alert']");
-        confirmationMessage.waitFor(new Locator.WaitForOptions().setTimeout(TestConfiguration.getWaitSeconds() * 1000));
-
-        var confirmationMessageText = confirmationMessage.textContent();
-
-        var pattern = Pattern.compile("Success! Order has been created with Order Number ([\\w-]+) and Original Price \\$(\\d+(?:\\.\\d{2})?)");
-        var matcher = pattern.matcher(confirmationMessageText);
-
-        assertTrue(matcher.find(), "Confirmation message should match expected pattern. Actual: " + confirmationMessageText);
-
-        var originalPriceString = matcher.group(2);
-        var originalPrice = Double.parseDouble(originalPriceString);
+        // Assert - Use concrete value based on known input (5 × $109.95 = $549.75)
         assertEquals(549.75, originalPrice, 0.01, "Original price should be $549.75 (5 × $109.95)");
     }
 
     @Test
     void shouldRetrieveOrderHistory() {
         // Arrange - First place an order to get an order number
-        page.navigate(baseUrl + "/shop.html");
-
-        var productIdInput = page.locator("[aria-label='Product ID']");
-        productIdInput.fill("SAM-2020");
-
-        var quantityInput = page.locator("[aria-label='Quantity']");
-        quantityInput.fill("3");
-
-        var placeOrderButton = page.locator("[aria-label='Place Order']");
-        placeOrderButton.click();
-
-        // Wait for confirmation message and extract order number
-        var confirmationMessage = page.locator("[role='alert']");
-        confirmationMessage.waitFor(new Locator.WaitForOptions().setTimeout(TestConfiguration.getWaitSeconds() * 1000));
-
-        var confirmationMessageText = confirmationMessage.textContent();
-        var pattern = Pattern.compile("Success! Order has been created with Order Number ([\\w-]+)");
-        var matcher = pattern.matcher(confirmationMessageText);
-        assertTrue(matcher.find(), "Should extract order number from confirmation message");
-        var orderNumber = matcher.group(1);
+        var orderNumber = createNewOrder("SAM-2020", "3", "US");
 
         // Act - Navigate to Order History and search for the order
-        page.navigate(baseUrl + "/");
-        
-        var orderHistoryLink = page.locator("a[href='/order-history.html']");
-        orderHistoryLink.click();
+        var homePage = uiClient.openHomePage();
+        var orderHistoryPage = homePage.clickOrderHistory();
 
-        var orderNumberInput = page.locator("[aria-label='Order Number']");
-        orderNumberInput.fill(orderNumber);
+        orderHistoryPage.inputOrderNumber(orderNumber);
+        orderHistoryPage.clickSearch();
+        orderHistoryPage.waitForOrderDetails();
 
-        var searchButton = page.locator("[aria-label='Search']");
-        searchButton.click();
+        // Assert - Verify all order details fields
+        var displayOrderNumber = orderHistoryPage.getOrderNumber();
+        var displayProductId = orderHistoryPage.getProductId();
+        var displayCountry = orderHistoryPage.getCountry();
+        var displayQuantity = orderHistoryPage.getQuantity();
+        var displayUnitPrice = orderHistoryPage.getUnitPrice();
+        var displayOriginalPrice = orderHistoryPage.getOriginalPrice();
+        var displayDiscountRate = orderHistoryPage.getDiscountRate();
+        var displayDiscountAmount = orderHistoryPage.getDiscountAmount();
+        var displaySubtotalPrice = orderHistoryPage.getSubtotalPrice();
+        var displayTaxRate = orderHistoryPage.getTaxRate();
+        var displayTaxAmount = orderHistoryPage.getTaxAmount();
+        var displayTotalPrice = orderHistoryPage.getTotalPrice();
 
-        // Wait for order details to appear
-        var orderDetails = page.locator("[role='alert']");
-        orderDetails.waitFor(new Locator.WaitForOptions().setTimeout(TestConfiguration.getWaitSeconds() * 1000));
+        // Assert with concrete values where known
+        assertEquals(orderNumber, displayOrderNumber, "Should display the order number: " + orderNumber);
+        assertEquals("SAM-2020", displayProductId, "Should display SKU SAM-2020");
+        assertEquals("US", displayCountry, "Should display country US");
+        assertEquals("3", displayQuantity, "Should display quantity 3");
+        assertEquals("$499.99", displayUnitPrice, "Should display unit price $499.99");
+        assertEquals("$1499.97", displayOriginalPrice, "Should display original price $1499.97 (3 × $499.99)");
 
-        var orderDetailsText = orderDetails.textContent();
-
-        // Assert - Verify order details heading is displayed
-        assertTrue(orderDetailsText.contains("Order Details"), "Should display order details heading");
-
-        // Verify order details in read-only textboxes
-        var displayOrderNumber = page.locator("[aria-label='Display Order Number']");
-        var displayProductId = page.locator("[aria-label='Display Product ID']");
-        var displayCountry = page.locator("[aria-label='Display Country']");
-        var displayQuantity = page.locator("[aria-label='Display Quantity']");
-        var displayUnitPrice = page.locator("[aria-label='Display Unit Price']");
-        var displayOriginalPrice = page.locator("[aria-label='Display Original Price']");
-        var displayDiscountRate = page.locator("[aria-label='Display Discount Rate']");
-        var displayDiscountAmount = page.locator("[aria-label='Display Discount Amount']");
-        var displaySubtotalPrice = page.locator("[aria-label='Display Subtotal Price']");
-        var displayTaxRate = page.locator("[aria-label='Display Tax Rate']");
-        var displayTaxAmount = page.locator("[aria-label='Display Tax Amount']");
-        var displayTotalPrice = page.locator("[aria-label='Display Total Price']");
-
-        assertTrue(displayOrderNumber.inputValue().equals(orderNumber), "Should display the order number: " + orderNumber);
-        assertTrue(displayProductId.inputValue().equals("SAM-2020"), "Should display SKU SAM-2020");
-        assertTrue(displayCountry.inputValue().equals("US"), "Should display country US");
-        assertTrue(displayQuantity.inputValue().equals("3"), "Should display quantity 3");
-        assertTrue(displayUnitPrice.inputValue().equals("$499.99"), "Should display unit price $499.99");
-        assertTrue(displayOriginalPrice.inputValue().equals("$1499.97"), "Should display original price $1499.97");
-        assertTrue(displayDiscountRate.inputValue().endsWith("%"), "Should display discount rate with % symbol");
-        assertTrue(displayDiscountAmount.inputValue().startsWith("$"), "Should display discount amount with $ symbol");
-        assertTrue(displaySubtotalPrice.inputValue().startsWith("$"), "Should display subtotal price with $ symbol");
-        assertTrue(displayTaxRate.inputValue().endsWith("%"), "Should display tax rate with % symbol");
-        assertTrue(displayTaxAmount.inputValue().startsWith("$"), "Should display tax amount with $ symbol");
-        assertTrue(displayTotalPrice.inputValue().startsWith("$"), "Should display total price with $ symbol");
+        // Assert format for calculated fields
+        assertTrue(displayDiscountRate.endsWith("%"), "Should display discount rate with % symbol");
+        assertTrue(displayDiscountAmount.startsWith("$"), "Should display discount amount with $ symbol");
+        assertTrue(displaySubtotalPrice.startsWith("$"), "Should display subtotal price with $ symbol");
+        assertTrue(displayTaxRate.endsWith("%"), "Should display tax rate with % symbol");
+        assertTrue(displayTaxAmount.startsWith("$"), "Should display tax amount with $ symbol");
+        assertTrue(displayTotalPrice.startsWith("$"), "Should display total price with $ symbol");
     }
 
     @Test
     void shouldCancelOrder() {
         // Arrange - First place an order
-        page.navigate(baseUrl + "/shop.html");
+        var orderNumber = createNewOrder("HUA-P30", "2", "US");
 
-        var productIdInput = page.locator("[aria-label='Product ID']");
-        productIdInput.fill("HUA-P30");
-
-        var quantityInput = page.locator("[aria-label='Quantity']");
-        quantityInput.fill("2");
-
-        var placeOrderButton = page.locator("[aria-label='Place Order']");
-        placeOrderButton.click();
-
-        // Wait for confirmation message and extract order number
-        var confirmationMessage = page.locator("[role='alert']");
-        confirmationMessage.waitFor(new Locator.WaitForOptions().setTimeout(TestConfiguration.getWaitSeconds() * 1000));
-
-        var confirmationMessageText = confirmationMessage.textContent();
-        assertNotNull(confirmationMessageText);
-        assertTrue(confirmationMessageText.startsWith("Success! Order has been created with Order Number"));
-        var pattern = Pattern.compile("Success! Order has been created with Order Number ([\\w-]+)");
-        var matcher = pattern.matcher(confirmationMessageText);
-        assertTrue(matcher.find(), "Should extract order number from confirmation message");
-        var orderNumber = matcher.group(1);
-        assertNotNull(orderNumber);
-
-        // Act - Navigate to Order History and search for the order
-        page.navigate(baseUrl + "/");
-        
-        var orderHistoryLink = page.locator("a[href='/order-history.html']");
-        orderHistoryLink.click();
-
-        var orderNumberInput = page.locator("[aria-label='Order Number']");
-        orderNumberInput.fill(orderNumber);
-
-        var searchButton = page.locator("[aria-label='Search']");
-        searchButton.click();
-
-        // Wait for order details to appear
-        var orderDetails = page.locator("[role='alert']");
-        orderDetails.waitFor(new Locator.WaitForOptions().setTimeout(TestConfiguration.getWaitSeconds() * 1000));
+        // Navigate to Order History and search for the order
+        var orderHistoryPage = viewOrderDetails(orderNumber);
 
         // Verify initial status is PLACED
-        var displayStatusBeforeCancel = page.locator("[aria-label='Display Status']");
-        assertTrue(displayStatusBeforeCancel.inputValue().equals("PLACED"), "Initial status should be PLACED");
+        var displayStatusBeforeCancel = orderHistoryPage.getStatus();
+        assertEquals("PLACED", displayStatusBeforeCancel, "Initial status should be PLACED");
 
-        // Click Cancel Order button
-        page.onDialog(dialog -> dialog.accept()); // Auto-accept the alert
-        var cancelButton = page.locator("[aria-label='Cancel Order']");
-        cancelButton.click();
-
-        // Wait a moment for the order to be cancelled and details refreshed
-        page.waitForTimeout(1000);
+        // Act - Click Cancel Order button
+        orderHistoryPage.clickCancelOrder();
 
         // Assert - Verify status changed to CANCELLED
-        var displayStatusAfterCancel = page.locator("[aria-label='Display Status']");
-        assertTrue(displayStatusAfterCancel.inputValue().equals("CANCELLED"), "Status should be CANCELLED after cancellation");
+        var displayStatusAfterCancel = orderHistoryPage.getStatus();
+        assertEquals("CANCELLED", displayStatusAfterCancel, "Status should be CANCELLED after cancellation");
 
         // Verify Cancel button is no longer visible (since order is already cancelled)
-        var cancelButtonAfter = page.locator("[aria-label='Cancel Order']");
-        assertTrue(cancelButtonAfter.count() == 0, "Cancel button should not be visible for cancelled orders");
+        orderHistoryPage.confirmCancelButtonNotVisible();
     }
 
     @Test
     void shouldRejectOrderWithNonExistentSku() {
+        // Arrange
+        var homePage = uiClient.openHomePage();
+        var newOrderPage = homePage.clickNewOrder();
+
         // Act
-        page.navigate(baseUrl + "/shop.html");
+        newOrderPage.inputProductId("AUTO-NOTFOUND-999");
+        newOrderPage.inputQuantity("5");
+        newOrderPage.inputCountry("US");
+        newOrderPage.clickPlaceOrder();
 
-        var productIdInput = page.locator("[aria-label='Product ID']");
-        productIdInput.fill("AUTO-NOTFOUND-999");
-
-        var quantityInput = page.locator("[aria-label='Quantity']");
-        quantityInput.fill("5");
-
-        var countryInput = page.locator("[aria-label='Country']");
-        countryInput.fill("US");
-
-        var placeOrderButton = page.locator("[aria-label='Place Order']");
-        placeOrderButton.click();
-
-        // Wait for error message to appear
-        var errorMessage = page.locator("[role='alert']");
-        errorMessage.waitFor(new Locator.WaitForOptions().setTimeout(TestConfiguration.getWaitSeconds() * 1000));
-
-        var errorMessageText = errorMessage.textContent();
+        var errorMessageText = newOrderPage.readConfirmationMessageText();
 
         // Assert
         assertTrue(errorMessageText.contains("Product does not exist for SKU"),
@@ -253,23 +147,16 @@ class UiE2eTest {
 
     @Test
     void shouldRejectOrderWithNegativeQuantity() {
+        // Arrange
+        var homePage = uiClient.openHomePage();
+        var newOrderPage = homePage.clickNewOrder();
+
         // Act
-        page.navigate(baseUrl + "/shop.html");
+        newOrderPage.inputProductId("HP-15");
+        newOrderPage.inputQuantity("-5");
+        newOrderPage.clickPlaceOrder();
 
-        var productIdInput = page.locator("[aria-label='Product ID']");
-        productIdInput.fill("HP-15");
-
-        var quantityInput = page.locator("[aria-label='Quantity']");
-        quantityInput.fill("-5");
-
-        var placeOrderButton = page.locator("[aria-label='Place Order']");
-        placeOrderButton.click();
-
-        // Wait for error message to appear
-        var errorMessage = page.locator("[role='alert']");
-        errorMessage.waitFor(new Locator.WaitForOptions().setTimeout(TestConfiguration.getWaitSeconds() * 1000));
-
-        var errorMessageText = errorMessage.textContent();
+        var errorMessageText = newOrderPage.readConfirmationMessageText();
 
         // Assert
         assertTrue(errorMessageText.contains("Quantity must be positive"),
@@ -286,25 +173,16 @@ class UiE2eTest {
     @ParameterizedTest
     @MethodSource("provideEmptySkuValues")
     void shouldRejectOrderWithEmptySku(String skuValue) {
+        // Arrange
+        var homePage = uiClient.openHomePage();
+        var newOrderPage = homePage.clickNewOrder();
+
         // Act
-        page.navigate(baseUrl + "/shop.html");
+        newOrderPage.inputProductId(skuValue);
+        newOrderPage.inputQuantity("5");
+        newOrderPage.clickPlaceOrder();
 
-        var productIdInput = page.locator("[aria-label='Product ID']");
-        productIdInput.fill(skuValue);
-
-        var quantityInput = page.locator("[aria-label='Quantity']");
-        quantityInput.fill("5");
-
-        var placeOrderButton = page.locator("[aria-label='Place Order']");
-        placeOrderButton.click();
-
-        // Wait for error message to appear and become visible
-        var errorMessage = page.locator("[role='alert']");
-        errorMessage.waitFor(new Locator.WaitForOptions()
-                .setTimeout(TestConfiguration.getWaitSeconds() * 1000)
-                .setState(com.microsoft.playwright.options.WaitForSelectorState.VISIBLE));
-
-        var errorMessageText = errorMessage.textContent();
+        var errorMessageText = newOrderPage.readConfirmationMessageText();
 
         // Assert
         assertTrue(errorMessageText.contains("SKU must not be empty"),
@@ -327,25 +205,15 @@ class UiE2eTest {
 
         String sku = setupProductInErp(baseSku, "Test Product", unitPrice);
 
+        var homePage = uiClient.openHomePage();
+        var newOrderPage = homePage.clickNewOrder();
+
         // Act
-        page.navigate(baseUrl + "/shop.html");
+        newOrderPage.inputProductId(sku);
+        newOrderPage.inputQuantity(quantityValue);
+        newOrderPage.clickPlaceOrder();
 
-        var productIdInput = page.locator("[aria-label='Product ID']");
-        productIdInput.fill(sku);
-
-        var quantityInput = page.locator("[aria-label='Quantity']");
-        quantityInput.fill(quantityValue);
-
-        var placeOrderButton = page.locator("[aria-label='Place Order']");
-        placeOrderButton.click();
-
-        // Wait for error message to appear and become visible
-        var errorMessage = page.locator("[role='alert']");
-        errorMessage.waitFor(new Locator.WaitForOptions()
-                .setTimeout(TestConfiguration.getWaitSeconds() * 1000)
-                .setState(com.microsoft.playwright.options.WaitForSelectorState.VISIBLE));
-
-        var errorMessageText = errorMessage.textContent();
+        var errorMessageText = newOrderPage.readConfirmationMessageText();
 
         // Assert
         assertTrue(errorMessageText.contains("Quantity must be an integer") || errorMessageText.contains("Quantity must be greater than 0"),
@@ -362,23 +230,16 @@ class UiE2eTest {
     @ParameterizedTest
     @MethodSource("provideInvalidQuantityValues")
     void shouldRejectOrderWithNonIntegerQuantity(String quantityValue) {
+        // Arrange
+        var homePage = uiClient.openHomePage();
+        var newOrderPage = homePage.clickNewOrder();
+
         // Act
-        page.navigate(baseUrl + "/shop.html");
+        newOrderPage.inputProductId("HP-15");
+        newOrderPage.inputQuantity(quantityValue);
+        newOrderPage.clickPlaceOrder();
 
-        var productIdInput = page.locator("[aria-label='Product ID']");
-        productIdInput.fill("HP-15");
-
-        var quantityInput = page.locator("[aria-label='Quantity']");
-        quantityInput.fill(quantityValue);
-
-        var placeOrderButton = page.locator("[aria-label='Place Order']");
-        placeOrderButton.click();
-
-        // Wait for error message to appear
-        var errorMessage = page.locator("[role='alert']");
-        errorMessage.waitFor(new Locator.WaitForOptions().setTimeout(TestConfiguration.getWaitSeconds() * 1000));
-
-        var errorMessageText = errorMessage.textContent();
+        var errorMessageText = newOrderPage.readConfirmationMessageText();
 
         // Assert
         assertTrue(errorMessageText.contains("Quantity must be an integer"),
@@ -401,37 +262,50 @@ class UiE2eTest {
 
         String sku = setupProductInErp(baseSku, "Test Product", unitPrice);
 
+        var homePage = uiClient.openHomePage();
+        var newOrderPage = homePage.clickNewOrder();
+
         // Act
-        page.navigate(baseUrl + "/shop.html");
+        newOrderPage.inputProductId(sku);
+        newOrderPage.inputQuantity("5");
+        newOrderPage.inputCountry(countryValue);
+        newOrderPage.clickPlaceOrder();
 
-        var productIdInput = page.locator("[aria-label='Product ID']");
-        productIdInput.fill(sku);
-
-        var quantityInput = page.locator("[aria-label='Quantity']");
-        quantityInput.fill("5");
-
-        var countryInput = page.locator("[aria-label='Country']");
-        countryInput.fill(countryValue);
-
-        var placeOrderButton = page.locator("[aria-label='Place Order']");
-        placeOrderButton.click();
-
-        // Wait for error message to appear and become visible
-        var errorMessage = page.locator("[role='alert']");
-        errorMessage.waitFor(new Locator.WaitForOptions()
-                .setTimeout(TestConfiguration.getWaitSeconds() * 1000)
-                .setState(com.microsoft.playwright.options.WaitForSelectorState.VISIBLE));
-
-        var errorMessageText = errorMessage.textContent();
+        var errorMessageText = newOrderPage.readConfirmationMessageText();
 
         // Assert
         assertTrue(errorMessageText.contains("Country must not be empty"),
                 "Error message should be 'Country must not be empty' for country: '" + countryValue + "'. Actual: " + errorMessageText);
     }
 
-    // Helper method to set up product in ERP JSON Server (wrapper for base class method)
+    // Helper method to set up product in ERP JSON Server
     private String setupProductInErp(String baseSku, String title, BigDecimal price) throws Exception {
         return ErpApiHelper.setupProductInErp(httpClient, baseSku, title, price);
+    }
+
+    private String createNewOrder(String productId, String quantity, String country) {
+        var homePage = uiClient.openHomePage();
+        var newOrderPage = homePage.clickNewOrder();
+
+        newOrderPage.inputProductId(productId);
+        newOrderPage.inputQuantity(quantity);
+        if (country != null && !country.isEmpty()) {
+            newOrderPage.inputCountry(country);
+        }
+        newOrderPage.clickPlaceOrder();
+
+        return newOrderPage.extractOrderNumber();
+    }
+
+    private OrderHistoryPage viewOrderDetails(String orderNumber) {
+        var homePage = uiClient.openHomePage();
+        var orderHistoryPage = homePage.clickOrderHistory();
+
+        orderHistoryPage.inputOrderNumber(orderNumber);
+        orderHistoryPage.clickSearch();
+        orderHistoryPage.waitForOrderDetails();
+
+        return orderHistoryPage;
     }
 }
 

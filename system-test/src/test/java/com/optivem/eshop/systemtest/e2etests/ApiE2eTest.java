@@ -1,10 +1,9 @@
 package com.optivem.eshop.systemtest.e2etests;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.optivem.eshop.systemtest.TestConfiguration;
+import com.optivem.eshop.systemtest.core.clients.api.ApiClient;
+import com.optivem.eshop.systemtest.core.clients.api.dtos.GetOrderResponse;
 import com.optivem.eshop.systemtest.e2etests.helpers.ErpApiHelper;
-import lombok.Data;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,10 +13,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.Arguments;
 
 import java.math.BigDecimal;
-import java.net.URI;
 import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,16 +21,20 @@ import static org.junit.jupiter.api.Assertions.*;
 class ApiE2eTest {
 
     private static final String BASE_URL = TestConfiguration.getBaseUrl();
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-    private HttpClient httpClient;
+    private ApiClient apiClient;
+    private HttpClient httpClient; // Still needed for ERP API helper
 
     @BeforeEach
     void setUp() {
-        httpClient = HttpClient.newHttpClient();
+        apiClient = new ApiClient(BASE_URL);
+        httpClient = HttpClient.newHttpClient(); // For ERP API helper
     }
 
     @AfterEach
     void tearDown() {
+        if (apiClient != null) {
+            apiClient.close();
+        }
         if (httpClient != null) {
             httpClient.close();
         }
@@ -49,31 +49,15 @@ class ApiE2eTest {
 
         String sku = setupProductInErpAndGetSku(baseSku, "Test Product", unitPrice);
 
-        var requestDto = new PlaceOrderRequest();
-        requestDto.setSku(sku);
-        requestDto.setQuantity(String.valueOf(quantity));
-        requestDto.setCountry("US");
-
-        var requestBody = objectMapper.writeValueAsString(requestDto);
-        
-        var request = HttpRequest.newBuilder()
-                .uri(new URI(BASE_URL + "/api/orders"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .build();
-
         // Act
-        var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        var httpResponse = apiClient.getOrderController().placeOrder(sku, String.valueOf(quantity), "US");
 
         // Assert
-        assertEquals(201, response.statusCode(), "Response status should be 201 CREATED. Response body: " + response.body());
+        var response = apiClient.getOrderController().confirmOrderPlacedSuccessfully(httpResponse);
 
-        var responseBody = response.body();
-        var responseDto = objectMapper.readValue(responseBody, PlaceOrderResponse.class);
-        
         // Verify response contains orderNumber
-        assertNotNull(responseDto.getOrderNumber(), "Order number should not be null");
-        assertTrue(responseDto.getOrderNumber().startsWith("ORD-"), "Order number should start with ORD-");
+        assertNotNull(response.getOrderNumber(), "Order number should not be null");
+        assertTrue(response.getOrderNumber().startsWith("ORD-"), "Order number should start with ORD-");
     }
 
     @Test
@@ -86,43 +70,23 @@ class ApiE2eTest {
 
         String sku = setupProductInErpAndGetSku(baseSku, "Test Laptop", unitPrice);
 
-        var placeOrderRequest = new PlaceOrderRequest();
-        placeOrderRequest.setSku(sku);
-        placeOrderRequest.setQuantity(String.valueOf(quantity));
-        placeOrderRequest.setCountry(country);
+        // Place order
+        var orderNumber = placeOrderAndGetOrderNumber(sku, quantity, country);
 
-        var requestBody = objectMapper.writeValueAsString(placeOrderRequest);
-        
-        var postRequest = HttpRequest.newBuilder()
-                .uri(new URI(BASE_URL + "/api/orders"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .build();
-
-        var postResponse = httpClient.send(postRequest, HttpResponse.BodyHandlers.ofString());
-        assertEquals(201, postResponse.statusCode(), "Order creation should return 201 CREATED. Response body: " + postResponse.body());
-
-        var placeOrderResponse = objectMapper.readValue(postResponse.body(), PlaceOrderResponse.class);
-        var orderNumber = placeOrderResponse.getOrderNumber();
-        
         // Act - Get the order details
-        var getRequest = HttpRequest.newBuilder()
-                .uri(new URI(BASE_URL + "/api/orders/" + orderNumber))
-                .GET()
-                .build();
-
-        var getResponse = httpClient.send(getRequest, HttpResponse.BodyHandlers.ofString());
+        var httpResponse = apiClient.getOrderController().viewOrder(orderNumber);
 
         // Assert
-        assertEquals(200, getResponse.statusCode(), "Response status should be 200 OK");
-        
-        var getOrderResponse = objectMapper.readValue(getResponse.body(), GetOrderResponse.class);
-        
+        var getOrderResponse = apiClient.getOrderController().confirmOrderViewedSuccessfully(httpResponse);
+
         // Assert all fields from GetOrderResponse
         assertNotNull(getOrderResponse.getOrderNumber(), "Order number should not be null");
+        assertEquals(orderNumber, getOrderResponse.getOrderNumber(), "Order number should match");
         assertEquals(sku, getOrderResponse.getSku(), "SKU should be " + sku);
         assertEquals(quantity, getOrderResponse.getQuantity(), "Quantity should be " + quantity);
         assertEquals(country, getOrderResponse.getCountry(), "Country should be " + country);
+
+        // Assert with concrete values based on known input
         assertEquals(unitPrice, getOrderResponse.getUnitPrice(), "Unit price should be " + unitPrice);
 
         BigDecimal expectedOriginalPrice = new BigDecimal("898.50");
@@ -136,79 +100,42 @@ class ApiE2eTest {
     @Test
     void cancelOrder_shouldSetStatusToCancelled() throws Exception {
         // Arrange - Place an order
-        var placeOrderRequest = new PlaceOrderRequest();
-        placeOrderRequest.setSku("HUA-P30");
-        placeOrderRequest.setQuantity("2");
-        placeOrderRequest.setCountry("UK");
+        String sku = "HUA-P30";
+        int quantity = 2;
+        String country = "UK";
 
-        var requestBody = objectMapper.writeValueAsString(placeOrderRequest);
-        
-        var postRequest = HttpRequest.newBuilder()
-                .uri(new URI(BASE_URL + "/api/orders"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .build();
+        var orderNumber = placeOrderAndGetOrderNumber(sku, quantity, country);
 
-        var postResponse = httpClient.send(postRequest, HttpResponse.BodyHandlers.ofString());
-
-        // Verify order was created successfully
-        assertEquals(201, postResponse.statusCode(), "Order creation should return 201 CREATED. Response: " + postResponse.body());
-
-        var placeOrderResponse = objectMapper.readValue(postResponse.body(), PlaceOrderResponse.class);
-        var orderNumber = placeOrderResponse.getOrderNumber();
-        
         assertNotNull(orderNumber, "Order number should not be null");
 
         // Act - Cancel the order
-        var cancelRequest = HttpRequest.newBuilder()
-                .uri(new URI(BASE_URL + "/api/orders/" + orderNumber + "/cancel"))
-                .POST(HttpRequest.BodyPublishers.noBody())
-                .build();
-
-        var cancelResponse = httpClient.send(cancelRequest, HttpResponse.BodyHandlers.ofString());
+        var httpResponse = apiClient.getOrderController().cancelOrder(orderNumber);
 
         // Assert - Verify cancel response
-        assertEquals(204, cancelResponse.statusCode(), "Response status should be 204 No Content");
+        apiClient.getOrderController().confirmOrderCancelledSuccessfully(httpResponse);
 
         // Verify order status is CANCELLED
-        var getRequest = HttpRequest.newBuilder()
-                .uri(new URI(BASE_URL + "/api/orders/" + orderNumber))
-                .GET()
-                .build();
-
-        var getResponse = httpClient.send(getRequest, HttpResponse.BodyHandlers.ofString());
-        assertEquals(200, getResponse.statusCode(), "Response status should be 200 OK");
-        
-        var getOrderResponse = objectMapper.readValue(getResponse.body(), GetOrderResponse.class);
-        assertEquals("CANCELLED", getOrderResponse.getStatus(), "Order status should be CANCELLED");
+        var orderDetails = getOrderDetails(orderNumber);
+        assertEquals("CANCELLED", orderDetails.getStatus(), "Order status should be CANCELLED");
     }
 
 
     @Test
     void shouldRejectOrderWithNonExistentSku() throws Exception {
         // Arrange
-        var requestDto = new PlaceOrderRequest();
-        requestDto.setSku("NON-EXISTENT-SKU-12345");
-        requestDto.setQuantity("5");
-        requestDto.setCountry("US");
-
-        var requestBody = objectMapper.writeValueAsString(requestDto);
-
-        var request = HttpRequest.newBuilder()
-                .uri(new URI(BASE_URL + "/api/orders"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .build();
+        String sku = "NON-EXISTENT-SKU-12345";
+        String quantity = "5";
+        String country = "US";
 
         // Act
-        var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        var httpResponse = apiClient.getOrderController().placeOrder(sku, quantity, country);
 
         // Assert
-        assertEquals(422, response.statusCode(), "Response status should be 422 Unprocessable Entity");
+        apiClient.getOrderController().confirmOrderPlacementFailed(httpResponse);
 
-        var responseBody = response.body();
-        assertTrue(responseBody.contains("Product does not exist for SKU"),
-                "Error message should contain 'Product does not exist for SKU'. Actual: " + responseBody);
+        var errorMessage = apiClient.getOrderController().getErrorMessage(httpResponse);
+        assertTrue(errorMessage.contains("Product does not exist for SKU"),
+                "Error message should contain 'Product does not exist for SKU'. Actual: " + errorMessage);
     }
 
     @Test
@@ -219,28 +146,15 @@ class ApiE2eTest {
 
         String sku = setupProductInErpAndGetSku(baseSku, "Test Product", unitPrice);
 
-        var requestDto = new PlaceOrderRequest();
-        requestDto.setSku(sku);
-        requestDto.setQuantity("-5");
-        requestDto.setCountry("US");
-
-        var requestBody = objectMapper.writeValueAsString(requestDto);
-
-        var request = HttpRequest.newBuilder()
-                .uri(new URI(BASE_URL + "/api/orders"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .build();
-
         // Act
-        var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        var httpResponse = apiClient.getOrderController().placeOrder(sku, "-5", "US");
 
         // Assert
-        assertEquals(422, response.statusCode(), "Response status should be 422 Unprocessable Entity");
+        apiClient.getOrderController().confirmOrderPlacementFailed(httpResponse);
 
-        var responseBody = response.body();
-        assertTrue(responseBody.contains("Quantity must be positive"),
-                "Error message should contain 'Quantity must be positive'. Actual: " + responseBody);
+        var errorMessage = apiClient.getOrderController().getErrorMessage(httpResponse);
+        assertTrue(errorMessage.contains("Quantity must be positive"),
+                "Error message should contain 'Quantity must be positive'. Actual: " + errorMessage);
     }
 
     private static Stream<Arguments> provideEmptySkuValues() {
@@ -269,29 +183,15 @@ class ApiE2eTest {
 
         String sku = setupProductInErpAndGetSku(baseSku, "Test Product", unitPrice);
 
-        var requestDto = new PlaceOrderRequest();
-        requestDto.setSku(sku);
-        requestDto.setQuantity(quantityValue);
-        requestDto.setCountry("US");
-
-        var requestBody = objectMapper.writeValueAsString(requestDto);
-
-        var request = HttpRequest.newBuilder()
-                .uri(new URI(BASE_URL + "/api/orders"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .build();
-
         // Act
-        var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
+        var httpResponse = apiClient.getOrderController().placeOrder(sku, quantityValue, "US");
 
         // Assert
-        assertEquals(422, response.statusCode(), "Response status should be 422 Unprocessable Entity for Quantity: " + quantityValue);
+        apiClient.getOrderController().confirmOrderPlacementFailed(httpResponse);
 
-        var responseBody = response.body();
-        assertTrue(responseBody.contains("Quantity must not be empty"),
-                "Error message should be 'Quantity must not be empty'. Actual: " + responseBody);
+        var errorMessage = apiClient.getOrderController().getErrorMessage(httpResponse);
+        assertTrue(errorMessage.contains("Quantity must not be empty"),
+                "Error message should be 'Quantity must not be empty'. Actual: " + errorMessage);
     }
 
     private static Stream<Arguments> provideNonIntegerQuantityValues() {
@@ -320,28 +220,15 @@ class ApiE2eTest {
 
         String sku = setupProductInErpAndGetSku(baseSku, "Test Product", unitPrice);
 
-        var requestDto = new PlaceOrderRequest();
-        requestDto.setSku(sku);
-        requestDto.setQuantity("5");
-        requestDto.setCountry(countryValue);
-
-        var requestBody = objectMapper.writeValueAsString(requestDto);
-
-        var request = HttpRequest.newBuilder()
-                .uri(new URI(BASE_URL + "/api/orders"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .build();
-
         // Act
-        var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        var httpResponse = apiClient.getOrderController().placeOrder(sku, "5", countryValue);
 
         // Assert
-        assertEquals(422, response.statusCode(), "Response status should be 422 Unprocessable Entity for Country: " + countryValue);
+        apiClient.getOrderController().confirmOrderPlacementFailed(httpResponse);
 
-        var responseBody = response.body();
-        assertTrue(responseBody.contains("Country must not be empty"),
-                "Error message should be 'Country must not be empty'. Actual: " + responseBody);
+        var errorMessage = apiClient.getOrderController().getErrorMessage(httpResponse);
+        assertTrue(errorMessage.contains("Country must not be empty"),
+                "Error message should be 'Country must not be empty'. Actual: " + errorMessage);
     }
 
 
@@ -350,28 +237,14 @@ class ApiE2eTest {
         return ErpApiHelper.setupProductInErp(httpClient, baseSku, title, price);
     }
 
-    @Data
-    static class PlaceOrderRequest {
-        private String sku;
-        private String quantity;
-        private String country;
+    private String placeOrderAndGetOrderNumber(String sku, int quantity, String country) {
+        var httpResponse = apiClient.getOrderController().placeOrder(sku, String.valueOf(quantity), country);
+        var placeOrderResponse = apiClient.getOrderController().confirmOrderPlacedSuccessfully(httpResponse);
+        return placeOrderResponse.getOrderNumber();
     }
-    
-    @Data
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    static class PlaceOrderResponse {
-        private String orderNumber;
-    }
-    
-    @Data
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    static class GetOrderResponse {
-        private String orderNumber;
-        private String sku;
-        private int quantity;
-        private BigDecimal unitPrice;
-        private BigDecimal originalPrice;
-        private String status;
-        private String country;
+
+    private GetOrderResponse getOrderDetails(String orderNumber) {
+        var httpResponse = apiClient.getOrderController().viewOrder(orderNumber);
+        return apiClient.getOrderController().confirmOrderViewedSuccessfully(httpResponse);
     }
 }
