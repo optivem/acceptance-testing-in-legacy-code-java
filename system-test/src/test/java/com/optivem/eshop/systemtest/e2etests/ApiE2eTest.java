@@ -51,10 +51,10 @@ class ApiE2eTest {
         String sku = setupProductInErpAndGetSku(baseSku, "Test Product", unitPrice);
 
         // Act
-        var httpResponse = apiClient.getOrderController().placeOrder(sku, String.valueOf(quantity), "US");
+        var httpResponse = apiClient.orders().placeOrder(sku, String.valueOf(quantity), "US");
 
         // Assert
-        var response = apiClient.getOrderController().confirmOrderPlacedSuccessfully(httpResponse);
+        var response = apiClient.orders().assertOrderPlacedSuccessfully(httpResponse);
 
         // Verify response contains orderNumber
         assertNotNull(response.getOrderNumber(), "Order number should not be null");
@@ -75,10 +75,10 @@ class ApiE2eTest {
         var orderNumber = placeOrderAndGetOrderNumber(sku, quantity, country);
 
         // Act - Get the order details
-        var httpResponse = apiClient.getOrderController().viewOrder(orderNumber);
+        var httpResponse = apiClient.orders().viewOrder(orderNumber);
 
         // Assert
-        var getOrderResponse = apiClient.getOrderController().confirmOrderViewedSuccessfully(httpResponse);
+        var getOrderResponse = apiClient.orders().assertOrderViewedSuccessfully(httpResponse);
 
         // Assert all fields from GetOrderResponse
         assertNotNull(getOrderResponse.getOrderNumber(), "Order number should not be null");
@@ -110,10 +110,10 @@ class ApiE2eTest {
         assertNotNull(orderNumber, "Order number should not be null");
 
         // Act - Cancel the order
-        var httpResponse = apiClient.getOrderController().cancelOrder(orderNumber);
+        var httpResponse = apiClient.orders().cancelOrder(orderNumber);
 
         // Assert - Verify cancel response
-        apiClient.getOrderController().confirmOrderCancelledSuccessfully(httpResponse);
+        apiClient.orders().assertOrderCancelledSuccessfully(httpResponse);
 
         // Verify order status is CANCELLED
         var orderDetails = getOrderDetails(orderNumber);
@@ -129,12 +129,12 @@ class ApiE2eTest {
         String country = "US";
 
         // Act
-        var httpResponse = apiClient.getOrderController().placeOrder(sku, quantity, country);
+        var httpResponse = apiClient.orders().placeOrder(sku, quantity, country);
 
         // Assert
-        apiClient.getOrderController().confirmOrderPlacementFailed(httpResponse);
+        apiClient.orders().assertOrderPlacementFailed(httpResponse);
 
-        var errorMessage = apiClient.getOrderController().getErrorMessage(httpResponse);
+        var errorMessage = apiClient.orders().getErrorMessage(httpResponse);
         assertTrue(errorMessage.contains("Product does not exist for SKU"),
                 "Error message should contain 'Product does not exist for SKU'. Actual: " + errorMessage);
     }
@@ -148,12 +148,12 @@ class ApiE2eTest {
         String sku = setupProductInErpAndGetSku(baseSku, "Test Product", unitPrice);
 
         // Act
-        var httpResponse = apiClient.getOrderController().placeOrder(sku, "-5", "US");
+        var httpResponse = apiClient.orders().placeOrder(sku, "-5", "US");
 
         // Assert
-        apiClient.getOrderController().confirmOrderPlacementFailed(httpResponse);
+        apiClient.orders().assertOrderPlacementFailed(httpResponse);
 
-        var errorMessage = apiClient.getOrderController().getErrorMessage(httpResponse);
+        var errorMessage = apiClient.orders().getErrorMessage(httpResponse);
         assertTrue(errorMessage.contains("Quantity must be positive"),
                 "Error message should contain 'Quantity must be positive'. Actual: " + errorMessage);
     }
@@ -185,12 +185,12 @@ class ApiE2eTest {
         String sku = setupProductInErpAndGetSku(baseSku, "Test Product", unitPrice);
 
         // Act
-        var httpResponse = apiClient.getOrderController().placeOrder(sku, quantityValue, "US");
+        var httpResponse = apiClient.orders().placeOrder(sku, quantityValue, "US");
 
         // Assert
-        apiClient.getOrderController().confirmOrderPlacementFailed(httpResponse);
+        apiClient.orders().assertOrderPlacementFailed(httpResponse);
 
-        var errorMessage = apiClient.getOrderController().getErrorMessage(httpResponse);
+        var errorMessage = apiClient.orders().getErrorMessage(httpResponse);
         assertTrue(errorMessage.contains("Quantity must not be empty"),
                 "Error message should be 'Quantity must not be empty'. Actual: " + errorMessage);
     }
@@ -222,12 +222,12 @@ class ApiE2eTest {
         String sku = setupProductInErpAndGetSku(baseSku, "Test Product", unitPrice);
 
         // Act
-        var httpResponse = apiClient.getOrderController().placeOrder(sku, "5", countryValue);
+        var httpResponse = apiClient.orders().placeOrder(sku, "5", countryValue);
 
         // Assert
-        apiClient.getOrderController().confirmOrderPlacementFailed(httpResponse);
+        apiClient.orders().assertOrderPlacementFailed(httpResponse);
 
-        var errorMessage = apiClient.getOrderController().getErrorMessage(httpResponse);
+        var errorMessage = apiClient.orders().getErrorMessage(httpResponse);
         assertTrue(errorMessage.contains("Country must not be empty"),
                 "Error message should be 'Country must not be empty'. Actual: " + errorMessage);
     }
@@ -239,13 +239,13 @@ class ApiE2eTest {
     }
 
     private String placeOrderAndGetOrderNumber(String sku, int quantity, String country) {
-        var httpResponse = apiClient.getOrderController().placeOrder(sku, String.valueOf(quantity), country);
-        var placeOrderResponse = apiClient.getOrderController().confirmOrderPlacedSuccessfully(httpResponse);
+        var httpResponse = apiClient.orders().placeOrder(sku, String.valueOf(quantity), country);
+        var placeOrderResponse = apiClient.orders().assertOrderPlacedSuccessfully(httpResponse);
         return placeOrderResponse.getOrderNumber();
     }
 
     private GetOrderResponse getOrderDetails(String orderNumber) {
-        var httpResponse = apiClient.getOrderController().viewOrder(orderNumber);
-        return apiClient.getOrderController().confirmOrderViewedSuccessfully(httpResponse);
+        var httpResponse = apiClient.orders().viewOrder(orderNumber);
+        return apiClient.orders().assertOrderViewedSuccessfully(httpResponse);
     }
 }

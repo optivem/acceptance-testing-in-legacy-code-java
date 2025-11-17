@@ -13,7 +13,7 @@ public class EchoControllerClient extends BaseControllerClient {
         return get("api/echo");
     }
 
-    public void confirmEchoSuccessful(HttpResponse<String> httpResponse) {
+    public void assertEchoSuccessful(HttpResponse<String> httpResponse) {
         assertOk(httpResponse);
     }
 }

@@ -7,7 +7,7 @@ import com.optivem.eshop.systemtest.TestConfiguration;
 public abstract class BasePage {
     protected final Page page;
     private final String baseUrl;
-    private final double timeoutMilliseconds;
+    protected final double timeoutMilliseconds;
 
     private static final double DEFAULT_TIMEOUT_MILLISECONDS = TestConfiguration.getWaitSeconds() * 1000;
 
@@ -23,14 +23,6 @@ public abstract class BasePage {
 
     protected String getBaseUrl() {
         return baseUrl;
-    }
-
-    private Locator.WaitForOptions getWaitForOptions() {
-        return new Locator.WaitForOptions().setTimeout(timeoutMilliseconds);
-    }
-
-    protected void wait(Locator locator) {
-        locator.waitFor(getWaitForOptions());
     }
 
     protected void fill(String selector, String text) {
@@ -60,6 +52,11 @@ public abstract class BasePage {
     protected boolean isHidden(String selector) {
         var locator = page.locator(selector);
         return locator.count() == 0;
+    }
+
+    private void wait(Locator locator) {
+        var waitOptions = new Locator.WaitForOptions().setTimeout(timeoutMilliseconds);
+        locator.waitFor(waitOptions);
     }
 }
 

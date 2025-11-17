@@ -24,12 +24,12 @@ public class OrderControllerClient extends BaseControllerClient {
         return post(CONTROLLER_ENDPOINT, request);
     }
 
-    public PlaceOrderResponse confirmOrderPlacedSuccessfully(HttpResponse<String> httpResponse) {
+    public PlaceOrderResponse assertOrderPlacedSuccessfully(HttpResponse<String> httpResponse) {
         assertCreated(httpResponse);
         return readBody(httpResponse, PlaceOrderResponse.class);
     }
 
-    public void confirmOrderPlacementFailed(HttpResponse<String> httpResponse) {
+    public void assertOrderPlacementFailed(HttpResponse<String> httpResponse) {
         assertUnprocessableEntity(httpResponse);
     }
 
@@ -42,7 +42,7 @@ public class OrderControllerClient extends BaseControllerClient {
         return get(endpoint);
     }
 
-    public GetOrderResponse confirmOrderViewedSuccessfully(HttpResponse<String> httpResponse) {
+    public GetOrderResponse assertOrderViewedSuccessfully(HttpResponse<String> httpResponse) {
         assertOk(httpResponse);
         return readBody(httpResponse, GetOrderResponse.class);
     }
@@ -52,7 +52,7 @@ public class OrderControllerClient extends BaseControllerClient {
         return post(endpoint);
     }
 
-    public void confirmOrderCancelledSuccessfully(HttpResponse<String> httpResponse) {
+    public void assertOrderCancelledSuccessfully(HttpResponse<String> httpResponse) {
         assertNoContent(httpResponse);
     }
 }

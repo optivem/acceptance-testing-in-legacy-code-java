@@ -4,17 +4,20 @@ import com.microsoft.playwright.Page;
 
 public class HomePage extends BasePage {
 
+    private static final String SHOP_BUTTON_SELECTOR = "a[href='/shop.html']";
+    private static final String ORDER_HISTORY_BUTTON_SELECTOR = "a[href='/order-history.html']";
+
     public HomePage(Page page, String baseUrl) {
         super(page, baseUrl);
     }
 
     public NewOrderPage clickNewOrder() {
-        click("a[href='/shop.html']");
+        click(SHOP_BUTTON_SELECTOR);
         return new NewOrderPage(page, getBaseUrl());
     }
 
     public OrderHistoryPage clickOrderHistory() {
-        click("a[href='/order-history.html']");
+        click(ORDER_HISTORY_BUTTON_SELECTOR);
         return new OrderHistoryPage(page, getBaseUrl());
     }
 }

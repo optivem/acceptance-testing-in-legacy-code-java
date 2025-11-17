@@ -2,51 +2,60 @@ package com.optivem.eshop.systemtest.core.clients.ui.pages;
 
 import com.microsoft.playwright.Page;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class NewOrderPage extends BasePage {
 
+    private static final String PRODUCT_ID_INPUT_SELECTOR = "[aria-label=\"Product ID\"]";
+    private static final String QUANTITY_INPUT_SELECTOR = "[aria-label=\"Quantity\"]";
+    private static final String COUNTRY_INPUT_SELECTOR = "[aria-label=\"Country\"]";
+    private static final String PLACE_ORDER_BUTTONG_SELECTOR = "[aria-label=\"Place Order\"]";
+    private static final String CONFIRMATION_MESSAGE_SELECTOR = "[role='alert']";
+    private static final String ORDER_NUMBER_REGEX = "Success! Order has been created with Order Number ([\\w-]+)";
+    private static final int ORDER_NUMBER_MATCHER_GROUP = 1;
+    private static final String ORIGINAL_PRICE_REGEX = "Original Price \\$(\\d+(?:\\.\\d{2})?)";
+    private static final int ORIGINAL_PRICE_MATCHER_GROUP = 1;
+
     public NewOrderPage(Page page, String baseUrl) {
         super(page, baseUrl);
     }
 
     public void inputProductId(String productId) {
-        fill("[aria-label=\"Product ID\"]", productId);
+        fill(PRODUCT_ID_INPUT_SELECTOR, productId);
     }
 
     public void inputQuantity(String quantity) {
-        fill("[aria-label=\"Quantity\"]", quantity);
+        fill(QUANTITY_INPUT_SELECTOR, quantity);
     }
 
     public void inputCountry(String country) {
-        fill("[aria-label=\"Country\"]", country);
+        fill(COUNTRY_INPUT_SELECTOR, country);
     }
 
     public void clickPlaceOrder() {
-        click("[aria-label=\"Place Order\"]");
+        click(PLACE_ORDER_BUTTONG_SELECTOR);
     }
 
     public String readConfirmationMessageText() {
-        return readTextContent("[role='alert']");
+        return readTextContent(CONFIRMATION_MESSAGE_SELECTOR);
     }
 
     public String extractOrderNumber() {
         var confirmationMessageText = readConfirmationMessageText();
-        var pattern = Pattern.compile("Success! Order has been created with Order Number ([\\w-]+)");
+        var pattern = Pattern.compile(ORDER_NUMBER_REGEX);
         var matcher = pattern.matcher(confirmationMessageText);
         assertTrue(matcher.find(), "Should extract order number from confirmation message: " + confirmationMessageText);
-        return matcher.group(1);
+        return matcher.group(ORDER_NUMBER_MATCHER_GROUP);
     }
 
     public double extractOriginalPrice() {
         var confirmationMessageText = readConfirmationMessageText();
-        var pattern = Pattern.compile("Original Price \\$(\\d+(?:\\.\\d{2})?)");
+        var pattern = Pattern.compile(ORIGINAL_PRICE_REGEX);
         var matcher = pattern.matcher(confirmationMessageText);
         assertTrue(matcher.find(), "Should extract original price from confirmation message: " + confirmationMessageText);
-        return Double.parseDouble(matcher.group(1));
+        return Double.parseDouble(matcher.group(ORIGINAL_PRICE_MATCHER_GROUP));
     }
 }
 

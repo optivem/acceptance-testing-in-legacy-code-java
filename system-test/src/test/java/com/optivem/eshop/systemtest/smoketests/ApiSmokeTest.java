@@ -25,7 +25,7 @@ public class ApiSmokeTest {
 
     @Test
     void echo_shouldReturn200OK() throws Exception {
-        var httpResponse = apiClient.getEchoController().echo();
-        apiClient.getEchoController().confirmEchoSuccessful(httpResponse);
+        var httpResponse = apiClient.echo().echo();
+        apiClient.echo().assertEchoSuccessful(httpResponse);
     }
 }

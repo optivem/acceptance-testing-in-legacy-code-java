@@ -123,7 +123,7 @@ class UiE2eTest {
         assertEquals("CANCELLED", displayStatusAfterCancel, "Status should be CANCELLED after cancellation");
 
         // Verify Cancel button is no longer visible (since order is already cancelled)
-        orderHistoryPage.confirmCancelButtonNotVisible();
+        orderHistoryPage.assertCancelButtonNotVisible();
     }
 
     @Test

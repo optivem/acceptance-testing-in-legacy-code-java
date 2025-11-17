@@ -1,90 +1,115 @@
 package com.optivem.eshop.systemtest.core.clients.ui.pages;
 
+import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.WaitForSelectorState;
+import com.optivem.eshop.systemtest.TestConfiguration;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OrderHistoryPage extends BasePage {
+
+    private static final String ORDER_NUMBER_INPUT_SELECTOR = "[aria-label='Order Number']";
+    private static final String SEARCH_BUTTON_SELECTOR = "[aria-label='Search']";
+    private static final String CONFIRMATION_MESSAGE_SELECTOR = "[role='alert']";
+    private static final String ORDER_NUMBER_OUTPUT_SELECTOR = "[aria-label='Display Order Number']";
+    private static final String PRODUCT_ID_OUTPUT_SELECTOR = "[aria-label='Display Product ID']";
+    private static final String COUNTRY_OUTPUT_SELECTOR = "[aria-label='Display Country']";
+    private static final String QUANTITY_OUTPUT_SELECTOR = "[aria-label='Display Quantity']";
+    private static final String UNIT_PRICE_OUTPUT_SELECTOR = "[aria-label='Display Unit Price']";
+    private static final String ORIGINAL_PRICE_OUTPUT_SELECTOR = "[aria-label='Display Original Price']";
+    private static final String DISCOUNT_RATE_OUTPUT_SELECTOR = "[aria-label='Display Discount Rate']";
+    private static final String DISCOUNT_AMOUNT_OUTPUT_SELECTOR = "[aria-label='Display Discount Amount']";
+    private static final String SUBTOTAL_PRICE_OUTPUT_SELECTOR = "[aria-label='Display Subtotal Price']";
+    private static final String TAX_RATE_OUTPUT_SELECTOR = "[aria-label='Display Tax Rate']";
+    private static final String TAX_AMOUNT_OUTPUT_SELECTOR = "[aria-label='Display Tax Amount']";
+    private static final String TOTAL_PRICE_OUTPUT_SELECTOR = "[aria-label='Display Total Price']";
+    private static final String STATUS_OUTPUT_SELECTOR = "[aria-label='Display Status']";
+    private static final String CANCEL_ORDER_OUTPUT_SELECTOR = "[aria-label='Cancel Order']";
+
+    private static final String ORDER_DETAILS_HEADING_TEXT = "Order Details";
 
     public OrderHistoryPage(Page page, String baseUrl) {
         super(page, baseUrl);
     }
 
     public void inputOrderNumber(String orderNumber) {
-        fill("[aria-label='Order Number']", orderNumber);
+        fill(ORDER_NUMBER_INPUT_SELECTOR, orderNumber);
     }
 
     public void clickSearch() {
-        click("[aria-label='Search']");
+        click(SEARCH_BUTTON_SELECTOR);
     }
 
     public void waitForOrderDetails() {
-        var orderDetailsText = readTextContent("[role='alert']");
-        assertTrue(orderDetailsText.contains("Order Details"), "Should display order details heading");
+        var orderDetailsText = readTextContent(CONFIRMATION_MESSAGE_SELECTOR);
+        assertTrue(orderDetailsText.contains(ORDER_DETAILS_HEADING_TEXT), "Should display order details heading");
     }
 
     public String getOrderNumber() {
-        return readInputValue("[aria-label='Display Order Number']");
+        return readInputValue(ORDER_NUMBER_OUTPUT_SELECTOR);
     }
 
     public String getProductId() {
-        return readInputValue("[aria-label='Display Product ID']");
+        return readInputValue(PRODUCT_ID_OUTPUT_SELECTOR);
     }
 
     public String getCountry() {
-        return readInputValue("[aria-label='Display Country']");
+        return readInputValue(COUNTRY_OUTPUT_SELECTOR);
     }
 
     public String getQuantity() {
-        return readInputValue("[aria-label='Display Quantity']");
+        return readInputValue(QUANTITY_OUTPUT_SELECTOR);
     }
 
     public String getUnitPrice() {
-        return readInputValue("[aria-label='Display Unit Price']");
+        return readInputValue(UNIT_PRICE_OUTPUT_SELECTOR);
     }
 
     public String getOriginalPrice() {
-        return readInputValue("[aria-label='Display Original Price']");
+        return readInputValue(ORIGINAL_PRICE_OUTPUT_SELECTOR);
     }
 
     public String getDiscountRate() {
-        return readInputValue("[aria-label='Display Discount Rate']");
+        return readInputValue(DISCOUNT_RATE_OUTPUT_SELECTOR);
     }
 
     public String getDiscountAmount() {
-        return readInputValue("[aria-label='Display Discount Amount']");
+        return readInputValue(DISCOUNT_AMOUNT_OUTPUT_SELECTOR);
     }
 
     public String getSubtotalPrice() {
-        return readInputValue("[aria-label='Display Subtotal Price']");
+        return readInputValue(SUBTOTAL_PRICE_OUTPUT_SELECTOR);
     }
 
     public String getTaxRate() {
-        return readInputValue("[aria-label='Display Tax Rate']");
+        return readInputValue(TAX_RATE_OUTPUT_SELECTOR);
     }
 
     public String getTaxAmount() {
-        return readInputValue("[aria-label='Display Tax Amount']");
+        return readInputValue(TAX_AMOUNT_OUTPUT_SELECTOR);
     }
 
     public String getTotalPrice() {
-        return readInputValue("[aria-label='Display Total Price']");
+        return readInputValue(TOTAL_PRICE_OUTPUT_SELECTOR);
     }
 
     public String getStatus() {
-        return readInputValue("[aria-label='Display Status']");
+        return readInputValue(STATUS_OUTPUT_SELECTOR);
     }
 
     public void clickCancelOrder() {
-        page.onDialog(dialog -> dialog.accept()); // Auto-accept the alert
-        click("[aria-label='Cancel Order']");
+        click(CANCEL_ORDER_OUTPUT_SELECTOR);
 
-        // Wait a moment for the order to be cancelled and details refreshed
-        page.waitForTimeout(1000);
+        page.locator(CANCEL_ORDER_OUTPUT_SELECTOR).waitFor(
+                new Locator.WaitForOptions()
+                        .setState(WaitForSelectorState.HIDDEN)
+                        .setTimeout(timeoutMilliseconds)
+        );
     }
 
-    public void confirmCancelButtonNotVisible() {
-        assertTrue(isHidden("[aria-label='Cancel Order']"), "Cancel Order button should not be visible");
+    public void assertCancelButtonNotVisible() {
+        assertTrue(isHidden(CANCEL_ORDER_OUTPUT_SELECTOR), "Cancel Order button should not be visible");
     }
 }
 

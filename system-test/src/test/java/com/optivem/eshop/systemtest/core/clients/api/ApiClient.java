@@ -17,11 +17,11 @@ public class ApiClient implements AutoCloseable {
         this.orderControllerClient = new OrderControllerClient(client, baseUrl);
     }
 
-    public EchoControllerClient getEchoController() {
+    public EchoControllerClient echo() {
         return echoControllerClient;
     }
 
-    public OrderControllerClient getOrderController() {
+    public OrderControllerClient orders() {
         return orderControllerClient;
     }
 
