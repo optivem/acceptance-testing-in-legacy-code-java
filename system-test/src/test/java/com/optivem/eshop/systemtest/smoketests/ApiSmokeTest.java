@@ -1,7 +1,7 @@
 package com.optivem.eshop.systemtest.smoketests;
 
 import com.optivem.eshop.systemtest.TestConfiguration;
-import com.optivem.eshop.systemtest.core.clients.api.ApiClient;
+import com.optivem.eshop.systemtest.core.clients.system.api.ApiClient;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

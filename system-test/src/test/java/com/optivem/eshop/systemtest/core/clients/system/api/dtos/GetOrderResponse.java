@@ -1,6 +1,5 @@
-package com.optivem.eshop.systemtest.core.clients.api.dtos;
+package com.optivem.eshop.systemtest.core.clients.system.api.dtos;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.math.BigDecimal;

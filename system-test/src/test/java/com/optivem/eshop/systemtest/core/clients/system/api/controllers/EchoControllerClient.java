@@ -1,4 +1,4 @@
-package com.optivem.eshop.systemtest.core.clients.api.controllers;
+package com.optivem.eshop.systemtest.core.clients.system.api.controllers;
 
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;

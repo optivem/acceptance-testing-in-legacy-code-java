@@ -1,4 +1,4 @@
-package com.optivem.eshop.systemtest.core.clients.ui.pages;
+package com.optivem.eshop.systemtest.core.clients.system.ui.pages;
 
 import com.microsoft.playwright.Page;
 

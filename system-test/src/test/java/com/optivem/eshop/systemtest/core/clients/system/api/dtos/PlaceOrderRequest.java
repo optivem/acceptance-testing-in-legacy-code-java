@@ -1,4 +1,4 @@
-package com.optivem.eshop.systemtest.core.clients.api.dtos;
+package com.optivem.eshop.systemtest.core.clients.system.api.dtos;
 
 import lombok.Data;
 

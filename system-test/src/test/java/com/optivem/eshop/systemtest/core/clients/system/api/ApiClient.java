@@ -1,7 +1,7 @@
-package com.optivem.eshop.systemtest.core.clients.api;
+package com.optivem.eshop.systemtest.core.clients.system.api;
 
-import com.optivem.eshop.systemtest.core.clients.api.controllers.EchoControllerClient;
-import com.optivem.eshop.systemtest.core.clients.api.controllers.OrderControllerClient;
+import com.optivem.eshop.systemtest.core.clients.system.api.controllers.EchoControllerClient;
+import com.optivem.eshop.systemtest.core.clients.system.api.controllers.OrderControllerClient;
 
 import java.net.http.HttpClient;
 

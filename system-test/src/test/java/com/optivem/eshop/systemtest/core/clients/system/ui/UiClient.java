@@ -1,7 +1,7 @@
-package com.optivem.eshop.systemtest.core.clients.ui;
+package com.optivem.eshop.systemtest.core.clients.system.ui;
 
 import com.microsoft.playwright.*;
-import com.optivem.eshop.systemtest.core.clients.ui.pages.HomePage;
+import com.optivem.eshop.systemtest.core.clients.system.ui.pages.HomePage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

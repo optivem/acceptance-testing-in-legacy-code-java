@@ -1,4 +1,4 @@
-package com.optivem.eshop.systemtest.core.clients.api.controllers;
+package com.optivem.eshop.systemtest.core.clients.system.api.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;

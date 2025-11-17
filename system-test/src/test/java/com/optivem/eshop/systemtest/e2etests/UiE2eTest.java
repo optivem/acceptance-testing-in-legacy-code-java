@@ -1,10 +1,8 @@
 package com.optivem.eshop.systemtest.e2etests;
 
-import com.microsoft.playwright.*;
 import com.optivem.eshop.systemtest.TestConfiguration;
-import com.optivem.eshop.systemtest.core.clients.ui.UiClient;
-import com.optivem.eshop.systemtest.core.clients.ui.pages.NewOrderPage;
-import com.optivem.eshop.systemtest.core.clients.ui.pages.OrderHistoryPage;
+import com.optivem.eshop.systemtest.core.clients.system.ui.UiClient;
+import com.optivem.eshop.systemtest.core.clients.system.ui.pages.OrderHistoryPage;
 import com.optivem.eshop.systemtest.e2etests.helpers.ErpApiHelper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

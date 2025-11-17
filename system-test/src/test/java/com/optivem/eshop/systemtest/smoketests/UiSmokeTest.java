@@ -1,7 +1,7 @@
 package com.optivem.eshop.systemtest.smoketests;
 
 import com.optivem.eshop.systemtest.TestConfiguration;
-import com.optivem.eshop.systemtest.core.clients.ui.UiClient;
+import com.optivem.eshop.systemtest.core.clients.system.ui.UiClient;
 import org.junit.jupiter.api.*;
 
 public class UiSmokeTest {

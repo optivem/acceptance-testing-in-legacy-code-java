@@ -1,9 +1,9 @@
 package com.optivem.eshop.systemtest.e2etests;
 
 import com.optivem.eshop.systemtest.TestConfiguration;
-import com.optivem.eshop.systemtest.core.clients.api.ApiClient;
-import com.optivem.eshop.systemtest.core.clients.api.dtos.GetOrderResponse;
-import com.optivem.eshop.systemtest.core.clients.api.dtos.OrderStatus;
+import com.optivem.eshop.systemtest.core.clients.system.api.ApiClient;
+import com.optivem.eshop.systemtest.core.clients.system.api.dtos.GetOrderResponse;
+import com.optivem.eshop.systemtest.core.clients.system.api.dtos.OrderStatus;
 import com.optivem.eshop.systemtest.e2etests.helpers.ErpApiHelper;
 
 import org.junit.jupiter.api.AfterEach;

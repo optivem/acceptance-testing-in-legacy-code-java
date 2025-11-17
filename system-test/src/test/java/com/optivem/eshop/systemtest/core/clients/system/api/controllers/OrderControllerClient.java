@@ -1,8 +1,8 @@
-package com.optivem.eshop.systemtest.core.clients.api.controllers;
+package com.optivem.eshop.systemtest.core.clients.system.api.controllers;
 
-import com.optivem.eshop.systemtest.core.clients.api.dtos.GetOrderResponse;
-import com.optivem.eshop.systemtest.core.clients.api.dtos.PlaceOrderRequest;
-import com.optivem.eshop.systemtest.core.clients.api.dtos.PlaceOrderResponse;
+import com.optivem.eshop.systemtest.core.clients.system.api.dtos.GetOrderResponse;
+import com.optivem.eshop.systemtest.core.clients.system.api.dtos.PlaceOrderRequest;
+import com.optivem.eshop.systemtest.core.clients.system.api.dtos.PlaceOrderResponse;
 
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
