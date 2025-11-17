@@ -7,15 +7,15 @@ import com.optivem.eshop.systemtest.core.clients.system.ui.ShopUiClient;
 
 public class ClientFactory {
 
-    public static ShopApiClient createShopApiClient() {
-        return new ShopApiClient(TestConfiguration.getBaseUrl());
+    public static ShopUiClient createShopUiClient() {
+        return new ShopUiClient(TestConfiguration.getShopUiBaseUrl());
     }
 
-    public static ShopUiClient createShopUiClient() {
-        return new ShopUiClient(TestConfiguration.getBaseUrl());
+    public static ShopApiClient createShopApiClient() {
+        return new ShopApiClient(TestConfiguration.getShopApiBaseUrl());
     }
 
     public static ErpApiClient createErpApiClient() {
-        return new ErpApiClient(TestConfiguration.getErpBaseUrl());
+        return new ErpApiClient(TestConfiguration.getErpApiBaseUrl());
     }
 }

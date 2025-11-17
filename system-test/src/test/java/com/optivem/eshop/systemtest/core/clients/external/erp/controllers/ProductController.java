@@ -2,6 +2,7 @@ package com.optivem.eshop.systemtest.core.clients.external.erp.controllers;
 
 import com.optivem.eshop.systemtest.core.clients.commons.BaseController;
 import com.optivem.eshop.systemtest.core.clients.external.erp.dtos.ErpProduct;
+import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
 import java.net.URI;
@@ -9,6 +10,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ProductController extends BaseController {
@@ -26,22 +28,12 @@ public class ProductController extends BaseController {
             product.setTitle(title);
             product.setDescription("Test product for " + uniqueSku);
             product.setPrice(price);
-            product.setCategory("test-category");
+            product.setCategory("Test Category");
             product.setBrand("Test Brand");
 
-            var productJson = objectMapper.writeValueAsString(product);
+            var response = post("products", product);
 
-            var request = HttpRequest.newBuilder()
-                    .uri(new URI("http://localhost:3000/products"))
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(productJson))
-                    .build();
-
-            var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-            // JSON Server returns 201 Created for successful resource creation
-            assertTrue(response.statusCode() == 201,
-                    "ERP product setup should succeed. Status: " + response.statusCode() + ", Body: " + response.body());
+            assertEquals(HttpStatus.CREATED.value(), response.statusCode(), "ERP product setup should succeed. Status: " + response.statusCode() + ", Body: " + response.body());
 
             return uniqueSku;
         } catch (Exception e) {

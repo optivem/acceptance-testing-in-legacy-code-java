@@ -24,12 +24,16 @@ public class TestConfiguration {
         }
         return (T) current.get(keys[keys.length - 1]);
     }
-    
-    public static String getBaseUrl() {
-        return getNestedValue("test", "eshop", "baseUrl");
+
+    public static String getShopUiBaseUrl() {
+        return getNestedValue("test", "eshop", "ui", "baseUrl");
     }
 
-    public static String getErpBaseUrl() {
-        return getNestedValue("test", "erp", "baseUrl");
+    public static String getShopApiBaseUrl() {
+        return getNestedValue("test", "eshop", "api", "baseUrl");
+    }
+
+    public static String getErpApiBaseUrl() {
+        return getNestedValue("test", "erp", "api", "baseUrl");
     }
 }
