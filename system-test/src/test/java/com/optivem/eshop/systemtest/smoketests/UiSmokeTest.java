@@ -1,27 +1,26 @@
 package com.optivem.eshop.systemtest.smoketests;
 
-import com.optivem.eshop.systemtest.core.clients.ClientCloser;
-import com.optivem.eshop.systemtest.core.clients.ClientFactory;
-import com.optivem.eshop.systemtest.core.clients.system.ui.ShopUiClient;
+import com.optivem.eshop.systemtest.core.drivers.DriverCloser;
+import com.optivem.eshop.systemtest.core.drivers.DriverFactory;
+import com.optivem.eshop.systemtest.core.drivers.system.ShopUiDriver;
 import org.junit.jupiter.api.*;
 
 public class UiSmokeTest {
 
-    private ShopUiClient shopUiClient;
+    private ShopUiDriver shopUiDriver;
 
     @BeforeEach
     void setUp() {
-        this.shopUiClient = ClientFactory.createShopUiClient();
+        this.shopUiDriver = DriverFactory.createShopUiDriver();
     }
 
     @AfterEach
     void tearDown() {
-        ClientCloser.close(shopUiClient);
+        DriverCloser.close(shopUiDriver);
     }
 
     @Test
     void home_shouldReturnHtmlContent() {
-        shopUiClient.openHomePage();
-        shopUiClient.assertHomePageLoaded();
+        shopUiDriver.assertHomePageLoaded();
     }
 }

@@ -17,6 +17,11 @@ public class ShopUiDriver implements AutoCloseable {
         return shopUiClient.openHomePage();
     }
 
+    public void assertHomePageLoaded() {
+        shopUiClient.openHomePage();
+        shopUiClient.assertHomePageLoaded();
+    }
+
     public String placeOrder(String sku, String quantity, String country) {
         var homePage = shopUiClient.openHomePage();
         var newOrderPage = homePage.clickNewOrder();

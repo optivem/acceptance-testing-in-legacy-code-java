@@ -12,6 +12,11 @@ public class ErpApiDriver implements AutoCloseable {
         this.erpApiClient = erpApiClient;
     }
 
+    public void assertHomeSuccessful() {
+        var httpResponse = erpApiClient.home().home();
+        erpApiClient.home().assertHomeSuccessful(httpResponse);
+    }
+
     public String createProduct(String baseSku, BigDecimal unitPrice) {
         return erpApiClient.products().createProduct(baseSku, unitPrice);
     }

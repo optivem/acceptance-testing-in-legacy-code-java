@@ -10,6 +10,10 @@ public class TaxApiDriver implements AutoCloseable {
         this.taxApiClient = taxApiClient;
     }
 
+    public void assertHomeSuccessful() {
+        var httpResponse = taxApiClient.home().home();
+        taxApiClient.home().assertHomeSuccessful(httpResponse);
+    }
 
     @Override
     public void close() {

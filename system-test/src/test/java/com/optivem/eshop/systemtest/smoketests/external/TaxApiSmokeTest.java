@@ -1,33 +1,29 @@
 package com.optivem.eshop.systemtest.smoketests.external;
 
-import com.optivem.eshop.systemtest.core.clients.ClientCloser;
-import com.optivem.eshop.systemtest.core.clients.ClientFactory;
-import com.optivem.eshop.systemtest.core.clients.external.tax.TaxApiClient;
+import com.optivem.eshop.systemtest.core.drivers.DriverCloser;
+import com.optivem.eshop.systemtest.core.drivers.DriverFactory;
+import com.optivem.eshop.systemtest.core.drivers.external.TaxApiDriver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class TaxApiSmokeTest {
 
-    private TaxApiClient taxApiClient;
+    private TaxApiDriver taxApiDriver;
 
     @BeforeEach
     void setUp() {
-        this.taxApiClient = ClientFactory.createTaxApiClient();
+        this.taxApiDriver = DriverFactory.createTaxApiDriver();
     }
 
     @AfterEach
     void tearDown() {
-        ClientCloser.close(taxApiClient);
+        DriverCloser.close(taxApiDriver);
     }
 
     @Test
     void home_shouldReturn200OK() {
-        // Arrange & Act
-        var httpResponse = taxApiClient.home().home();
-
-        // Assert
-        taxApiClient.home().assertHomeSuccessful(httpResponse);
+        taxApiDriver.assertHomeSuccessful();
     }
 }
 

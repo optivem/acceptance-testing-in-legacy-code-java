@@ -13,6 +13,11 @@ public class ShopApiDriver implements AutoCloseable {
         this.shopApiClient = shopApiClient;
     }
 
+    public void assertEchoSuccessful() {
+        var httpResponse = shopApiClient.echo().echo();
+        shopApiClient.echo().assertEchoSuccessful(httpResponse);
+    }
+
     public String placeOrder(String sku, int quantity, String country) {
         var httpResponse = shopApiClient.orders().placeOrder(sku, String.valueOf(quantity), country);
         var response = shopApiClient.orders().assertOrderPlacedSuccessfully(httpResponse);
