@@ -6,10 +6,6 @@ import com.optivem.eshop.systemtest.core.drivers.external.TaxApiDriver;
 import com.optivem.eshop.systemtest.core.drivers.system.ShopApiDriver;
 import com.optivem.eshop.systemtest.core.drivers.system.ShopUiDriver;
 
-/**
- * Factory for creating test drivers.
- * Drivers encapsulate high-level business operations and use clients internally.
- */
 public class DriverFactory {
 
     public static ShopUiDriver createShopUiDriver() {
