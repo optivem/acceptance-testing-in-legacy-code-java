@@ -4,8 +4,10 @@ import com.optivem.eshop.systemtest.core.clients.commons.TestHttpClient;
 import com.optivem.eshop.systemtest.core.clients.system.api.dtos.GetOrderResponse;
 import com.optivem.eshop.systemtest.core.clients.system.api.dtos.PlaceOrderRequest;
 import com.optivem.eshop.systemtest.core.clients.system.api.dtos.PlaceOrderResponse;
+import org.springframework.http.HttpStatus;
 
 import java.net.http.HttpResponse;
+import java.util.Optional;
 
 public class OrderController {
 
@@ -54,6 +56,15 @@ public class OrderController {
 
     public void assertOrderCancelledSuccessfully(HttpResponse<String> httpResponse) {
         httpClient.assertNoContent(httpResponse);
+    }
+    public Optional<String> getOrderNumberIfOrderPlacedSuccessfully(HttpResponse<String> httpResponse) {
+        if(httpResponse.statusCode() != HttpStatus.CREATED.value()) {
+            return Optional.empty();
+        }
+
+        var response = httpClient.readBody(httpResponse, PlaceOrderResponse.class);
+        var orderNumber = response.getOrderNumber();
+        return Optional.of(orderNumber);
     }
 }
 

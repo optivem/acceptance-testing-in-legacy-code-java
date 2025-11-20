@@ -23,7 +23,7 @@ public class ErpApiSmokeTest {
 
     @Test
     void home_shouldReturn200OK() {
-        erpApiDriver.assertHomeSuccessful();
+        erpApiDriver.toToErp();
     }
 }
 

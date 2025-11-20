@@ -1,5 +1,6 @@
 package com.optivem.eshop.systemtest.core.drivers;
 
+import com.optivem.eshop.systemtest.TestConfiguration;
 import com.optivem.eshop.systemtest.core.clients.ClientFactory;
 import com.optivem.eshop.systemtest.core.drivers.external.ErpApiDriver;
 import com.optivem.eshop.systemtest.core.drivers.external.TaxApiDriver;
@@ -9,13 +10,11 @@ import com.optivem.eshop.systemtest.core.drivers.system.ShopUiDriver;
 public class DriverFactory {
 
     public static ShopUiDriver createShopUiDriver() {
-        var client = ClientFactory.createShopUiClient();
-        return new ShopUiDriver(client);
+        return new ShopUiDriver(TestConfiguration.getShopUiBaseUrl());
     }
 
     public static ShopApiDriver createShopApiDriver() {
-        var client = ClientFactory.createShopApiClient();
-        return new ShopApiDriver(client);
+        return new ShopApiDriver(TestConfiguration.getShopApiBaseUrl());
     }
 
     public static ErpApiDriver createErpApiDriver() {

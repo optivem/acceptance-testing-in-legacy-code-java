@@ -2,6 +2,8 @@ package com.optivem.eshop.systemtest.core.clients.system.ui.pages;
 
 import com.optivem.eshop.systemtest.core.clients.commons.TestPageClient;
 
+import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -44,20 +46,36 @@ public class NewOrderPage {
         return pageClient.readTextContent(CONFIRMATION_MESSAGE_SELECTOR);
     }
 
-    public String extractOrderNumber() {
+    public Optional<String> getOrderNumber() {
         var confirmationMessageText = readConfirmationMessageText();
         var pattern = Pattern.compile(ORDER_NUMBER_REGEX);
         var matcher = pattern.matcher(confirmationMessageText);
-        assertTrue(matcher.find(), "Should extract order number from confirmation message: " + confirmationMessageText);
-        return matcher.group(ORDER_NUMBER_MATCHER_GROUP);
+
+        if(!matcher.find()) {
+            return Optional.empty();
+        }
+
+        var result = matcher.group(ORDER_NUMBER_MATCHER_GROUP);
+        return Optional.of(result);
     }
 
-    public double extractOriginalPrice() {
+    public Optional<BigDecimal> getOriginalPrice() {
         var confirmationMessageText = readConfirmationMessageText();
         var pattern = Pattern.compile(ORIGINAL_PRICE_REGEX);
         var matcher = pattern.matcher(confirmationMessageText);
-        assertTrue(matcher.find(), "Should extract original price from confirmation message: " + confirmationMessageText);
-        return Double.parseDouble(matcher.group(ORIGINAL_PRICE_MATCHER_GROUP));
+
+        if(!matcher.find()) {
+            return Optional.empty();
+        }
+
+        var result = BigDecimal.valueOf(Double.parseDouble(matcher.group(ORIGINAL_PRICE_MATCHER_GROUP)));
+
+        return Optional.of(result);
+    }
+
+    public void assertConfirmationMessageShown() {
+        var confirmationMessageText = readConfirmationMessageText();
+        assertTrue(!confirmationMessageText.isBlank(), "Confirmation message should be shown.");
     }
 }
 

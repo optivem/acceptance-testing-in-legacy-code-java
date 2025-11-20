@@ -16,7 +16,7 @@ public class ProductController {
         this.httpClient = httpClient;
     }
 
-    public String createProduct(String baseSku, BigDecimal price) {
+    public String createProduct(String baseSku, String price) {
         // Add UUID suffix to avoid duplicate IDs across test runs
         var uniqueSku = baseSku + "-" + java.util.UUID.randomUUID().toString().substring(0, 8);
 

@@ -2,55 +2,172 @@ package com.optivem.eshop.systemtest.core.drivers.system;
 
 import com.optivem.eshop.systemtest.core.clients.system.api.ShopApiClient;
 import com.optivem.eshop.systemtest.core.clients.system.api.dtos.GetOrderResponse;
+import com.optivem.eshop.systemtest.core.clients.system.api.dtos.OrderStatus;
 
+import java.math.BigDecimal;
 import java.net.http.HttpResponse;
+import java.util.HashMap;
 
-public class ShopApiDriver implements AutoCloseable {
+import static org.junit.jupiter.api.Assertions.*;
 
-    private final ShopApiClient shopApiClient;
+public class ShopApiDriver implements ShopDriver {
+    private final ShopApiClient apiClient;
 
-    public ShopApiDriver(ShopApiClient shopApiClient) {
-        this.shopApiClient = shopApiClient;
+    private final HashMap<String, String> orderNumbers;
+    private final HashMap<String, HttpResponse<String>> ordersPlaced;
+    private final HashMap<String, HttpResponse<String>> ordersViewed;
+    private final HashMap<String, HttpResponse<String>> ordersCancelled;
+
+    public ShopApiDriver(String baseUrl) {
+        this.apiClient = new ShopApiClient(baseUrl);
+        this.orderNumbers = new HashMap<>();
+        this.ordersPlaced = new HashMap<>();
+        this.ordersViewed = new HashMap<>();
+        this.ordersCancelled = new HashMap<>();
     }
 
-    public void assertEchoSuccessful() {
-        var httpResponse = shopApiClient.echo().echo();
-        shopApiClient.echo().assertEchoSuccessful(httpResponse);
+    @Override
+    public void goToShop() {
+        var httpResponse = apiClient.echo().echo();
+        apiClient.echo().assertEchoSuccessful(httpResponse);
     }
 
-    public String placeOrder(String sku, int quantity, String country) {
-        var httpResponse = shopApiClient.orders().placeOrder(sku, String.valueOf(quantity), country);
-        var response = shopApiClient.orders().assertOrderPlacedSuccessfully(httpResponse);
-        return response.getOrderNumber();
+    @Override
+    public void placeOrder(String orderNumberAlias, String productId, String quantity, String country) {
+        var httpResponse = apiClient.orders().placeOrder(productId, quantity, country);
+        registerOrderResponse(ordersPlaced, orderNumberAlias, httpResponse);
+
+        var orderNumberOptional = apiClient.orders().getOrderNumberIfOrderPlacedSuccessfully(httpResponse);
+        orderNumberOptional.ifPresent(orderNumber -> registerOrderNumber(orderNumberAlias, orderNumber));
     }
 
-    public GetOrderResponse getOrderDetails(String orderNumber) {
-        var httpResponse = shopApiClient.orders().viewOrder(orderNumber);
-        return shopApiClient.orders().assertOrderViewedSuccessfully(httpResponse);
+    @Override
+    public void confirmOrderPlaced(String orderNumberAlias, String prefix) {
+        var httpResponse = ordersPlaced.get(orderNumberAlias);
+        var response = apiClient.orders().assertOrderPlacedSuccessfully(httpResponse);
+
+        assertNotNull(response.getOrderNumber(), "Order number should be not be null");
+        assertFalse(response.getOrderNumber().isEmpty(), "Order number should be not be empty");
+        assertTrue(response.getOrderNumber().startsWith(prefix), "Order number should start with prefix: " + prefix);
     }
 
-    public void cancelOrder(String orderNumber) {
-        var httpResponse = shopApiClient.orders().cancelOrder(orderNumber);
-        shopApiClient.orders().assertOrderCancelledSuccessfully(httpResponse);
+    @Override
+    public void viewOrderDetails(String orderNumberAlias) {
+        var orderNumber = getOrderNumber(orderNumberAlias);
+        var httpResponse = apiClient.orders().viewOrder(orderNumber);
+        registerOrderResponse(ordersViewed, orderNumberAlias, httpResponse);
     }
 
-    public HttpResponse<String> attemptPlaceOrder(String sku, String quantity, String country) {
-        return shopApiClient.orders().placeOrder(sku, quantity, country);
+    @Override
+    public void confirmOrderDetails(String orderNumberAlias, String productId, String quantity, String status) {
+        var httpResponse = ordersViewed.get(orderNumberAlias);
+        var response = apiClient.orders().assertOrderViewedSuccessfully(httpResponse);
+
+        assertEquals(Long.parseLong(productId), response.getSku());
+        assertEquals(Long.parseLong(quantity), response.getQuantity());
+
+        var unitPrice = response.getUnitPrice();
+        assertNotNull(unitPrice, "Unit price should not be null");
+        assertTrue(unitPrice.compareTo(BigDecimal.ZERO) > 0, "Unit price should be positive");
+
+        var totalPrice = response.getTotalPrice();
+        assertNotNull(totalPrice, "Total price should not be null");
+        assertTrue(totalPrice.compareTo(BigDecimal.ZERO) > 0, "Total price should be positive");
     }
 
-    public void assertOrderPlacementFailed(HttpResponse<String> httpResponse) {
-        shopApiClient.orders().assertOrderPlacementFailed(httpResponse);
+    @Override
+    public void confirmOrderStatusIsCancelled(String orderNumberAlias) {
+        var httpResponse = ordersViewed.get(orderNumberAlias);
+        var response = apiClient.orders().assertOrderViewedSuccessfully(httpResponse);
+        assertEquals(OrderStatus.CANCELLED, response.getStatus(), "Order status should be CANCELLED");
     }
 
-    public String getOrderPlacementErrorMessage(HttpResponse<String> httpResponse) {
-        return shopApiClient.orders().getErrorMessage(httpResponse);
+    @Override
+    public void cancelOrder(String orderNumberAlias) {
+        var orderNumber = getOrderNumber(orderNumberAlias);
+        var httpResponse = apiClient.orders().cancelOrder(orderNumber);
+        registerOrderResponse(ordersCancelled, orderNumberAlias, httpResponse);
+    }
+
+    @Override
+    public void confirmOrderCancelled(String orderNumberAlias) {
+        var httpResponse = ordersCancelled.get(orderNumberAlias);
+        apiClient.orders().assertOrderCancelledSuccessfully(httpResponse);
+    }
+
+    private static void registerOrderResponse(HashMap<String, HttpResponse<String>> map, String orderNumber, HttpResponse<String> httpResponse) {
+        if(map.containsKey(orderNumber)) {
+            throw new IllegalStateException("Response for order number " + orderNumber + " is already registered.");
+        }
+
+        map.put(orderNumber, httpResponse);
+    }
+
+    private void registerOrderNumber(String orderNumberAlias, String orderNumber) {
+        if(orderNumbers.containsKey(orderNumberAlias)) {
+            throw new IllegalStateException("Order number alias " + orderNumberAlias + " is already registered.");
+        }
+
+        orderNumbers.put(orderNumberAlias, orderNumber);
+    }
+
+    private String getOrderNumber(String orderNumberAlias) {
+        if(!orderNumbers.containsKey(orderNumberAlias)) {
+            throw new IllegalStateException("Order number alias " + orderNumberAlias + " is not registered.");
+        }
+
+        return orderNumbers.get(orderNumberAlias);
     }
 
     @Override
     public void close() {
-        if (shopApiClient != null) {
-            shopApiClient.close();
-        }
+        apiClient.close();
     }
+
+//    private final ShopApiClient shopApiClient;
+//
+//    public ShopApiDriver(ShopApiClient shopApiClient) {
+//        this.shopApiClient = shopApiClient;
+//    }
+//
+//    public void assertEchoSuccessful() {
+//        var httpResponse = shopApiClient.echo().echo();
+//        shopApiClient.echo().assertEchoSuccessful(httpResponse);
+//    }
+//
+//    public String placeOrder(String sku, int quantity, String country) {
+//        var httpResponse = shopApiClient.orders().placeOrder(sku, String.valueOf(quantity), country);
+//        var response = shopApiClient.orders().assertOrderPlacedSuccessfully(httpResponse);
+//        return response.getOrderNumber();
+//    }
+//
+//    public GetOrderResponse getOrderDetails(String orderNumber) {
+//        var httpResponse = shopApiClient.orders().viewOrder(orderNumber);
+//        return shopApiClient.orders().assertOrderViewedSuccessfully(httpResponse);
+//    }
+//
+//    public void cancelOrder(String orderNumber) {
+//        var httpResponse = shopApiClient.orders().cancelOrder(orderNumber);
+//        shopApiClient.orders().assertOrderCancelledSuccessfully(httpResponse);
+//    }
+//
+//    public HttpResponse<String> attemptPlaceOrder(String sku, String quantity, String country) {
+//        return shopApiClient.orders().placeOrder(sku, quantity, country);
+//    }
+//
+//    public void assertOrderPlacementFailed(HttpResponse<String> httpResponse) {
+//        shopApiClient.orders().assertOrderPlacementFailed(httpResponse);
+//    }
+//
+//    public String getOrderPlacementErrorMessage(HttpResponse<String> httpResponse) {
+//        return shopApiClient.orders().getErrorMessage(httpResponse);
+//    }
+//
+//    @Override
+//    public void close() {
+//        if (shopApiClient != null) {
+//            shopApiClient.close();
+//        }
+//    }
 }
 

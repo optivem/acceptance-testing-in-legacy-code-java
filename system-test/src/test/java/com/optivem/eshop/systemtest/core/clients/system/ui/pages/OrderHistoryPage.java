@@ -2,6 +2,8 @@ package com.optivem.eshop.systemtest.core.clients.system.ui.pages;
 
 import com.optivem.eshop.systemtest.core.clients.commons.TestPageClient;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OrderHistoryPage {
@@ -61,12 +63,12 @@ public class OrderHistoryPage {
         return pageClient.readInputValue(QUANTITY_OUTPUT_SELECTOR);
     }
 
-    public String getUnitPrice() {
-        return pageClient.readInputValue(UNIT_PRICE_OUTPUT_SELECTOR);
+    public BigDecimal getUnitPrice() {
+        return pageClient.readInputDecimalValue(UNIT_PRICE_OUTPUT_SELECTOR);
     }
 
-    public String getOriginalPrice() {
-        return pageClient.readInputValue(ORIGINAL_PRICE_OUTPUT_SELECTOR);
+    public BigDecimal getOriginalPrice() {
+        return pageClient.readInputDecimalValue(ORIGINAL_PRICE_OUTPUT_SELECTOR);
     }
 
     public String getDiscountRate() {

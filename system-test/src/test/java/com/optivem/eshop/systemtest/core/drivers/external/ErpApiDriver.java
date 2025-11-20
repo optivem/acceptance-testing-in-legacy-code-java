@@ -2,8 +2,6 @@ package com.optivem.eshop.systemtest.core.drivers.external;
 
 import com.optivem.eshop.systemtest.core.clients.external.erp.ErpApiClient;
 
-import java.math.BigDecimal;
-
 public class ErpApiDriver implements AutoCloseable {
 
     private final ErpApiClient erpApiClient;
@@ -12,12 +10,12 @@ public class ErpApiDriver implements AutoCloseable {
         this.erpApiClient = erpApiClient;
     }
 
-    public void assertHomeSuccessful() {
+    public void toToErp() {
         var httpResponse = erpApiClient.home().home();
         erpApiClient.home().assertHomeSuccessful(httpResponse);
     }
 
-    public String createProduct(String baseSku, BigDecimal unitPrice) {
+    public String createProduct(String baseSku, String unitPrice) {
         return erpApiClient.products().createProduct(baseSku, unitPrice);
     }
 

@@ -4,6 +4,8 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitForSelectorState;
 
+import java.math.BigDecimal;
+
 public class TestPageClient {
     private final Page page;
     private final String baseUrl;
@@ -52,6 +54,11 @@ public class TestPageClient {
         var locator = page.locator(selector);
         wait(locator);
         return locator.inputValue();
+    }
+
+    public BigDecimal readInputDecimalValue(String selector) {
+        var inputValue = readInputValue(selector);
+        return new BigDecimal(inputValue);
     }
 
     public boolean isHidden(String selector) {

@@ -23,7 +23,7 @@ public class TaxApiSmokeTest {
 
     @Test
     void home_shouldReturn200OK() {
-        taxApiDriver.assertHomeSuccessful();
+        taxApiDriver.goToTaxation();
     }
 }
 
