@@ -16,20 +16,16 @@ public class ProductController {
         this.httpClient = httpClient;
     }
 
-    public String createProduct(String baseSku, String price) {
-        // Add UUID suffix to avoid duplicate IDs across test runs
-        var uniqueSku = baseSku + "-" + java.util.UUID.randomUUID().toString().substring(0, 8);
-
+    public void createProduct(String sku, String price) {
         var product = new CreateProductRequest();
-        product.setId(uniqueSku);
-        product.setTitle("Test product title for " + uniqueSku);
-        product.setDescription("Test product description for " + uniqueSku);
+        product.setId(sku);
+        product.setTitle("Test product title for " + sku);
+        product.setDescription("Test product description for " + sku);
         product.setPrice(price);
         product.setCategory("Test Category");
         product.setBrand("Test Brand");
 
         var httpResponse = httpClient.post(ENDPOINT, product);
         httpClient.assertCreated(httpResponse);
-        return uniqueSku;
     }
 }

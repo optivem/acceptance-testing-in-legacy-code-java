@@ -16,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class UiE2eTest extends BaseE2eTest {
 
     @Override
-    protected ShopDriver createDriver() {
-        return DriverFactory.createShopUiDriver();
+    protected ShopDriver createDriver(DriverFactory driverFactory) {
+        return driverFactory.createShopUiDriver();
     }
 
 //    @Test

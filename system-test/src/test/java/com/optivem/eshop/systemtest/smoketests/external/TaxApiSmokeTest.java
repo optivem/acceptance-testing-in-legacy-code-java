@@ -13,7 +13,8 @@ public class TaxApiSmokeTest {
 
     @BeforeEach
     void setUp() {
-        this.taxApiDriver = DriverFactory.createTaxApiDriver();
+        var driverFactory = new DriverFactory();
+        this.taxApiDriver = driverFactory.createTaxApiDriver();
     }
 
     @AfterEach

@@ -15,10 +15,11 @@ public abstract class BaseShopSmokeTest {
 
     @BeforeEach
     void setUp() {
-        shopDriver = createDriver();
+        var driverFactory = new DriverFactory();
+        shopDriver = createDriver(driverFactory);
     }
 
-    protected abstract ShopDriver createDriver();
+    protected abstract ShopDriver createDriver(DriverFactory driverFactory);
 
     @AfterEach
     void tearDown() {

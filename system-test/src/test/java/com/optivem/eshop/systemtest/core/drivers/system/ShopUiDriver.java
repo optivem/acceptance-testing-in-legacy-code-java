@@ -1,5 +1,6 @@
 package com.optivem.eshop.systemtest.core.drivers.system;
 
+import com.optivem.eshop.systemtest.core.context.Context;
 import com.optivem.eshop.systemtest.core.clients.system.ui.ShopUiClient;
 import com.optivem.eshop.systemtest.core.clients.system.ui.pages.HomePage;
 import com.optivem.eshop.systemtest.core.clients.system.ui.pages.NewOrderPage;
@@ -13,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ShopUiDriver implements ShopDriver {
     private final ShopUiClient client;
-    private final HashMap<String, String> orderNumbers;
+    private final Context context;
 
     private HomePage homePage;
     private NewOrderPage newOrderPage;
@@ -28,9 +29,9 @@ public class ShopUiDriver implements ShopDriver {
         ORDER_HISTORY
     }
 
-    public ShopUiDriver(String baseUrl) {
+    public ShopUiDriver(String baseUrl, Context context) {
         this.client = new ShopUiClient(baseUrl);
-        this.orderNumbers = new HashMap<>();
+        this.context = context;
     }
 
     @Override
@@ -59,16 +60,19 @@ public class ShopUiDriver implements ShopDriver {
     }
 
     @Override
-    public void placeOrder(String orderNumberAlias, String productId, String quantity, String country) {
+    public void placeOrder(String orderNumberAlias, String skuAlias, String quantity, String country) {
+
+        var skueValue = context.params().alias(skuAlias);
+
         ensureOnNewOrderPage();
-        newOrderPage.inputProductId(productId);
+        newOrderPage.inputProductId(skueValue);
         newOrderPage.inputQuantity(quantity);
         newOrderPage.inputCountry(country);
         newOrderPage.clickPlaceOrder();
 
-        var orderNumberOptional = newOrderPage.getOrderNumber();
+        var orderNumberValue = newOrderPage.getOrderNumber();
 
-        orderNumberOptional.ifPresent(orderNumber -> registerOrderNumber(orderNumberAlias, orderNumber));
+        orderNumberValue.ifPresent(v -> context.results().alias(orderNumberAlias, v));
     }
 
     @Override
@@ -86,27 +90,29 @@ public class ShopUiDriver implements ShopDriver {
     @Override
     public void viewOrderDetails(String orderNumberAlias) {
         ensureOnOrderHistoryPage();
-        var orderNumber = getOrderNumber(orderNumberAlias);
-        orderHistoryPage.inputOrderNumber(orderNumber);
+        var orderNumberValue = context.results().alias(orderNumberAlias);
+        orderHistoryPage.inputOrderNumber(orderNumberValue);
         orderHistoryPage.clickSearch();
         orderHistoryPage.waitForOrderDetails();
     }
 
     @Override
-    public void confirmOrderDetails(String orderNumberAlias, String productId, String quantity, String status) {
+    public void confirmOrderDetails(String orderNumberAlias, String skuAlias, String quantity, String status) {
         // TODO: VC: If on new order page, we then need to confirm the first original price before going to view the details
 //        var originalPrice = newOrderPage.extractOriginalPrice();
 //
 //        assertEquals(549.75, originalPrice, 0.01, "Original price should be $549.75 (5 × $109.95)");
 
+        var orderNumberValue = context.results().alias(orderNumberAlias);
+        var skuValue = context.params().alias(skuAlias);
+
         viewOrderDetails(orderNumberAlias);
 
-        var orderNumber = getOrderNumber(orderNumberAlias);
         var displayOrderNumber = orderHistoryPage.getOrderNumber();
-        assertEquals(orderNumber, displayOrderNumber, "Should display the order number: " + orderNumber);
+        assertEquals(orderNumberValue, displayOrderNumber, "Should display the order number: " + orderNumberValue);
 
         var displayProductId = orderHistoryPage.getProductId();
-        assertEquals(productId, displayProductId, "Should display product ID: " + productId);
+        assertEquals(skuValue, displayProductId, "Should display product ID: " + skuValue);
 
         var displayQuantity = orderHistoryPage.getQuantity();
         assertEquals(quantity, displayQuantity, "Should display quantity: " + quantity);
@@ -139,23 +145,6 @@ public class ShopUiDriver implements ShopDriver {
         var displayStatusAfterCancel = orderHistoryPage.getStatus();
         assertEquals("CANCELLED", displayStatusAfterCancel, "Status should be CANCELLED after cancellation");
         orderHistoryPage.assertCancelButtonNotVisible();
-    }
-
-    private void registerOrderNumber(String orderNumberAlias, String orderNumber) {
-        if(orderNumbers.containsKey(orderNumberAlias)) {
-            throw new IllegalStateException("Order number alias already registered: " + orderNumberAlias);
-        }
-
-        orderNumbers.put(orderNumberAlias, orderNumber);
-    }
-
-    private String getOrderNumber(String orderNumberAlias) {
-        var orderNumber = orderNumbers.get(orderNumberAlias);
-        if(orderNumber == null) {
-            throw new IllegalStateException("Order number alias not registered: " + orderNumberAlias);
-        }
-
-        return orderNumber;
     }
 
     @Override

@@ -13,7 +13,8 @@ public class ErpApiSmokeTest {
 
     @BeforeEach
     void setUp() {
-        this.erpApiDriver = DriverFactory.createErpApiDriver();
+        var driverFactory = new DriverFactory();
+        this.erpApiDriver = driverFactory.createErpApiDriver();
     }
 
     @AfterEach

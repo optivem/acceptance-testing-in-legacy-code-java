@@ -17,23 +17,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class ApiE2eTest extends BaseE2eTest {
 
     @Override
-    protected ShopDriver createDriver() {
-        return DriverFactory.createShopApiDriver();
+    protected ShopDriver createDriver(DriverFactory driverFactory) {
+        return driverFactory.createShopApiDriver();
     }
 
-//    @Test
-//    void placeOrder_shouldReturnOrderNumber() {
-//        var baseSku = "AUTO-PO-100";
-//        var unitPrice = new BigDecimal("199.99");
-//        var quantity = 5;
-//
-//        var sku = erpApiDriver.createProduct(baseSku, unitPrice);
-//
-//        var orderNumber = shopApiDriver.placeOrder(sku, quantity, "US");
-//
-//        assertNotNull(orderNumber, "Order number should not be null");
-//        assertTrue(orderNumber.startsWith("ORD-"), "Order number should start with ORD-");
-//    }
+
 
 //    @Test
 //    void getOrder_shouldReturnOrderDetails() {

@@ -1,5 +1,6 @@
 package com.optivem.eshop.systemtest.e2etests;
 
+import com.optivem.eshop.systemtest.core.context.Context;
 import com.optivem.eshop.systemtest.core.drivers.DriverCloser;
 import com.optivem.eshop.systemtest.core.drivers.DriverFactory;
 import com.optivem.eshop.systemtest.core.drivers.external.ErpApiDriver;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -24,12 +26,13 @@ public abstract class BaseE2eTest {
 
     @BeforeEach
     void setUp() {
-        shopDriver = createDriver();
-        erpApiDriver = DriverFactory.createErpApiDriver();
-        taxApiDriver = DriverFactory.createTaxApiDriver();
+        var driverFactory = new DriverFactory();
+        shopDriver = createDriver(driverFactory);
+        erpApiDriver = driverFactory.createErpApiDriver();
+        taxApiDriver = driverFactory.createTaxApiDriver();
     }
 
-    protected abstract ShopDriver createDriver();
+    protected abstract ShopDriver createDriver(DriverFactory driverFactory);
 
     @AfterEach
     void tearDown() {
@@ -40,9 +43,23 @@ public abstract class BaseE2eTest {
 
     @Test
     void shouldCalculateOriginalOrderPrice() {
-        erpApiDriver.createProduct("HP-15", "109.95");
-        shopDriver.placeOrder("ORD-1001", "HP-15", "5", "US");
-        shopDriver.confirmOrderDetails("ORD-1001", "HP-15", "5", "PLACED");
+        erpApiDriver.createProduct("ABC-123", "109.95");
+        shopDriver.placeOrder("ORD-1001", "ABC-123", "5", "US");
+        shopDriver.confirmOrderDetails("ORD-1001", "ABC-123", "5", "PLACED");
     }
+
+//    @Test
+//    void placeOrder_shouldReturnOrderNumber() {
+//        var baseSku = "AUTO-PO-100";
+//        var unitPrice = new BigDecimal("199.99");
+//        var quantity = 5;
+//
+//        var sku = erpApiDriver.createProduct(baseSku, unitPrice);
+//
+//        var orderNumber = shopApiDriver.placeOrder(sku, quantity, "US");
+//
+//        assertNotNull(orderNumber, "Order number should not be null");
+//        assertTrue(orderNumber.startsWith("ORD-"), "Order number should start with ORD-");
+//    }
 }
 
