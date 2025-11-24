@@ -43,7 +43,7 @@ public abstract class BaseE2eTest {
     }
 
     @Test
-    void shouldCalculateOriginalOrderPriceAndViewOtherOrderDetails() {
+    void shouldPlaceOrderAndCalculateOriginalPrice() {
         var sku = "ABC-" + UUID.randomUUID();
         erpApiDriver.createProduct(sku, "20.00");
         var result = shopDriver.placeOrder(sku, "5", "US");
@@ -56,45 +56,43 @@ public abstract class BaseE2eTest {
 
         shopDriver.confirmSubtotalPricePositive(orderNumber);
         shopDriver.confirmTotalPricePositive(orderNumber);
+    }
 
+    @Test
+    void shouldCancelOrder() {
+        var sku = "XYZ-" + UUID.randomUUID();
+        erpApiDriver.createProduct(sku, "50.00");
+        var result = shopDriver.placeOrder(sku, "2", "US");
+        assertTrue(result.isSuccess());
+
+        var orderNumber = result.getValue();
+        shopDriver.confirmOrderDetails(orderNumber, Optional.of(sku), Optional.of("2"), Optional.of("US"),
+                Optional.of("50.00"), Optional.of("100.00"), Optional.of("PLACED"));
+
+        shopDriver.cancelOrder(orderNumber);
+        shopDriver.confirmOrderCancelled(orderNumber);
+
+        shopDriver.confirmOrderDetails(orderNumber, Optional.of(sku), Optional.of("2"), Optional.of("US"),
+                Optional.of("50.00"), Optional.of("100.00"), Optional.of("CANCELLED"));
     }
 
 
 
-
-
-
+//
 //    @Test
-//    void shouldRetrieveOrderHistory() {
-//        var orderNumber = shopUiDriver.placeOrder("SAM-2020", "3", "US");
+//    void shouldRejectOrderWithNonExistentSku() {
+//        var homePage = shopUiDriver.openHomePage();
+//        var newOrderPage = homePage.clickNewOrder();
 //
-//        var orderHistoryPage = shopUiDriver.viewOrderDetails(orderNumber);
+//        newOrderPage.inputProductId("AUTO-NOTFOUND-999");
+//        newOrderPage.inputQuantity("5");
+//        newOrderPage.inputCountry("US");
+//        newOrderPage.clickPlaceOrder();
 //
-//        var displayOrderNumber = orderHistoryPage.getOrderNumber();
-//        var displayProductId = orderHistoryPage.getProductId();
-//        var displayCountry = orderHistoryPage.getCountry();
-//        var displayQuantity = orderHistoryPage.getQuantity();
-//        var displayUnitPrice = orderHistoryPage.getUnitPrice();
-//        var displayOriginalPrice = orderHistoryPage.getOriginalPrice();
-//        var displayDiscountRate = orderHistoryPage.getDiscountRate();
-//        var displayDiscountAmount = orderHistoryPage.getDiscountAmount();
-//        var displaySubtotalPrice = orderHistoryPage.getSubtotalPrice();
-//        var displayTaxRate = orderHistoryPage.getTaxRate();
-//        var displayTaxAmount = orderHistoryPage.getTaxAmount();
-//        var displayTotalPrice = orderHistoryPage.getTotalPrice();
+//        var errorMessageText = newOrderPage.readConfirmationMessageText();
 //
-
-//        assertEquals("US", displayCountry, "Should display country US");
-//        assertEquals("3", displayQuantity, "Should display quantity 3");
-//        assertEquals("$499.99", displayUnitPrice, "Should display unit price $499.99");
-//        assertEquals("$1499.97", displayOriginalPrice, "Should display original price $1499.97 (3 × $499.99)");
-//
-//        assertTrue(displayDiscountRate.endsWith("%"), "Should display discount rate with % symbol");
-//        assertTrue(displayDiscountAmount.startsWith("$"), "Should display discount amount with $ symbol");
-//        assertTrue(displaySubtotalPrice.startsWith("$"), "Should display subtotal price with $ symbol");
-//        assertTrue(displayTaxRate.endsWith("%"), "Should display tax rate with % symbol");
-//        assertTrue(displayTaxAmount.startsWith("$"), "Should display tax amount with $ symbol");
-//        assertTrue(displayTotalPrice.startsWith("$"), "Should display total price with $ symbol");
+//        assertTrue(errorMessageText.contains("Product does not exist for SKU"),
+//                "Error message should indicate product does not exist. Actual: " + errorMessageText);
 //    }
 }
 

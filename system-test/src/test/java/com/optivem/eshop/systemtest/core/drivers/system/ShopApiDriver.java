@@ -1,6 +1,7 @@
 package com.optivem.eshop.systemtest.core.drivers.system;
 
 import com.optivem.eshop.systemtest.core.clients.system.api.ShopApiClient;
+import com.optivem.eshop.systemtest.core.clients.system.api.dtos.GetOrderResponse;
 import com.optivem.eshop.systemtest.core.clients.system.api.dtos.OrderStatus;
 
 import java.math.BigDecimal;
@@ -102,16 +103,8 @@ public class ShopApiDriver implements ShopDriver {
     }
 
     @Override
-    public void confirmOrderStatusIsCancelled(String orderNumberAlias) {
-        var httpResponse = ordersViewed.get(orderNumberAlias);
-        var response = apiClient.orders().assertOrderViewedSuccessfully(httpResponse);
-        assertEquals(OrderStatus.CANCELLED, response.getStatus(), "Order status should be CANCELLED");
-    }
-
-    @Override
     public void confirmSubtotalPricePositive(String orderNumber) {
-        var httpResponse = apiClient.orders().viewOrder(orderNumber);
-        var response = apiClient.orders().assertOrderViewedSuccessfully(httpResponse);
+        var response = viewOrderDetailsSuccessfully(orderNumber);
 
         var discountRate = response.getDiscountRate();
         var discountAmount = response.getDiscountAmount();
@@ -130,10 +123,14 @@ public class ShopApiDriver implements ShopDriver {
                 .isGreaterThan(BigDecimal.ZERO);
     }
 
+    private GetOrderResponse viewOrderDetailsSuccessfully(String orderNumber) {
+        var httpResponse = apiClient.orders().viewOrder(orderNumber);
+        return apiClient.orders().assertOrderViewedSuccessfully(httpResponse);
+    }
+
     @Override
     public void confirmTotalPricePositive(String orderNumber) {
-        var httpResponse = apiClient.orders().viewOrder(orderNumber);
-        var response = apiClient.orders().assertOrderViewedSuccessfully(httpResponse);
+        var response = viewOrderDetailsSuccessfully(orderNumber);
 
         var taxRate = response.getTaxRate();
         var taxAmount = response.getTaxAmount();
@@ -170,8 +167,8 @@ public class ShopApiDriver implements ShopDriver {
     }
 
     @Override
-    public void confirmOrderCancelled(String orderNumberAlias) {
-        var httpResponse = ordersCancelled.get(orderNumberAlias);
+    public void confirmOrderCancelled(String orderNumber) {
+        var httpResponse = ordersCancelled.get(orderNumber);
         apiClient.orders().assertOrderCancelledSuccessfully(httpResponse);
     }
 

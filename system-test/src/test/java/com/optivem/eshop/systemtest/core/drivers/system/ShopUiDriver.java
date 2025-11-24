@@ -6,7 +6,6 @@ import com.optivem.eshop.systemtest.core.clients.system.ui.pages.NewOrderPage;
 import com.optivem.eshop.systemtest.core.clients.system.ui.pages.OrderHistoryPage;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -147,15 +146,10 @@ public class ShopUiDriver implements ShopDriver {
     }
 
     @Override
-    public void confirmOrderCancelled(String orderNumberAlias) {
-        var displayStatusAfterCancel = orderHistoryPage.getStatus();
-        assertEquals("CANCELLED", displayStatusAfterCancel, "Status should be CANCELLED after cancellation");
-        orderHistoryPage.assertCancelButtonNotVisible();
-    }
+    public void confirmOrderCancelled(String orderNumber) {
+        var cancellationMessage = orderHistoryPage.getNotificationMessage();
+        assertEquals("Order cancelled successfully!", cancellationMessage, "Should display cancellation success message");
 
-    // TODO: VJ: This is duplicate
-    @Override
-    public void confirmOrderStatusIsCancelled(String orderNumberAlias) {
         var displayStatusAfterCancel = orderHistoryPage.getStatus();
         assertEquals("CANCELLED", displayStatusAfterCancel, "Status should be CANCELLED after cancellation");
         orderHistoryPage.assertCancelButtonNotVisible();

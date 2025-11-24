@@ -10,7 +10,8 @@ public class OrderHistoryPage {
 
     private static final String ORDER_NUMBER_INPUT_SELECTOR = "[aria-label='Order Number']";
     private static final String SEARCH_BUTTON_SELECTOR = "[aria-label='Search']";
-    private static final String CONFIRMATION_MESSAGE_SELECTOR = "[role='alert']";
+    private static final String ORDER_DETAILS_CONTAINER_SELECTOR = "#orderDetails";
+    private static final String NOTIFICATION_ALERT_SELECTOR = "[role='alert'].notification";
     private static final String ORDER_NUMBER_OUTPUT_SELECTOR = "[aria-label='Display Order Number']";
     private static final String PRODUCT_ID_OUTPUT_SELECTOR = "[aria-label='Display Product ID']";
     private static final String COUNTRY_OUTPUT_SELECTOR = "[aria-label='Display Country']";
@@ -43,7 +44,7 @@ public class OrderHistoryPage {
     }
 
     public void waitForOrderDetails() {
-        var orderDetailsText = pageClient.readTextContent(CONFIRMATION_MESSAGE_SELECTOR);
+        var orderDetailsText = pageClient.readTextContent(ORDER_DETAILS_CONTAINER_SELECTOR);
         assertTrue(orderDetailsText.contains(ORDER_DETAILS_HEADING_TEXT), "Should display order details heading");
     }
 
@@ -107,6 +108,10 @@ public class OrderHistoryPage {
 
         pageClient.click(CANCEL_ORDER_OUTPUT_SELECTOR);
         pageClient.waitForHidden(CANCEL_ORDER_OUTPUT_SELECTOR);
+    }
+
+    public String getNotificationMessage() {
+        return pageClient.readTextContent(NOTIFICATION_ALERT_SELECTOR);
     }
 
     public void assertCancelButtonNotVisible() {

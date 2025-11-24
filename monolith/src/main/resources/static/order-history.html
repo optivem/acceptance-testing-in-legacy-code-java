@@ -50,6 +50,9 @@
         async function displayOrderDetails(orderNumber) {
             const resultDiv = document.getElementById('orderDetails');
             
+            // Save existing notifications
+            const existingNotifications = resultDiv.querySelectorAll('.notification');
+
             try {
                 const response = await fetch(`/api/orders/${orderNumber}`, {
                     method: 'GET'
@@ -118,6 +121,11 @@
                         </div>
                         ${cancelButtonHtml}
                     `;
+
+                    // Restore notifications after setting innerHTML
+                    existingNotifications.forEach(notif => {
+                        resultDiv.prepend(notif);
+                    });
                 } else {
                     resultDiv.textContent = 'Order not found. Please check the order number.';
                 }
@@ -134,9 +142,10 @@
                 });
                 
                 if (response.status === 204) {
-                    // Refresh order details to show updated status
-                    await displayOrderDetails(orderNumber);
+                    // Show notification first
                     showNotification('Order cancelled successfully!', false);
+                    // Then refresh order details to show updated status
+                    await displayOrderDetails(orderNumber);
                 } else {
                     showNotification('Failed to cancel order. Please try again.', true);
                 }
@@ -155,13 +164,6 @@
 
             // Prepend notification above order details
             resultDiv.prepend(notif);
-
-            // Remove notification after 3 seconds
-            setTimeout(() => {
-                if (notif.parentNode) {
-                    notif.remove();
-                }
-            }, 3000);
         }
     </script>
 </body>
