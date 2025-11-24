@@ -1,6 +1,5 @@
 package com.optivem.eshop.systemtest.e2etests;
 
-import com.optivem.eshop.systemtest.core.context.Context;
 import com.optivem.eshop.systemtest.core.drivers.DriverCloser;
 import com.optivem.eshop.systemtest.core.drivers.DriverFactory;
 import com.optivem.eshop.systemtest.core.drivers.external.ErpApiDriver;
@@ -14,9 +13,11 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class BaseE2eTest {
 
@@ -43,16 +44,64 @@ public abstract class BaseE2eTest {
 
     @Test
     void shouldCalculateOriginalOrderPrice() {
-        erpApiDriver.createProduct("ABC-123", "109.95");
-        shopDriver.placeOrder("ORD-1001", "ABC-123", "5", "US");
-        shopDriver.confirmOrderDetails("ORD-1001", "ABC-123", "5", "PLACED");
+        var sku = "ABC-" + UUID.randomUUID();
+        erpApiDriver.createProduct(sku, "109.95");
+        var result = shopDriver.placeOrder(sku, "5", "US");
+        assertTrue(result.isSuccess());
+        shopDriver.confirmOrderDetails(result.getValue(), Optional.of(sku), Optional.of("5"), Optional.empty());
     }
 
     @Test
     void shouldGenerateOrderNumber() {
-        erpApiDriver.createProduct("ABC-123", "199.99");
-        shopDriver.placeOrder("ORD-1001", "ABC-123", "5", "US");
-        shopDriver.confirmOrderNumberGeneratedWithPrefix("ORD-1001", "ORD-");
+        var sku = "ABC-" + UUID.randomUUID();
+        erpApiDriver.createProduct(sku, "199.99");
+        var result = shopDriver.placeOrder(sku, "5", "US");
+        assertTrue(result.isSuccess());
+        shopDriver.confirmOrderNumberGeneratedWithPrefix(result.getValue(), "ORD-");
     }
+
+    @Test
+    void shouldHaveStatusPlacedAfterOrderCreation() {
+        var sku = "ABC-" + UUID.randomUUID();
+        erpApiDriver.createProduct(sku, "29.99");
+        var result = shopDriver.placeOrder(sku, "2", "UK");
+        assertTrue(result.isSuccess());
+        shopDriver.confirmOrderDetails(result.getValue(), Optional.of(sku), Optional.empty(), Optional.of("PLACED"));
+    }
+
+
+//    @Test
+//    void shouldRetrieveOrderHistory() {
+//        var orderNumber = shopUiDriver.placeOrder("SAM-2020", "3", "US");
+//
+//        var orderHistoryPage = shopUiDriver.viewOrderDetails(orderNumber);
+//
+//        var displayOrderNumber = orderHistoryPage.getOrderNumber();
+//        var displayProductId = orderHistoryPage.getProductId();
+//        var displayCountry = orderHistoryPage.getCountry();
+//        var displayQuantity = orderHistoryPage.getQuantity();
+//        var displayUnitPrice = orderHistoryPage.getUnitPrice();
+//        var displayOriginalPrice = orderHistoryPage.getOriginalPrice();
+//        var displayDiscountRate = orderHistoryPage.getDiscountRate();
+//        var displayDiscountAmount = orderHistoryPage.getDiscountAmount();
+//        var displaySubtotalPrice = orderHistoryPage.getSubtotalPrice();
+//        var displayTaxRate = orderHistoryPage.getTaxRate();
+//        var displayTaxAmount = orderHistoryPage.getTaxAmount();
+//        var displayTotalPrice = orderHistoryPage.getTotalPrice();
+//
+//        assertEquals(orderNumber, displayOrderNumber, "Should display the order number: " + orderNumber);
+//        assertEquals("SAM-2020", displayProductId, "Should display SKU SAM-2020");
+//        assertEquals("US", displayCountry, "Should display country US");
+//        assertEquals("3", displayQuantity, "Should display quantity 3");
+//        assertEquals("$499.99", displayUnitPrice, "Should display unit price $499.99");
+//        assertEquals("$1499.97", displayOriginalPrice, "Should display original price $1499.97 (3 × $499.99)");
+//
+//        assertTrue(displayDiscountRate.endsWith("%"), "Should display discount rate with % symbol");
+//        assertTrue(displayDiscountAmount.startsWith("$"), "Should display discount amount with $ symbol");
+//        assertTrue(displaySubtotalPrice.startsWith("$"), "Should display subtotal price with $ symbol");
+//        assertTrue(displayTaxRate.endsWith("%"), "Should display tax rate with % symbol");
+//        assertTrue(displayTaxAmount.startsWith("$"), "Should display tax amount with $ symbol");
+//        assertTrue(displayTotalPrice.startsWith("$"), "Should display total price with $ symbol");
+//    }
 }
 

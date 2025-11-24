@@ -1,6 +1,5 @@
 package com.optivem.eshop.systemtest.core.drivers.system;
 
-import com.optivem.eshop.systemtest.core.context.Context;
 import com.optivem.eshop.systemtest.core.clients.system.ui.ShopUiClient;
 import com.optivem.eshop.systemtest.core.clients.system.ui.pages.HomePage;
 import com.optivem.eshop.systemtest.core.clients.system.ui.pages.NewOrderPage;
@@ -8,6 +7,7 @@ import com.optivem.eshop.systemtest.core.clients.system.ui.pages.OrderHistoryPag
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ShopUiDriver implements ShopDriver {
     private final ShopUiClient client;
-    private final Context context;
 
     private HomePage homePage;
     private NewOrderPage newOrderPage;
@@ -30,9 +29,8 @@ public class ShopUiDriver implements ShopDriver {
         ORDER_HISTORY
     }
 
-    public ShopUiDriver(String baseUrl, Context context) {
+    public ShopUiDriver(String baseUrl) {
         this.client = new ShopUiClient(baseUrl);
-        this.context = context;
     }
 
     @Override
@@ -61,23 +59,24 @@ public class ShopUiDriver implements ShopDriver {
     }
 
     @Override
-    public void placeOrder(String orderNumberAlias, String skuAlias, String quantity, String country) {
-
-        var skueValue = context.params().alias(skuAlias);
+    public Result<String> placeOrder(String sku, String quantity, String country) {
 
         ensureOnNewOrderPage();
-        newOrderPage.inputProductId(skueValue);
+        newOrderPage.inputProductId(sku);
         newOrderPage.inputQuantity(quantity);
         newOrderPage.inputCountry(country);
         newOrderPage.clickPlaceOrder();
 
         var orderNumberValue = newOrderPage.getOrderNumber();
+        return orderNumberValue
+                .map(Result::success)
+                .orElseGet(() -> Result.failure("Order placement failed, order number not generated"));
 
-        orderNumberValue.ifPresent(v -> context.results().alias(orderNumberAlias, v));
+//        orderNumberValue.ifPresent(v -> context.results().alias(orderNumberAlias, v));
     }
 
     @Override
-    public void confirmOrderPlaced(String orderNumberAlias, String prefix) {
+    public void confirmOrderPlaced(String orderNumber, String prefix) {
         newOrderPage.assertConfirmationMessageShown();
         assertTrue(newOrderPage.getOrderNumber().isPresent(), "Order number should be present after placing order");
         assertTrue(newOrderPage.getOriginalPrice().isPresent(), "Original price should be present after placing order");
@@ -88,35 +87,43 @@ public class ShopUiDriver implements ShopDriver {
         assertTrue(displayOrderNumber.get().startsWith(prefix), "Order number should start with prefix: " + prefix);
     }
 
-    @Override
-    public void viewOrderDetails(String orderNumberAlias) {
+
+    private void viewOrderDetails(String orderNumber) {
         ensureOnOrderHistoryPage();
-        var orderNumberValue = context.results().alias(orderNumberAlias);
-        orderHistoryPage.inputOrderNumber(orderNumberValue);
+        orderHistoryPage.inputOrderNumber(orderNumber);
         orderHistoryPage.clickSearch();
         orderHistoryPage.waitForOrderDetails();
     }
 
     @Override
-    public void confirmOrderDetails(String orderNumberAlias, String skuAlias, String quantity, String status) {
+    public void confirmOrderDetails(String orderNumber, Optional<String> sku, Optional<String> quantity, Optional<String> status) {
         // TODO: VC: If on new order page, we then need to confirm the first original price before going to view the details
 //        var originalPrice = newOrderPage.extractOriginalPrice();
 //
 //        assertEquals(549.75, originalPrice, 0.01, "Original price should be $549.75 (5 × $109.95)");
 
-        var orderNumberValue = context.results().alias(orderNumberAlias);
-        var skuValue = context.params().alias(skuAlias);
 
-        viewOrderDetails(orderNumberAlias);
+        viewOrderDetails(orderNumber);
 
         var displayOrderNumber = orderHistoryPage.getOrderNumber();
-        assertEquals(orderNumberValue, displayOrderNumber, "Should display the order number: " + orderNumberValue);
+        assertEquals(orderNumber, displayOrderNumber, "Should display the order number: " + orderNumber);
 
-        var displayProductId = orderHistoryPage.getProductId();
-        assertEquals(skuValue, displayProductId, "Should display product ID: " + skuValue);
+        if(sku.isPresent()) {
+            var displayProductId = orderHistoryPage.getProductId();
+            assertEquals(sku.get(), displayProductId, "Should display product ID: " + sku);
+        }
 
-        var displayQuantity = orderHistoryPage.getQuantity();
-        assertEquals(quantity, displayQuantity, "Should display quantity: " + quantity);
+        if(quantity.isPresent()) {
+            var displayQuantity = orderHistoryPage.getQuantity();
+            assertEquals(quantity.get(), displayQuantity, "Should display quantity: " + quantity);
+        }
+
+        if(status.isPresent()) {
+            var displayStatus = orderHistoryPage.getStatus();
+            assertEquals(status.get(), displayStatus, "Should display status: " + status);
+        }
+
+
 
         var displayUnitPrice = orderHistoryPage.getUnitPrice();
         assertTrue(displayUnitPrice.compareTo(BigDecimal.ZERO) > 0, "Unit price should be positive");
@@ -149,15 +156,13 @@ public class ShopUiDriver implements ShopDriver {
     }
 
     @Override
-    public void confirmOrderNumberGeneratedWithPrefix(String orderNumberAlias, String expectedPrefix) {
+    public void confirmOrderNumberGeneratedWithPrefix(String orderNumber, String expectedPrefix) {
         // NOTE: VJ: If we are on order creation page, then check order number generated correctly
 
-        var orderNumberValue = context.results().alias(orderNumberAlias);
-
-        viewOrderDetails(orderNumberAlias);
+        viewOrderDetails(orderNumber);
 
         var displayOrderNumber = orderHistoryPage.getOrderNumber();
-        assertEquals(orderNumberValue, displayOrderNumber, "Should display the order number: " + orderNumberValue);
+        assertEquals(orderNumber, displayOrderNumber, "Should display the order number: " + orderNumber);
 
         assertThat(displayOrderNumber)
                 .withFailMessage("Order number should start with prefix: " + expectedPrefix)

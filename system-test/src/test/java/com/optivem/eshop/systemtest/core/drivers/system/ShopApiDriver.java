@@ -1,27 +1,26 @@
 package com.optivem.eshop.systemtest.core.drivers.system;
 
-import com.optivem.eshop.systemtest.core.context.Context;
 import com.optivem.eshop.systemtest.core.clients.system.api.ShopApiClient;
 import com.optivem.eshop.systemtest.core.clients.system.api.dtos.OrderStatus;
 
 import java.math.BigDecimal;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
+import java.util.Objects;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ShopApiDriver implements ShopDriver {
     private final ShopApiClient apiClient;
-    private final Context context;
 
     private final HashMap<String, HttpResponse<String>> ordersPlaced;
     private final HashMap<String, HttpResponse<String>> ordersViewed;
     private final HashMap<String, HttpResponse<String>> ordersCancelled;
 
-    public ShopApiDriver(String baseUrl, Context context) {
+    public ShopApiDriver(String baseUrl) {
         this.apiClient = new ShopApiClient(baseUrl);
-        this.context = context;
         this.ordersPlaced = new HashMap<>();
         this.ordersViewed = new HashMap<>();
         this.ordersCancelled = new HashMap<>();
@@ -34,14 +33,17 @@ public class ShopApiDriver implements ShopDriver {
     }
 
     @Override
-    public void placeOrder(String orderNumberAlias, String skuAlias, String quantity, String country) {
-        var skuValue = context.params().alias(skuAlias);
+    public Result<String> placeOrder(String sku, String quantity, String country) {
 
-        var httpResponse = apiClient.orders().placeOrder(skuValue, quantity, country);
-        registerOrderResponse(ordersPlaced, orderNumberAlias, httpResponse);
+        var httpResponse = apiClient.orders().placeOrder(sku, quantity, country);
+//        registerOrderResponse(ordersPlaced, orderNumberAlias, httpResponse);
 
         var orderNumberValue = apiClient.orders().getOrderNumberIfOrderPlacedSuccessfully(httpResponse);
-        orderNumberValue.ifPresent(v -> context.results().alias(orderNumberAlias, v));
+        return Result.success(orderNumberValue.get());
+
+        // TODO: VJ: handle failure case too
+
+//        orderNumberValue.ifPresent(v -> context.results().alias(orderNumberAlias, v));
     }
 
     @Override
@@ -54,34 +56,34 @@ public class ShopApiDriver implements ShopDriver {
         assertTrue(response.getOrderNumber().startsWith(prefix), "Order number should start with prefix: " + prefix);
     }
 
-    // TODO: VJ: Consider deleting
-    @Override
-    public void viewOrderDetails(String orderNumberAlias) {
-        var orderNumberValue = context.results().alias(orderNumberAlias);
-        var httpResponse = apiClient.orders().viewOrder(orderNumberValue);
-        registerOrderResponse(ordersViewed, orderNumberAlias, httpResponse);
-    }
+//    // TODO: VJ: Consider deleting
+//    @Override
+//    public void viewOrderDetails(String orderNumberAlias) {
+//        var orderNumberValue = context.results().alias(orderNumberAlias);
+//        var
+//        registerOrderResponse(ordersViewed, orderNumberAlias, httpResponse);
+//    }
 
     @Override
-    public void confirmOrderDetails(String orderNumberAlias, String skuAlias, String quantity, String status) {
-
-
-        var httpResponse = ordersViewed.get(orderNumberAlias);
-
-        if(httpResponse == null) {
-            viewOrderDetails(orderNumberAlias);
-            httpResponse = ordersViewed.get(orderNumberAlias);
-        }
+    public void confirmOrderDetails(String orderNumber, Optional<String> sku, Optional<String> quantity, Optional<String> status) {
+        var httpResponse = apiClient.orders().viewOrder(orderNumber);
 
         var response = apiClient.orders().assertOrderViewedSuccessfully(httpResponse);
 
-        var orderNumberValue = context.results().alias(orderNumberAlias);
-        var skuValue = context.params().alias(skuAlias);
-
         // TODO: VJ: Confirm the order number value too
 
-        assertEquals(skuValue, response.getSku());
-        assertEquals(Integer.parseInt(quantity), response.getQuantity());
+        if(sku.isPresent()) {
+            assertEquals(sku.get(), response.getSku());
+        }
+
+        if(quantity.isPresent()) {
+            assertEquals(Integer.parseInt(quantity.get()), response.getQuantity());
+        }
+
+        if(status.isPresent()) {
+            assertEquals(OrderStatus.valueOf(status.get()), response.getStatus(), "Order status should match");
+        }
+
 
         var unitPrice = response.getUnitPrice();
         assertNotNull(unitPrice, "Unit price should not be null");
@@ -100,11 +102,10 @@ public class ShopApiDriver implements ShopDriver {
     }
 
     @Override
-    public void confirmOrderNumberGeneratedWithPrefix(String orderNumberAlias, String expectedPrefix) {
+    public void confirmOrderNumberGeneratedWithPrefix(String orderNumber, String expectedPrefix) {
         // TODO: VJ: Check the generated order number prefix when placing the order
 
-        var orderNumberValue = context.results().alias(orderNumberAlias);
-        assertThat(orderNumberValue)
+        assertThat(orderNumber)
                 .withFailMessage("Order number should start with prefix: " + expectedPrefix)
                 .startsWith(expectedPrefix);
 
@@ -112,10 +113,9 @@ public class ShopApiDriver implements ShopDriver {
     }
 
     @Override
-    public void cancelOrder(String orderNumberAlias) {
-        var orderNumberValue = context.results().alias(orderNumberAlias);
-        var httpResponse = apiClient.orders().cancelOrder(orderNumberValue);
-        registerOrderResponse(ordersCancelled, orderNumberAlias, httpResponse);
+    public void cancelOrder(String orderNumber) {
+        var httpResponse = apiClient.orders().cancelOrder(orderNumber);
+        registerOrderResponse(ordersCancelled, orderNumber, httpResponse);
     }
 
     @Override
