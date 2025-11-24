@@ -23,29 +23,7 @@ class UiE2eTest extends BaseE2eTest {
 
 
 
-//
-//    private static Stream<Arguments> provideEmptySkuValues() {
-//        return Stream.of(
-//                Arguments.of(""),      // Empty string
-//                Arguments.of("   ")    // Whitespace string
-//        );
-//    }
-//
-//    @ParameterizedTest
-//    @MethodSource("provideEmptySkuValues")
-//    void shouldRejectOrderWithEmptySku(String skuValue) {
-//        var homePage = shopUiDriver.openHomePage();
-//        var newOrderPage = homePage.clickNewOrder();
-//
-//        newOrderPage.inputProductId(skuValue);
-//        newOrderPage.inputQuantity("5");
-//        newOrderPage.clickPlaceOrder();
-//
-//        var errorMessageText = newOrderPage.readConfirmationMessageText();
-//
-//        assertTrue(errorMessageText.contains("SKU must not be empty"),
-//                "Error message should be 'SKU must not be empty' for SKU: '" + skuValue + "'. Actual: " + errorMessageText);
-//    }
+
 //
 //    private static Stream<Arguments> provideEmptyQuantityValues() {
 //        return Stream.of(

@@ -11,10 +11,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -93,20 +97,20 @@ public abstract class BaseE2eTest {
     }
 
 
-//
-//    @Test
-//    void shouldRejectOrderWithNegativeQuantity() {
-//        var homePage = shopUiDriver.openHomePage();
-//        var newOrderPage = homePage.clickNewOrder();
-//
-//        newOrderPage.inputProductId("HP-15");
-//        newOrderPage.inputQuantity("-5");
-//        newOrderPage.clickPlaceOrder();
-//
-//        var errorMessageText = newOrderPage.readConfirmationMessageText();
-//
-//        assertTrue(errorMessageText.contains("Quantity must be positive"),
-//                "Error message should indicate quantity must be positive. Actual: " + errorMessageText);
-//    }
+    private static Stream<Arguments> provideEmptySkuValues() {
+        return Stream.of(
+                Arguments.of(""),      // Empty string
+                Arguments.of("   ")    // Whitespace string
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideEmptySkuValues")
+    void shouldRejectOrderWithEmptySku(String sku) {
+        var result = shopDriver.placeOrder(sku, "5", "US");
+        assertTrue(result.isFailure());
+        assertEquals("SKU must not be empty", result.getError());
+    }
+
 }
 
