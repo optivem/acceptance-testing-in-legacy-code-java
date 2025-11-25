@@ -17,14 +17,7 @@ class UiE2eTest extends BaseE2eTest {
 
     @Override
     protected ShopDriver createDriver(DriverFactory driverFactory) {
-        return driverFactory.createShopUiDriver();
+        return DriverFactory.createShopUiDriver();
     }
-
-
-
-
-
-
-
 }
 
