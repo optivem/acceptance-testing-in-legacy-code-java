@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -84,7 +85,7 @@ public abstract class BaseE2eTest {
     void shouldRejectOrderWithNonExistentSku() {
         var result = shopDriver.placeOrder("NON-EXISTENT-SKU-12345", "5", "US");
         assertTrue(result.isFailure());
-        assertEquals("Product does not exist for SKU: NON-EXISTENT-SKU-12345", result.getError());
+        assertThat(result.getErrors()).contains("Product does not exist for SKU: NON-EXISTENT-SKU-12345");
     }
 
     @Test
@@ -93,7 +94,7 @@ public abstract class BaseE2eTest {
         erpApiDriver.createProduct(sku, "30.00");
         var result = shopDriver.placeOrder(sku, "-3", "US");
         assertTrue(result.isFailure());
-        assertEquals("Quantity must be positive", result.getError());
+        assertThat(result.getErrors()).contains("Quantity must be positive");
     }
 
 
@@ -109,8 +110,37 @@ public abstract class BaseE2eTest {
     void shouldRejectOrderWithEmptySku(String sku) {
         var result = shopDriver.placeOrder(sku, "5", "US");
         assertTrue(result.isFailure());
-        assertEquals("SKU must not be empty", result.getError());
+        assertThat(result.getErrors()).contains("SKU must not be empty");
     }
+
+
+    // TODO: VJ: CONTINUE HERE
+//    private static Stream<Arguments> provideEmptyQuantityValues() {
+//        return Stream.of(
+//                Arguments.of(""),      // Empty string
+//                Arguments.of("   ")    // Whitespace string
+//        );
+//    }
+//
+//    @ParameterizedTest
+//    @MethodSource("provideEmptyQuantityValues")
+//    void shouldRejectOrderWithEmptyQuantity(String emptyQuantity) {
+//        var result = shopDriver.placeOrder("some-sku", emptyQuantity, "US");
+//        assertTrue(result.isFailure());
+//        assertEquals("SKU must not be empty", result.getError());
+//
+//        var homePage = shopUiDriver.openHomePage();
+//        var newOrderPage = homePage.clickNewOrder();
+//
+//        newOrderPage.inputProductId(sku);
+//        newOrderPage.inputQuantity(quantityValue);
+//        newOrderPage.clickPlaceOrder();
+//
+//        var errorMessageText = newOrderPage.readConfirmationMessageText();
+//
+//        assertTrue(errorMessageText.contains("Quantity must be an integer") || errorMessageText.contains("Quantity must be greater than 0"),
+//                "Error message should indicate quantity validation error for quantity: '" + quantityValue + "'. Actual: " + errorMessageText);
+//    }
 
 }
 

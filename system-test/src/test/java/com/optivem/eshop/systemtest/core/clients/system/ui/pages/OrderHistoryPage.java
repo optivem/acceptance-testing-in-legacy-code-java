@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class OrderHistoryPage {
+public class OrderHistoryPage extends BasePage {
 
     private static final String ORDER_NUMBER_INPUT_SELECTOR = "[aria-label='Order Number']";
     private static final String SEARCH_BUTTON_SELECTOR = "[aria-label='Search']";
@@ -29,10 +29,8 @@ public class OrderHistoryPage {
 
     private static final String ORDER_DETAILS_HEADING_TEXT = "Order Details";
 
-    private final TestPageClient pageClient;
-
     public OrderHistoryPage(TestPageClient pageClient) {
-        this.pageClient = pageClient;
+        super(pageClient);
     }
 
     public void inputOrderNumber(String orderNumber) {

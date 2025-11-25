@@ -50,6 +50,16 @@ public class TestPageClient {
         return locator.textContent();
     }
 
+    public boolean exists(String selector) {
+        var locator = page.locator(selector);
+        try {
+            wait(locator);
+            return locator.count() > 0;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public String readInputValue(String selector) {
         var locator = page.locator(selector);
         wait(locator);

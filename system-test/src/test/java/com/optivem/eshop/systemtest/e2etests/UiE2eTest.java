@@ -24,34 +24,7 @@ class UiE2eTest extends BaseE2eTest {
 
 
 
-//
-//    private static Stream<Arguments> provideEmptyQuantityValues() {
-//        return Stream.of(
-//                Arguments.of(""),      // Empty string
-//                Arguments.of("   ")    // Whitespace string
-//        );
-//    }
-//
-//    @ParameterizedTest
-//    @MethodSource("provideEmptyQuantityValues")
-//    void shouldRejectOrderWithEmptyQuantity(String quantityValue) {
-//        var baseSku = "AUTO-EQ-500";
-//        var unitPrice = new BigDecimal("175.00");
-//
-//        var sku = erpApiDriver.createProduct(baseSku, unitPrice);
-//
-//        var homePage = shopUiDriver.openHomePage();
-//        var newOrderPage = homePage.clickNewOrder();
-//
-//        newOrderPage.inputProductId(sku);
-//        newOrderPage.inputQuantity(quantityValue);
-//        newOrderPage.clickPlaceOrder();
-//
-//        var errorMessageText = newOrderPage.readConfirmationMessageText();
-//
-//        assertTrue(errorMessageText.contains("Quantity must be an integer") || errorMessageText.contains("Quantity must be greater than 0"),
-//                "Error message should indicate quantity validation error for quantity: '" + quantityValue + "'. Actual: " + errorMessageText);
-//    }
+
 //
 //    private static Stream<Arguments> provideInvalidQuantityValues() {
 //        return Stream.of(

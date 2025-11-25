@@ -9,9 +9,20 @@
             margin-top: 10px;
             padding: 10px;
             display: none;
+            border-radius: 4px;
         }
         #orderResult.show {
             display: block;
+        }
+        #orderResult.success {
+            background: #e6ffed;
+            color: #0b6623;
+            border: 1px solid #b7f0c4;
+        }
+        #orderResult.error {
+            background: #ffe6e6;
+            color: #8b0000;
+            border: 1px solid #f5b7b7;
         }
     </style>
 </head>
@@ -40,10 +51,27 @@
     <div role="alert" id="orderResult"></div>
 
     <script>
+        const resultDiv = document.getElementById('orderResult');
+        
+        function showSuccess(message) {
+            resultDiv.textContent = message;
+            resultDiv.classList.remove('error');
+            resultDiv.classList.add('success', 'show');
+        }
+        
+        function showError(message) {
+            resultDiv.textContent = message;
+            resultDiv.classList.remove('success');
+            resultDiv.classList.add('error', 'show');
+        }
+        
+        function clearMessage() {
+            resultDiv.textContent = '';
+            resultDiv.classList.remove('show', 'success', 'error');
+        }
+        
         document.getElementById('orderForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
-            const resultDiv = document.getElementById('orderResult');
 
             try {
                 const productIdValue = document.getElementById('productId').value;
@@ -51,14 +79,12 @@
                 const countryValue = document.getElementById('country').value;
 
                 // Clear previous messages and hide
-                resultDiv.textContent = '';
-                resultDiv.classList.remove('show');
+                clearMessage();
 
                 // Validate that quantity is an integer
                 const quantityNum = parseFloat(quantityValue);
                 if (isNaN(quantityNum) || !Number.isInteger(quantityNum)) {
-                    resultDiv.textContent = 'Quantity must be an integer';
-                    resultDiv.classList.add('show');
+                    showError('Quantity must be an integer');
                     return;
                 }
 
@@ -68,22 +94,19 @@
 
                 // Validate that SKU is not empty
                 if (!sku) {
-                    resultDiv.textContent = 'SKU must not be empty';
-                    resultDiv.classList.add('show');
+                    showError('SKU must not be empty');
                     return;
                 }
 
                 // Validate that quantity is positive
                 if (quantity <= 0) {
-                    resultDiv.textContent = 'Quantity must be positive';
-                    resultDiv.classList.add('show');
+                    showError('Quantity must be positive');
                     return;
                 }
 
                 // Validate that country is not empty
                 if (!country) {
-                    resultDiv.textContent = 'Country must not be empty';
-                    resultDiv.classList.add('show');
+                    showError('Country must not be empty');
                     return;
                 }
 
@@ -118,16 +141,14 @@
                         console.log('Total price value:', orderDetails.totalPrice);
 
                         if (orderDetails.originalPrice !== undefined && orderDetails.originalPrice !== null) {
-                            resultDiv.textContent = 'Success! Order has been created with Order Number ' + order.orderNumber + ' and Original Price $' + orderDetails.originalPrice.toFixed(2);
+                            showSuccess('Success! Order has been created with Order Number ' + order.orderNumber + ' and Original Price $' + orderDetails.originalPrice.toFixed(2));
                         } else {
-                            resultDiv.textContent = 'Success! Order has been created with Order Number ' + order.orderNumber;
+                            showSuccess('Success! Order has been created with Order Number ' + order.orderNumber);
                             console.warn('Original price is missing from order details');
                         }
-                        resultDiv.classList.add('show');
                     } else {
                         console.error('Failed to fetch order details, status:', orderDetailsResponse.status);
-                        resultDiv.textContent = 'Order created but failed to fetch details. Order Number: ' + order.orderNumber;
-                        resultDiv.classList.add('show');
+                        showError('Order created but failed to fetch details. Order Number: ' + order.orderNumber);
                     }
                 } else if (response.status === 404) {
                     // Handle not found errors (e.g., product doesn't exist)
@@ -137,18 +158,16 @@
 
                         // Check if it's RFC 7807 ProblemDetail format
                         if (errorData.detail) {
-                            resultDiv.textContent = errorData.detail;
+                            showError(errorData.detail);
                         } else if (errorData.message) {
                             // Legacy format
-                            resultDiv.textContent = errorData.message;
+                            showError(errorData.message);
                         } else {
-                            resultDiv.textContent = 'Resource not found.';
+                            showError('Resource not found.');
                         }
-                        resultDiv.classList.add('show');
                     } catch (e) {
                         console.error('Error parsing 404 response:', e);
-                        resultDiv.textContent = 'Resource not found.';
-                        resultDiv.classList.add('show');
+                        showError('Resource not found.');
                     }
                 } else if (response.status === 400 || response.status === 422) {
                     // Handle parsing errors (400) and validation errors (422)
@@ -156,29 +175,30 @@
                         const errorData = await response.json();
                         console.log('Validation error data:', errorData);
 
+                        let displayMessage = '';
+                        
                         // Check if it's RFC 7807 ProblemDetail format
                         if (errorData.detail) {
-                            // If there are field-level errors, show them
+                            // Start with the detail message
+                            displayMessage = errorData.detail;
+                            
+                            // If there are field-level errors, append them
                             if (errorData.errors && errorData.errors.length > 0) {
-                                const errorMessages = errorData.errors.map(e => e.message).join(', ');
-                                resultDiv.textContent = errorMessages;
-                            } else {
-                                // Otherwise show the detail message
-                                resultDiv.textContent = errorData.detail;
+                                const fieldErrors = errorData.errors.map(e => `${e.field}: ${e.message}`).join('; ');
+                                displayMessage += '\n' + fieldErrors;
                             }
                         } else if (errorData.message) {
                             // Legacy simple error format
-                            resultDiv.textContent = errorData.message;
+                            displayMessage = errorData.message;
                         } else {
                             // Legacy map of field errors
-                            const errorMessages = Object.values(errorData).join(', ');
-                            resultDiv.textContent = errorMessages;
+                            displayMessage = Object.entries(errorData).map(([field, msg]) => `${field}: ${msg}`).join('; ');
                         }
-                        resultDiv.classList.add('show');
+                        
+                        showError(displayMessage);
                     } catch (e) {
                         console.error('Error parsing validation error response:', e);
-                        resultDiv.textContent = 'Validation error. Please check your input.';
-                        resultDiv.classList.add('show');
+                        showError('Validation error. Please check your input.');
                     }
                 } else {
                     console.error('Order creation failed with status:', response.status);
@@ -191,15 +211,13 @@
                         console.error('Could not read response body:', e);
                     });
 
-                    resultDiv.textContent = 'Error placing order. Please try again. (Status: ' + response.status + ')';
-                    resultDiv.classList.add('show');
+                    showError('Error placing order. Please try again. (Status: ' + response.status + ')');
                 }
             } catch (error) {
                 console.error('Exception during order creation:', error);
                 console.error('Error message:', error.message);
                 console.error('Error stack:', error.stack);
-                resultDiv.textContent = 'Error placing order. Please try again. (Exception: ' + error.message + ')';
-                resultDiv.classList.add('show');
+                showError('Error placing order. Please try again. (Exception: ' + error.message + ')');
             }
         });
     </script>

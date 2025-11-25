@@ -45,8 +45,8 @@ public class ShopApiDriver implements ShopDriver {
             return Result.success(orderNumber.get());
         }
 
-        var errorMessage = apiClient.getErrorMessage(httpResponse);
-        return Result.failure(errorMessage);
+        var errorMessages = apiClient.getErrorMessages(httpResponse);
+        return Result.failure(errorMessages);
     }
 
     @Override

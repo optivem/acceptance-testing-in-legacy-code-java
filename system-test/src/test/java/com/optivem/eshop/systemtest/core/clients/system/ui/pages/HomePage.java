@@ -2,15 +2,13 @@ package com.optivem.eshop.systemtest.core.clients.system.ui.pages;
 
 import com.optivem.eshop.systemtest.core.clients.commons.TestPageClient;
 
-public class HomePage {
+public class HomePage extends BasePage {
 
     private static final String SHOP_BUTTON_SELECTOR = "a[href='/shop.html']";
     private static final String ORDER_HISTORY_BUTTON_SELECTOR = "a[href='/order-history.html']";
 
-    private final TestPageClient pageClient;
-
     public HomePage(TestPageClient pageClient) {
-        this.pageClient = pageClient;
+        super(pageClient);
     }
 
     public NewOrderPage clickNewOrder() {

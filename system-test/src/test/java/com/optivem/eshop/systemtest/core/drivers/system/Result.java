@@ -2,6 +2,7 @@ package com.optivem.eshop.systemtest.core.drivers.system;
 
 import lombok.Getter;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -10,20 +11,20 @@ public class Result<T> {
     @Getter
     private final boolean success;
     private final T value;
-    private final String error;
+    private final Collection<String> errors;
 
-    private Result(boolean success, T value, String error) {
+    private Result(boolean success, T value, Collection<String> errors) {
         this.success = success;
         this.value = value;
-        this.error = error;
+        this.errors = errors;
     }
 
     public static <T> Result<T> success(T value) {
         return new Result<>(true, value, null);
     }
 
-    public static <T> Result<T> failure(String error) {
-        return new Result<>(false, null, error);
+    public static <T> Result<T> failure(Collection<String> errors) {
+        return new Result<>(false, null, errors);
     }
 
     public static Result<Void> success() {
@@ -36,24 +37,15 @@ public class Result<T> {
 
     public T getValue() {
         if (!success) {
-            throw new IllegalStateException("Cannot get value from a failed result. Error: " + error);
+            throw new IllegalStateException("Cannot get value from a failed result");
         }
         return value;
     }
 
-    public String getError() {
+    public Collection<String> getErrors() {
         if (success) {
             throw new IllegalStateException("Cannot get error from a successful result");
         }
-        return error;
-    }
-
-    @Override
-    public String toString() {
-        if (success) {
-            return "Success(" + value + ")";
-        } else {
-            return "Failure(" + error + ")";
-        }
+        return errors;
     }
 }

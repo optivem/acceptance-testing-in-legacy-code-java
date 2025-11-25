@@ -72,7 +72,7 @@ public class ShopUiDriver implements ShopDriver {
         }
 
         // If no order number, read the error message from the page
-        var errorMessage = newOrderPage.readConfirmationMessageText();
+        var errorMessage = newOrderPage.readErrorNotification();
         return Result.failure(errorMessage);
 
 //        orderNumberValue.ifPresent(v -> context.results().alias(orderNumberAlias, v));
@@ -80,7 +80,7 @@ public class ShopUiDriver implements ShopDriver {
 
     @Override
     public void confirmOrderPlaced(String orderNumber, String prefix) {
-        newOrderPage.assertConfirmationMessageShown();
+        newOrderPage.assertSuccessConfirmationMessageShown();
         assertTrue(newOrderPage.getOrderNumber().isPresent(), "Order number should be present after placing order");
         assertTrue(newOrderPage.getOriginalPrice().isPresent(), "Original price should be present after placing order");
         assertTrue(newOrderPage.getOriginalPrice().get().compareTo(BigDecimal.ZERO) > 0, "Original price should be positive after placing order");

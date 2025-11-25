@@ -6,24 +6,22 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class NewOrderPage {
+public class NewOrderPage extends BasePage {
 
     private static final String PRODUCT_ID_INPUT_SELECTOR = "[aria-label=\"Product ID\"]";
     private static final String QUANTITY_INPUT_SELECTOR = "[aria-label=\"Quantity\"]";
     private static final String COUNTRY_INPUT_SELECTOR = "[aria-label=\"Country\"]";
     private static final String PLACE_ORDER_BUTTONG_SELECTOR = "[aria-label=\"Place Order\"]";
-    private static final String CONFIRMATION_MESSAGE_SELECTOR = "[role='alert']";
     private static final String ORDER_NUMBER_REGEX = "Success! Order has been created with Order Number ([\\w-]+)";
     private static final int ORDER_NUMBER_MATCHER_GROUP = 1;
     private static final String ORIGINAL_PRICE_REGEX = "Original Price \\$(\\d+(?:\\.\\d{2})?)";
     private static final int ORIGINAL_PRICE_MATCHER_GROUP = 1;
 
-    private final TestPageClient pageClient;
-
     public NewOrderPage(TestPageClient pageClient) {
-        this.pageClient = pageClient;
+        super(pageClient);
     }
 
     public void inputProductId(String productId) {
@@ -42,12 +40,21 @@ public class NewOrderPage {
         pageClient.click(PLACE_ORDER_BUTTONG_SELECTOR);
     }
 
-    public String readConfirmationMessageText() {
-        return pageClient.readTextContent(CONFIRMATION_MESSAGE_SELECTOR);
-    }
+    // TODO: VJ: This should be global since it's not specific to pages
+//    public List<String> readNotificationMessages() {
+//        var text = pageClient.readTextContent(NOTIFICATION_ALERT_SELECTOR);
+//        return text.lines().toList();
+//    }
+
+
 
     public Optional<String> getOrderNumber() {
-        var confirmationMessageText = readConfirmationMessageText();
+        if(!hasSuccessNotification()) {
+            return Optional.empty();
+        }
+
+        var confirmationMessageText = readSuccessNotification();
+
         var pattern = Pattern.compile(ORDER_NUMBER_REGEX);
         var matcher = pattern.matcher(confirmationMessageText);
 
@@ -60,7 +67,12 @@ public class NewOrderPage {
     }
 
     public Optional<BigDecimal> getOriginalPrice() {
-        var confirmationMessageText = readConfirmationMessageText();
+        if(!hasSuccessNotification()) {
+            return Optional.empty();
+        }
+
+        var confirmationMessageText = readSuccessNotification();
+
         var pattern = Pattern.compile(ORIGINAL_PRICE_REGEX);
         var matcher = pattern.matcher(confirmationMessageText);
 
@@ -73,9 +85,9 @@ public class NewOrderPage {
         return Optional.of(result);
     }
 
-    public void assertConfirmationMessageShown() {
-        var confirmationMessageText = readConfirmationMessageText();
-        assertTrue(!confirmationMessageText.isBlank(), "Confirmation message should be shown.");
+    public void assertSuccessConfirmationMessageShown() {
+        var confirmationMessageText = readSuccessNotification();
+        assertThat(confirmationMessageText).isNotEmpty();
     }
 }
 

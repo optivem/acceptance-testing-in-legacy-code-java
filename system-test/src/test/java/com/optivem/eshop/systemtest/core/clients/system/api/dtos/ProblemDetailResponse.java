@@ -3,7 +3,6 @@ package com.optivem.eshop.systemtest.core.clients.system.api.dtos;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Map;
 
 @Data
 public class ProblemDetailResponse {
@@ -13,6 +12,6 @@ public class ProblemDetailResponse {
     private String detail;
     private String instance;
     private String timestamp;
-    private List<Map<String, Object>> errors;
+    private List<ValidationError> errors;
 }
 

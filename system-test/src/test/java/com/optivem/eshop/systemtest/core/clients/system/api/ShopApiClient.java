@@ -7,7 +7,8 @@ import com.optivem.eshop.systemtest.core.clients.system.api.dtos.ProblemDetailRe
 
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ShopApiClient implements AutoCloseable {
 
@@ -31,37 +32,22 @@ public class ShopApiClient implements AutoCloseable {
         return orderController;
     }
 
-    public String getErrorMessage(HttpResponse<String> httpResponse) {
-        var responseBody = httpResponse.body();
+    public List<String> getErrorMessages(HttpResponse<String> httpResponse) {
+        var problemDetail = testHttpClient.readBody(httpResponse, ProblemDetailResponse.class);
 
-        // Try to parse as ProblemDetail (RFC 7807 format)
-        try {
-            var problemDetail = testHttpClient.readBody(httpResponse, ProblemDetailResponse.class);
+        var errors = new ArrayList<String>();
 
-            // If there are field-level validation errors, extract the first one
-            if (problemDetail.getErrors() != null && !problemDetail.getErrors().isEmpty()) {
-                Map<String, Object> firstError = problemDetail.getErrors().get(0);
-                Object message = firstError.get("message");
-                if (message != null) {
-                    return message.toString();
-                }
-            }
-
-            // Otherwise return the detail field
-            if (problemDetail.getDetail() != null) {
-                return problemDetail.getDetail();
-            }
-
-            // Fallback to title if detail is null
-            if (problemDetail.getTitle() != null) {
-                return problemDetail.getTitle();
-            }
-        } catch (Exception e) {
-            // Not a ProblemDetail format
+        if (problemDetail.getDetail() != null) {
+            errors.add(problemDetail.getDetail());
         }
 
-        // Fallback: return the raw response body
-        return responseBody;
+        if(problemDetail.getErrors() != null) {
+            for (var error : problemDetail.getErrors()) {
+                errors.add(error.getMessage());
+            }
+        }
+
+        return errors;
     }
 
     @Override
