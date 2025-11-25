@@ -1,0 +1,44 @@
+/* Common styles shared across all pages */
+
+#orderResult {
+    margin-top: 10px;
+    padding: 10px;
+    display: none;
+    border-radius: 4px;
+}
+
+#orderResult.show {
+    display: block;
+}
+
+#orderResult.success {
+    background: #e6ffed;
+    color: #0b6623;
+    border: 1px solid #b7f0c4;
+}
+
+#orderResult.error {
+    background: #ffe6e6;
+    color: #8b0000;
+    border: 1px solid #f5b7b7;
+}
+
+.notification {
+    padding: 12px;
+    margin-bottom: 16px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.notification.success {
+    background: #e6ffed;
+    color: #0b6623;
+    border: 1px solid #b7f0c4;
+}
+
+.notification.error {
+    background: #ffe6e6;
+    color: #8b0000;
+    border: 1px solid #f5b7b7;
+}
+

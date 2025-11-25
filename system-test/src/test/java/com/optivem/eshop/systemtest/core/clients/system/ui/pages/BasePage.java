@@ -16,6 +16,7 @@ public abstract class BasePage {
     }
 
     public Boolean hasSuccessNotification() {
+        waitForNotification();
         if(pageClient.exists(SUCCESS_NOTIFICATION_SELECTOR)) {
             return true;
         }
@@ -23,6 +24,11 @@ public abstract class BasePage {
             return false;
         }
         return null;
+    }
+
+    public void waitForNotification() {
+        pageClient.getPage().waitForSelector("[role='alert'].show",
+            new com.microsoft.playwright.Page.WaitForSelectorOptions().setTimeout(5000));
     }
 
     public String readSuccessNotification() {
