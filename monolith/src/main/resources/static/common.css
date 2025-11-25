@@ -8,13 +8,6 @@
     font-weight: 600;
 }
 
-#orderResult.notification {
-    display: none;
-}
-
-#orderResult.notification.show {
-    display: block;
-}
 
 .notification.success {
     background: #e6ffed;

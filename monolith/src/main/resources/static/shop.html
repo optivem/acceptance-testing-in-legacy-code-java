@@ -28,7 +28,7 @@
         <button type="submit" aria-label="Place Order">Place Order</button>
     </form>
     
-    <div role="alert" id="orderResult" class="notification"></div>
+    <div id="notifications" aria-live="polite"></div>
 
     <script src="/common.js"></script>
     <script>
@@ -40,26 +40,24 @@
                 const quantityValue = document.getElementById('quantity').value;
                 const countryValue = document.getElementById('country').value;
 
-                // Clear previous messages and hide
-                clearMessage();
+                document.getElementById('notifications').innerHTML = '';
 
-                // Validate quantity: distinguish between empty and non-integer
                 const quantityTrimmed = quantityValue.trim();
 
                 if (quantityTrimmed === '') {
-                    showError('Quantity must not be empty');
+                    showNotification('Quantity must not be empty', true);
                     return;
                 }
 
                 const quantityNum = parseFloat(quantityTrimmed);
 
                 if (isNaN(quantityNum)) {
-                    showError('Quantity must be an integer');
+                    showNotification('Quantity must be an integer', true);
                     return;
                 }
 
                 if (!Number.isInteger(quantityNum)) {
-                    showError('Quantity must be an integer');
+                    showNotification('Quantity must be an integer', true);
                     return;
                 }
 
@@ -67,21 +65,18 @@
                 const quantity = parseInt(quantityValue);
                 const country = countryValue.trim();
 
-                // Validate that SKU is not empty
                 if (!sku) {
-                    showError('SKU must not be empty');
+                    showNotification('SKU must not be empty', true);
                     return;
                 }
 
-                // Validate that quantity is positive
                 if (quantity <= 0) {
-                    showError('Quantity must be positive');
+                    showNotification('Quantity must be positive', true);
                     return;
                 }
 
-                // Validate that country is not empty
                 if (!country) {
-                    showError('Country must not be empty');
+                    showNotification('Country must not be empty', true);
                     return;
                 }
 
@@ -104,25 +99,22 @@
                 if (response.ok) {
                     const order = await response.json();
                     console.log('Order created successfully:', order);
-                    showSuccess('Success! Order has been created with Order Number ' + order.orderNumber);
+                    showNotification('Success! Order has been created with Order Number ' + order.orderNumber, false);
                 } else if (response.status === 404) {
-                    // Handle not found errors (e.g., product doesn't exist)
                     try {
                         const errorData = await response.json();
                         console.log('404 error data:', errorData);
 
-                        // Check if it's RFC 7807 ProblemDetail format
                         if (errorData.detail) {
-                            showError(errorData.detail);
+                            showNotification(errorData.detail, true);
                         } else if (errorData.message) {
-                            // Legacy format
-                            showError(errorData.message);
+                            showNotification(errorData.message, true);
                         } else {
-                            showError('Resource not found.');
+                            showNotification('Resource not found.', true);
                         }
                     } catch (e) {
                         console.error('Error parsing 404 response:', e);
-                        showError('Resource not found.');
+                        showNotification('Resource not found.', true);
                     }
                 } else if (response.status === 400 || response.status === 422) {
                     // Handle parsing errors (400) and validation errors (422)
@@ -132,47 +124,41 @@
 
                         let displayMessage = '';
                         
-                        // Check if it's RFC 7807 ProblemDetail format
                         if (errorData.detail) {
-                            // Start with the detail message
                             displayMessage = errorData.detail;
                             
-                            // If there are field-level errors, append them
                             if (errorData.errors && errorData.errors.length > 0) {
                                 const fieldErrors = errorData.errors.map(e => `${e.field}: ${e.message}`).join('; ');
                                 displayMessage += '\n' + fieldErrors;
                             }
                         } else if (errorData.message) {
-                            // Legacy simple error format
                             displayMessage = errorData.message;
                         } else {
-                            // Legacy map of field errors
                             displayMessage = Object.entries(errorData).map(([field, msg]) => `${field}: ${msg}`).join('; ');
                         }
                         
-                        showError(displayMessage);
+                        showNotification(displayMessage, true);
                     } catch (e) {
                         console.error('Error parsing validation error response:', e);
-                        showError('Validation error. Please check your input.');
+                        showNotification('Validation error. Please check your input.', true);
                     }
                 } else {
                     console.error('Order creation failed with status:', response.status);
                     console.error('Response status text:', response.statusText);
 
-                    // Try to get response body for more details
                     response.text().then(body => {
                         console.error('Response body:', body);
                     }).catch(e => {
                         console.error('Could not read response body:', e);
                     });
 
-                    showError('Error placing order. Please try again. (Status: ' + response.status + ')');
+                    showNotification('Error placing order. Please try again. (Status: ' + response.status + ')', true);
                 }
             } catch (error) {
                 console.error('Exception during order creation:', error);
                 console.error('Error message:', error.message);
                 console.error('Error stack:', error.stack);
-                showError('Error placing order. Please try again. (Exception: ' + error.message + ')');
+                showNotification('Error placing order. Please try again. (Exception: ' + error.message + ')', true);
             }
         });
     </script>
