@@ -81,11 +81,18 @@
                 // Clear previous messages and hide
                 clearMessage();
 
-                // Validate that quantity is an integer
-                const quantityNum = parseFloat(quantityValue);
+                // Validate quantity: distinguish between empty and non-integer
+                const quantityTrimmed = quantityValue.trim();
+
+                if (quantityTrimmed === '') {
+                    showError('Quantity must not be empty');
+                    return;
+                }
+
+                const quantityNum = parseFloat(quantityTrimmed);
 
                 if (isNaN(quantityNum)) {
-                    showError('Quantity must not be empty');
+                    showError('Quantity must be an integer');
                     return;
                 }
 

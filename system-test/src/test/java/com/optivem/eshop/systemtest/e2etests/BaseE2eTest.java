@@ -4,18 +4,14 @@ import com.optivem.eshop.systemtest.core.drivers.DriverCloser;
 import com.optivem.eshop.systemtest.core.drivers.DriverFactory;
 import com.optivem.eshop.systemtest.core.drivers.external.ErpApiDriver;
 import com.optivem.eshop.systemtest.core.drivers.external.TaxApiDriver;
-import com.optivem.eshop.systemtest.core.drivers.system.ShopApiDriver;
 import com.optivem.eshop.systemtest.core.drivers.system.ShopDriver;
-import com.optivem.eshop.systemtest.core.drivers.system.ShopUiDriver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -126,23 +122,36 @@ public abstract class BaseE2eTest {
         var result = shopDriver.placeOrder("some-sku", emptyQuantity, "US");
         assertTrue(result.isFailure());
         assertThat(result.getErrors()).contains("Quantity must not be empty");
+    }
 
-//
-//        var result = shopDriver.placeOrder("some-sku", emptyQuantity, "US");
-//        assertTrue(result.isFailure());
-//        assertEquals("SKU must not be empty", result.getError());
-//
-//        var homePage = shopUiDriver.openHomePage();
-//        var newOrderPage = homePage.clickNewOrder();
-//
-//        newOrderPage.inputProductId(sku);
-//        newOrderPage.inputQuantity(quantityValue);
-//        newOrderPage.clickPlaceOrder();
-//
-//        var errorMessageText = newOrderPage.readConfirmationMessageText();
-//
-//        assertTrue(errorMessageText.contains("Quantity must be an integer") || errorMessageText.contains("Quantity must be greater than 0"),
-//                "Error message should indicate quantity validation error for quantity: '" + quantityValue + "'. Actual: " + errorMessageText);
+    private static Stream<Arguments> provideNonIntegerQuantityValues() {
+        return Stream.of(
+                Arguments.of("3.5"),   // Decimal value
+                Arguments.of("lala")   // String value
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideNonIntegerQuantityValues")
+    void shouldRejectOrderWithNonIntegerQuantity(String nonIntegerQuantity) {
+        var result = shopDriver.placeOrder("some-sku", nonIntegerQuantity, "US");
+        assertTrue(result.isFailure());
+        assertThat(result.getErrors()).contains("Quantity must be an integer");
+    }
+
+    private static Stream<Arguments> provideEmptyCountryValues() {
+        return Stream.of(
+                Arguments.of(""),      // Empty string
+                Arguments.of("   ")    // Whitespace string
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideEmptyCountryValues")
+    void shouldRejectOrderWithEmptyCountry(String emptyCountry) {
+        var result = shopDriver.placeOrder("some-sku", "5", emptyCountry);
+        assertTrue(result.isFailure());
+        assertThat(result.getErrors()).contains("Country must not be empty");
     }
 
 }
