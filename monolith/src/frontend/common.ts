@@ -44,6 +44,16 @@ export function showApiError(error: ApiError): void {
   showNotification(errorMessage, true);
 }
 
+/**
+ * Displays a success notification message.
+ * Convenience wrapper for showNotification with isError=false.
+ *
+ * @param message The success message to display
+ */
+export function showSuccessNotification(message: string): void {
+  showNotification(message, false);
+}
+
 async function safeParseJson(response: Response): Promise<any> {
   try {
     return await response.json();
