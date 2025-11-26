@@ -1,6 +1,6 @@
 // Common notification functions shared across all pages
 
-import type { ApiError, ProblemDetail } from './types/order.types';
+import type { ApiError, ProblemDetail, Result } from './types/order.types';
 
 export function showNotification(
   message: string,
@@ -52,6 +52,24 @@ export function showApiError(error: ApiError): void {
  */
 export function showSuccessNotification(message: string): void {
   showNotification(message, false);
+}
+
+/**
+ * Handles a Result by executing a success callback or showing an error.
+ * Encapsulates the common if-else pattern for Result handling.
+ *
+ * @param result The Result from a service call
+ * @param onSuccess Callback to execute on success, receives the data
+ */
+export function handleResult<T>(
+  result: Result<T>,
+  onSuccess: (data: T) => void
+): void {
+  if (result.success) {
+    onSuccess(result.data);
+  } else {
+    showApiError(result.error);
+  }
 }
 
 async function safeParseJson(response: Response): Promise<any> {

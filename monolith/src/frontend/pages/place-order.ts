@@ -1,6 +1,6 @@
 // UI Controller for Place Order page
 
-import { showNotification, showApiError, showSuccessNotification } from '../common';
+import { showNotification, handleResult, showSuccessNotification } from '../common';
 import { orderService } from '../services/order-service';
 import type { OrderFormData } from '../types/order.types';
 
@@ -15,11 +15,9 @@ document.getElementById('orderForm')?.addEventListener('submit', async function(
 
   const result = await orderService.placeOrder(orderData.sku, orderData.quantity, orderData.country);
 
-  if (result.success) {
-    showSuccessNotification('Success! Order has been created with Order Number ' + result.data.orderNumber);
-  } else {
-    showApiError(result.error);
-  }
+  handleResult(result, (order) => {
+    showSuccessNotification('Success! Order has been created with Order Number ' + order.orderNumber);
+  });
 });
 
 function collectFormData(): OrderFormData {
