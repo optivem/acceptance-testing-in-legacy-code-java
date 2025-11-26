@@ -14,9 +14,7 @@ class OrderService {
             body: JSON.stringify({ sku, quantity, country })
         });
 
-        return await handleApiResponse(response, {
-            onDefaultErrorMessage: 'Error placing order. Please try again.'
-        });
+        return await handleApiResponse(response);
     }
 
     async getOrder(orderNumber) {
@@ -24,10 +22,7 @@ class OrderService {
             method: 'GET'
         });
 
-        return await handleApiResponse(response, {
-            on404Message: 'Order not found. Please check the order number.',
-            onDefaultErrorMessage: 'Error retrieving order. Please try again.'
-        });
+        return await handleApiResponse(response);
     }
 
     async cancelOrder(orderNumber) {
@@ -39,9 +34,7 @@ class OrderService {
             return { success: true };
         }
 
-        await handleApiResponse(response, {
-            onDefaultErrorMessage: 'Failed to cancel order. Please try again.'
-        });
+        await handleApiResponse(response);
     }
 }
 

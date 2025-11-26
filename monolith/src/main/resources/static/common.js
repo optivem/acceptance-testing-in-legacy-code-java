@@ -22,12 +22,7 @@ function showNotification(message, isError = false, containerElementId = 'notifi
 }
 
 async function handleApiResponse(response, options = {}) {
-    const {
-        onSuccess,
-        on404Message = 'Resource not found.',
-        onValidationErrorMessage = 'Validation error. Please check your input.',
-        onDefaultErrorMessage = 'An error occurred. Please try again.'
-    } = options;
+    const { onSuccess } = options;
 
     if (response.ok) {
         const data = await response.json();
@@ -37,42 +32,22 @@ async function handleApiResponse(response, options = {}) {
         return data;
     }
 
-    if (response.status === 404) {
-        const errorData = await safeParseJson(response);
-        const message = errorData?.detail || errorData?.message || on404Message;
-        showNotification(message, true);
-        const error = new Error(message);
-        error.alreadyHandled = true;
-        throw error;
-    }
+    const errorData = await safeParseJson(response);
+    let displayMessage = '';
 
-    if (response.status === 400 || response.status === 422) {
-        const errorData = await safeParseJson(response);
-        let displayMessage = '';
+    if (errorData?.detail) {
+        displayMessage = errorData.detail;
 
-        if (errorData?.detail) {
-            displayMessage = errorData.detail;
-            if (errorData.errors && errorData.errors.length > 0) {
-                const fieldErrors = errorData.errors.map(e => `${e.field}: ${e.message}`).join('; ');
-                displayMessage += '\n' + fieldErrors;
-            }
-        } else if (errorData?.message) {
-            displayMessage = errorData.message;
-        } else if (errorData && typeof errorData === 'object') {
-            displayMessage = Object.entries(errorData).map(([field, msg]) => `${field}: ${msg}`).join('; ');
-        } else {
-            displayMessage = onValidationErrorMessage;
+        if (errorData.errors && errorData.errors.length > 0) {
+            const fieldErrors = errorData.errors.map(e => `${e.field}: ${e.message}`).join('\n');
+            displayMessage += '\n' + fieldErrors;
         }
-
-        showNotification(displayMessage, true);
-        const error = new Error(displayMessage);
-        error.alreadyHandled = true;
-        throw error;
+    } else {
+        displayMessage = `An unexpected error occurred. (Status: ${response.status})`;
     }
 
-    const errorMessage = `${onDefaultErrorMessage} (Status: ${response.status})`;
-    showNotification(errorMessage, true);
-    const error = new Error(errorMessage);
+    showNotification(displayMessage, true);
+    const error = new Error(displayMessage);
     error.alreadyHandled = true;
     throw error;
 }
