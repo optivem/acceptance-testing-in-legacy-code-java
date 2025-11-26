@@ -48,7 +48,7 @@ public class ShopUiDriver implements ShopDriver {
     public Result<PlaceOrderResponse> placeOrder(String sku, String quantity, String country) {
 
         ensureOnNewOrderPage();
-        newOrderPage.inputProductId(sku);
+        newOrderPage.inputSku(sku);
         newOrderPage.inputQuantity(quantity);
         newOrderPage.inputCountry(country);
         newOrderPage.clickPlaceOrder();
@@ -74,7 +74,7 @@ public class ShopUiDriver implements ShopDriver {
         // TODO: VJ: Handle not found case
 
         var displayOrderNumber = orderHistoryPage.getOrderNumber();
-        var productId = orderHistoryPage.getProductId();
+        var sku = orderHistoryPage.getSku();
         var quantity = orderHistoryPage.getQuantity();
         var country = orderHistoryPage.getCountry();
         var unitPrice = orderHistoryPage.getUnitPrice();
@@ -89,7 +89,7 @@ public class ShopUiDriver implements ShopDriver {
 
         var response = GetOrderResponse.builder()
                 .orderNumber(displayOrderNumber)
-                .sku(productId)
+                .sku(sku)
                 .quantity(Integer.parseInt(quantity))
                 .unitPrice(unitPrice)
                 .originalPrice(originalPrice)

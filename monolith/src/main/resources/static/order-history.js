@@ -27,8 +27,8 @@ async function displayOrderDetails(orderNumber) {
                     <input type="text" id="displayOrderNumber" aria-label="Display Order Number" value="${order.orderNumber}" readonly />
                 </div>
                 <div>
-                    <label for="displayProductId">SKU:</label>
-                    <input type="text" id="displayProductId" aria-label="Display Product ID" value="${order.sku}" readonly />
+                    <label for="displaySku">SKU:</label>
+                    <input type="text" id="displaySku" aria-label="Display SKU" value="${order.sku}" readonly />
                 </div>
                 <div>
                     <label for="displayCountry">Country:</label>

@@ -13,7 +13,7 @@ public class OrderHistoryPage extends BasePage {
     private static final String SEARCH_BUTTON_SELECTOR = "[aria-label='Search']";
     private static final String ORDER_DETAILS_CONTAINER_SELECTOR = "#orderDetails";
     private static final String ORDER_NUMBER_OUTPUT_SELECTOR = "[aria-label='Display Order Number']";
-    private static final String PRODUCT_ID_OUTPUT_SELECTOR = "[aria-label='Display Product ID']";
+    private static final String SKU_OUTPUT_SELECTOR = "[aria-label='Display SKU']";
     private static final String COUNTRY_OUTPUT_SELECTOR = "[aria-label='Display Country']";
     private static final String QUANTITY_OUTPUT_SELECTOR = "[aria-label='Display Quantity']";
     private static final String UNIT_PRICE_OUTPUT_SELECTOR = "[aria-label='Display Unit Price']";
@@ -50,8 +50,8 @@ public class OrderHistoryPage extends BasePage {
         return pageClient.readInputValue(ORDER_NUMBER_OUTPUT_SELECTOR);
     }
 
-    public String getProductId() {
-        return pageClient.readInputValue(PRODUCT_ID_OUTPUT_SELECTOR);
+    public String getSku() {
+        return pageClient.readInputValue(SKU_OUTPUT_SELECTOR);
     }
 
     public String getCountry() {

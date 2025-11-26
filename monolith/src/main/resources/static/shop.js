@@ -2,7 +2,7 @@ document.getElementById('orderForm').addEventListener('submit', async function(e
     e.preventDefault();
 
     try {
-        const productIdValue = document.getElementById('productId').value;
+        const skuValue = document.getElementById('sku').value;
         const quantityValue = document.getElementById('quantity').value;
         const countryValue = document.getElementById('country').value;
 
@@ -27,7 +27,7 @@ document.getElementById('orderForm').addEventListener('submit', async function(e
             return;
         }
 
-        const sku = productIdValue.trim();
+        const sku = skuValue.trim();
         const quantity = parseInt(quantityValue);
         const country = countryValue.trim();
 

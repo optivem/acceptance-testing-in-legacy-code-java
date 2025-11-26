@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 public class NewOrderPage extends BasePage {
 
-    private static final String PRODUCT_ID_INPUT_SELECTOR = "[aria-label=\"Product ID\"]";
+    private static final String SKU_INPUT_SELECTOR = "[aria-label=\"SKU\"]";
     private static final String QUANTITY_INPUT_SELECTOR = "[aria-label=\"Quantity\"]";
     private static final String COUNTRY_INPUT_SELECTOR = "[aria-label=\"Country\"]";
     private static final String PLACE_ORDER_BUTTONG_SELECTOR = "[aria-label=\"Place Order\"]";
@@ -18,8 +18,8 @@ public class NewOrderPage extends BasePage {
         super(pageClient);
     }
 
-    public void inputProductId(String productId) {
-        pageClient.fill(PRODUCT_ID_INPUT_SELECTOR, productId);
+    public void inputSku(String sku) {
+        pageClient.fill(SKU_INPUT_SELECTOR, sku);
     }
 
     public void inputQuantity(String quantity) {
@@ -35,7 +35,8 @@ public class NewOrderPage extends BasePage {
     }
 
     public Optional<String> getOrderNumber() {
-        if(!hasSuccessNotification()) {
+        var hasSuccess = hasSuccessNotification();
+        if(hasSuccess == null || !hasSuccess) {
             return Optional.empty();
         }
 
