@@ -33,6 +33,11 @@ function validateFormData(data) {
 
     const quantityTrimmed = data.quantityValue.trim();
 
+    if (!data.sku) {
+        showNotification('SKU must not be empty', true);
+        return false;
+    }
+
     if (quantityTrimmed === '') {
         showNotification('Quantity must not be empty', true);
         return false;
@@ -50,12 +55,7 @@ function validateFormData(data) {
         return false;
     }
 
-    if (!data.sku) {
-        showNotification('SKU must not be empty', true);
-        return false;
-    }
-
-    if (data.quantity <= 0) {
+    if (quantityNum <= 0) {
         showNotification('Quantity must be positive', true);
         return false;
     }
