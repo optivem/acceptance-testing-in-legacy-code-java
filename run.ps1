@@ -26,7 +26,6 @@ $ComposeFile = if ($Mode -eq "pipeline") { "docker-compose.pipeline.yml" } else 
 function Execute-Command {
     param(
         [string]$Command,
-        [string]$ErrorMessage,
         [string]$SubFolder = $null
     )
 
@@ -47,6 +46,7 @@ function Execute-Command {
 
     Write-Host "$LASTEXITCODE returned from command." -ForegroundColor Cyan
     if ($LASTEXITCODE -ne 0) {
+        $ErrorMessage = "Failed to execute command: $Command"
         throw $ErrorMessage
     }
 
@@ -78,7 +78,7 @@ function Wait-ForService {
     }
 
     if (-not $isReady) {
-        Execute-Command -Command "docker compose -f $ComposeFile logs $ContainerName --tail=$LogLines" -ErrorMessage "Failed to get Docker compose logs"
+        Execute-Command -Command "docker compose -f $ComposeFile logs $ContainerName --tail=$LogLines"
         throw "$ServiceName failed to become ready after $MaxAttempts attempts"
     }
 }
@@ -91,17 +91,17 @@ function Wait-ForServices {
 }
 
 function Build-Backend {
-    Execute-Command -Command "& .\gradlew.bat clean build" -SubFolder "backend" -ErrorMessage "Backend build failed!"
+    Execute-Command -Command "& .\gradlew.bat clean build" -SubFolder "backend"
 }
 
 function Build-Frontend {
     Set-Location frontend
     if (-not (Test-Path "node_modules")) {
-        Execute-Command -Command "npm install" -ErrorMessage "Frontend dependency installation failed!"
+        Execute-Command -Command "npm install"
     }
     Set-Location ..
 
-    Execute-Command -Command "npm run build" -SubFolder "frontend" -ErrorMessage "Frontend build failed!"
+    Execute-Command -Command "npm run build" -SubFolder "frontend"
 }
 
 function Build-System {
@@ -114,15 +114,13 @@ function Build-System {
 }
 
 function Stop-System {
-    Execute-Command "docker compose -f docker-compose.local.yml down 2>`$null" "Error for docker compose down for local"
-    Execute-Command "docker compose -f docker-compose.pipeline.yml down 2>`$null" "Error for docker compose down for pipeline"
+    Execute-Command -Command "docker compose -f docker-compose.local.yml down 2>`$null"
+    Execute-Command -Command "docker compose -f docker-compose.pipeline.yml down 2>`$null"
 
-    $DockerCommand = "docker ps -aq --filter 'name=$ContainerName' 2>`$null"
-
-    $ProjectContainers = Execute-Command -Command $DockerCommand -ErrorMessage "Error retrieving Docker containers!"
+    $ProjectContainers = Execute-Command -Command "docker ps -aq --filter 'name=$ContainerName' 2>`$null"
     if ($ProjectContainers) {
-        Execute-Command "docker stop $ProjectContainers 2>`$null" "Failed to stop project containers"
-        Execute-Command "docker rm -f $ProjectContainers 2>`$null" "Failed to remove project containers"
+        Execute-Command -Command "docker stop $ProjectContainers 2>`$null"
+        Execute-Command -Command "docker rm -f $ProjectContainers 2>`$null"
     }
 
     # Wait to ensure containers are fully stopped and ports are released
@@ -130,7 +128,7 @@ function Stop-System {
 }
 
 function Start-System {
-    Execute-Command -Command "docker compose -f $ComposeFile up -d --build" -ErrorMessage "Failed to start Docker containers!"
+    Execute-Command -Command "docker compose -f $ComposeFile up -d --build"
 
     Write-Host "- Frontend UI: " -NoNewline
     Write-Host $FrontendUrl -ForegroundColor Yellow
@@ -150,7 +148,7 @@ function Start-System {
 }
 
 function Test-System {
-    Execute-Command -Command "& .\gradlew.bat clean test" -SubFolder "system-test" -ErrorMessage "System tests execution failed!"
+    Execute-Command -Command "& .\gradlew.bat clean test" -SubFolder "system-test"
 
     Write-Host ""
     Write-Host "All tests passed!" -ForegroundColor Green
@@ -161,7 +159,7 @@ function Test-System {
 
 
 function Show-Logs {
-    Execute-Command -Command "docker compose -f $ComposeFile logs --tail=100 -f" -ErrorMessage "Failed to retrieve Docker logs!"
+    Execute-Command -Command "docker compose -f $ComposeFile logs --tail=100 -f"
 }
 
 function Write-Heading {
