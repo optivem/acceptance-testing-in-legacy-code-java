@@ -37,11 +37,21 @@ Check that you have Node 22+
 node -v
 ```
 
-**Note:** Frontend dependencies are automatically installed during the build process. If you want to work on the frontend separately, run:
+## Project Structure
+
+```
+modern-acceptance-testing-in-legacy-code-java/
+├── backend/          # Spring Boot REST API (Java 21)
+├── frontend/         # TypeScript UI (Vite + Nginx)
+└── system-test/      # E2E & Smoke Tests (Playwright + REST Assured)
+```
+
+**Frontend Development:** Run `npm run dev` in the frontend folder for hot reload during development:
 
 ```shell
-cd monolith
+cd frontend
 npm install
+npm run dev  # Starts dev server on port 5173 with API proxy
 ```
 
 ## Run Everything
@@ -51,15 +61,17 @@ npm install
 ```
 
 This will:
-1. Build the Monolith (compile code and create JAR)
-2. Start Docker containers (Monolith, PostgreSQL, & Simulated External Systems)
-3. Wait for services to be healthy
-4. Run all System Tests
+1. Build the Frontend (TypeScript compilation and bundling with Vite)
+2. Build the Backend (Java compilation and JAR creation)
+3. Start Docker containers (Frontend, Backend, PostgreSQL, & Mock External APIs)
+4. Wait for all services to be healthy
+5. Run all System Tests (API E2E, UI E2E, and Smoke Tests)
 
 You can open these URLs in your browser:
-- Monolith Application: [http://localhost:8080](http://localhost:8080)
-- ERP API (JSON Server): [http://localhost:3000](http://localhost:3000)
-- Tax API (JSON Server): [http://localhost:3001](http://localhost:3001)
+- **Frontend UI**: [http://localhost:3001](http://localhost:3001)
+- **Backend API**: [http://localhost:8081/api](http://localhost:8081/api)
+- **ERP API**: [http://localhost:9011](http://localhost:9011)
+- **Tax API**: [http://localhost:9012](http://localhost:9012)
 
 ## Separate Commands
 
@@ -80,10 +92,11 @@ Starts the Docker containers:
 ```
 
 You can open these URLs in your browser:
-- Monolith Application: [http://localhost:8080](http://localhost:8080)
-- ERP API (JSON Server): [http://localhost:3000](http://localhost:3000)
-- Tax API (JSON Server): [http://localhost:3001](http://localhost:3001)
-- PostgreSQL Database: localhost:5432 (database: `eshop`, user: `eshop_user`, password: `eshop_password`)
+- **Frontend UI**: [http://localhost:3001](http://localhost:3001)
+- **Backend API**: [http://localhost:8081/api](http://localhost:8081/api)
+- **ERP API**: [http://localhost:9011](http://localhost:9011)
+- **Tax API**: [http://localhost:9012](http://localhost:9012)
+- **PostgreSQL Database**: localhost:5401 (database: `eshop`, user: `eshop_user`, password: `eshop_password`)
 
 ### Run Tests
 ```powershell

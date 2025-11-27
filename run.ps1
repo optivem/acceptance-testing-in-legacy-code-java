@@ -5,90 +5,116 @@ param(
 
     [Parameter(Position=1)]
     [ValidateSet("local", "pipeline")]
-    [string]$Mode = "local"
+    [string]$Mode = "local",
+
+    # Service URLs
+    [string]$FrontendUrl = "http://localhost:3001",
+    [string]$BackendUrl = "http://localhost:8081",
+    [string]$ErpApiUrl = "http://localhost:9101",
+    [string]$TaxApiUrl = "http://localhost:9201",
+    [string]$PostgresHost = "localhost:5401"
 )
 
+# Ensure script stops on errors
+$ErrorActionPreference = "Continue"
+
 $ComposeFile = if ($Mode -eq "pipeline") { "docker-compose.pipeline.yml" } else { "docker-compose.local.yml" }
+
+function Assert-Success {
+    param(
+        [string]$ErrorMessage
+    )
+
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host ""
+        Write-Host $ErrorMessage -ForegroundColor Red
+        throw $ErrorMessage
+    }
+}
+
+
+function Wait-ForService {
+    param(
+        [string]$Url,
+        [string]$ServiceName,
+        [string]$ContainerName,
+        [int]$MaxAttempts = 10,
+        [int]$LogLines = 50
+    )
+
+    $attempt = 0
+    $isReady = $false
+
+    Write-Host "Waiting for $ServiceName on $Url..." -ForegroundColor Yellow
+
+    while (-not $isReady -and $attempt -lt $MaxAttempts) {
+        try {
+            $response = Invoke-WebRequest -Uri $Url -UseBasicParsing -TimeoutSec 2 -ErrorAction SilentlyContinue
+            if ($response.StatusCode -eq 200 -or $response.StatusCode -eq 404) {
+                $isReady = $true
+                Write-Host "[OK] $ServiceName is responding!" -ForegroundColor Green
+            }
+        } catch {
+            $attempt++
+            Write-Host "  Attempt $attempt/$MaxAttempts - $ServiceName not ready yet..." -ForegroundColor Gray
+            Start-Sleep -Seconds 1
+        }
+    }
+
+    if (-not $isReady) {
+        Write-Host "[FAIL] $ServiceName failed to become ready" -ForegroundColor Red
+        Write-Host "  Checking $ServiceName logs..." -ForegroundColor Yellow
+        docker compose -f $ComposeFile logs $ContainerName --tail=$LogLines
+        Write-Host ""
+        throw "$ServiceName failed to become ready after $MaxAttempts attempts"
+    }
+
+    return $true
+}
 
 function Wait-ForServices {
     Write-Host "Checking if services are healthy..." -ForegroundColor Cyan
 
-    $maxAttempts = 30
-    $attempt = 0
-    $erpApiReady = $false
-    $monolithReady = $false
-
-    Write-Host "Waiting for ERP API on port 3000..." -ForegroundColor Yellow
-    while (-not $erpApiReady -and $attempt -lt $maxAttempts) {
-        try {
-            $response = Invoke-WebRequest -Uri "http://localhost:3000" -UseBasicParsing -TimeoutSec 2
-            if ($response.StatusCode -eq 200) {
-                $erpApiReady = $true
-                Write-Host "[OK] ERP API is responding!" -ForegroundColor Green
-            }
-        } catch {
-            $attempt++
-            Write-Host "  Attempt $attempt/$maxAttempts - ERP API not ready yet..." -ForegroundColor Gray
-            Start-Sleep -Seconds 1
-        }
-    }
-
-    if (-not $erpApiReady) {
-        Write-Host "[FAIL] ERP API failed to become ready" -ForegroundColor Red
-        Write-Host "  Checking ERP API logs..." -ForegroundColor Yellow
-        docker compose logs erp-api --tail=20
-        return $false
-    }
-
-    $attempt = 0
-    Write-Host "Waiting for Monolith API on port 8080..." -ForegroundColor Yellow
-    while (-not $monolithReady -and $attempt -lt $maxAttempts) {
-        try {
-            $response = Invoke-WebRequest -Uri "http://localhost:8080" -UseBasicParsing -TimeoutSec 2 -ErrorAction SilentlyContinue
-            if ($response.StatusCode -eq 200 -or $response.StatusCode -eq 404) {
-                $monolithReady = $true
-                Write-Host "[OK] Monolith API is responding!" -ForegroundColor Green
-            }
-        } catch {
-            $attempt++
-            Write-Host "  Attempt $attempt/$maxAttempts - Monolith API not ready yet..." -ForegroundColor Gray
-            Start-Sleep -Seconds 1
-        }
-    }
-
-    if (-not $monolithReady) {
-        Write-Host "[FAIL] Monolith API failed to become ready" -ForegroundColor Red
-        Write-Host "  Checking Monolith logs..." -ForegroundColor Yellow
-        docker compose logs monolith --tail=50
-        return $false
-    }
+    Wait-ForService -Url $ErpApiUrl -ServiceName "ERP API" -ContainerName "erp-api" -LogLines 20
+    Wait-ForService -Url $BackendUrl -ServiceName "Backend API" -ContainerName "backend" -LogLines 50
+    Wait-ForService -Url $FrontendUrl -ServiceName "Frontend" -ContainerName "frontend" -LogLines 50
 
     Write-Host ""
     Write-Host "All services are healthy and ready for testing!" -ForegroundColor Green
     return $true
 }
 
+function Build-Backend {
+    Write-Host "Building backend application..." -ForegroundColor Cyan
+    Set-Location backend
+
+    & .\gradlew.bat clean build
+    Assert-Success "Backend build failed!"
+
+    Write-Host ""
+    Write-Host "Backend build completed successfully!" -ForegroundColor Green
+    Set-Location ..
+}
+
+function Build-Frontend {
+    Write-Host "Building frontend application..." -ForegroundColor Cyan
+    Set-Location frontend
+
+    & .\gradlew.bat build
+    Assert-Success "Frontend build failed!"
+
+    Write-Host ""
+    Write-Host "Frontend build completed successfully!" -ForegroundColor Green
+    Set-Location ..
+}
+
 function Build-System {
     if ($Mode -eq "local") {
-        Write-Host "Building monolith application..." -ForegroundColor Cyan
-        Set-Location monolith
-
-        & .\gradlew.bat clean build
-
-        if ($LASTEXITCODE -ne 0) {
-            Write-Host "Build failed!" -ForegroundColor Red
-            Set-Location ..
-            exit $LASTEXITCODE
-        }
-
+        Build-Backend
+        Build-Frontend
         Write-Host ""
-        Write-Host "Build completed successfully!" -ForegroundColor Green
-        Write-Host "JAR file created in: " -NoNewline
-        Write-Host "build\libs\" -ForegroundColor Yellow
-        Write-Host ""
-        Set-Location ..
     } else {
-        Write-Host "Pipeline mode: Skipping build (using pre-built Docker image)" -ForegroundColor Cyan
+        Write-Host "Pipeline mode: Skipping build (using pre-built Docker images)" -ForegroundColor Cyan
     }
 }
 
@@ -100,60 +126,36 @@ function Start-System {
     docker compose -f docker-compose.local.yml down 2>$null
     docker compose -f docker-compose.pipeline.yml down 2>$null
 
-    # Force stop any containers that might be using our ports
-    Write-Host "Checking for port conflicts..." -ForegroundColor Cyan
-    $containersOnPort3000 = docker ps -q --filter "publish=3000" 2>$null
-    $containersOnPort8080 = docker ps -q --filter "publish=8080" 2>$null
-    $containersOnPort5432 = docker ps -q --filter "publish=5432" 2>$null
-    $containersOnPort3001 = docker ps -q --filter "publish=3001" 2>$null
-
-    if ($containersOnPort3000) {
-        Write-Host "  Stopping containers using port 3000..." -ForegroundColor Yellow
-        docker stop $containersOnPort3000 2>$null
-        docker rm $containersOnPort3000 2>$null
-    }
-
-    if ($containersOnPort3001) {
-        Write-Host "  Stopping containers using port 3001..." -ForegroundColor Yellow
-        docker stop $containersOnPort3001 2>$null
-        docker rm $containersOnPort3001 2>$null
-    }
-
-    if ($containersOnPort5432) {
-        Write-Host "  Stopping containers using port 5432..." -ForegroundColor Yellow
-        docker stop $containersOnPort5432 2>$null
-        docker rm $containersOnPort5432 2>$null
-    }
-
-    if ($containersOnPort8080) {
-        Write-Host "  Stopping containers using port 8080..." -ForegroundColor Yellow
-        docker stop $containersOnPort8080 2>$null
-        docker rm $containersOnPort8080 2>$null
+    # Force stop and remove ALL containers from this project (even if stuck)
+    Write-Host "Removing any stuck project containers..." -ForegroundColor Cyan
+    $projectContainers = docker ps -aq --filter "name=modern-acceptance-testing-in-legacy-code-java" 2>$null
+    if ($projectContainers) {
+        Write-Host "  Found project containers, forcing removal..." -ForegroundColor Yellow
+        docker stop $projectContainers 2>$null
+        docker rm -f $projectContainers 2>$null
     }
 
     # Wait to ensure containers are fully stopped and ports are released
+    Write-Host "Waiting for containers to fully stop..." -ForegroundColor Cyan
     Start-Sleep -Seconds 2
 
     Write-Host "Starting Docker containers (mode: $Mode)..." -ForegroundColor Cyan
 
     docker compose -f $ComposeFile up -d --build
-
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host ""
-        Write-Host "Failed to start Docker containers!" -ForegroundColor Red
-        exit $LASTEXITCODE
-    }
+    Assert-Success "Failed to start Docker containers!"
 
     Write-Host ""
     Write-Host "Done! Services are starting..." -ForegroundColor Green
+    Write-Host "- Frontend UI: " -NoNewline
+    Write-Host $FrontendUrl -ForegroundColor Yellow
+    Write-Host "- Backend API: " -NoNewline
+    Write-Host $BackendUrl -ForegroundColor Yellow
     Write-Host "- ERP API: " -NoNewline
-    Write-Host "http://localhost:3000" -ForegroundColor Yellow
+    Write-Host $ErpApiUrl -ForegroundColor Yellow
     Write-Host "- Tax API: " -NoNewline
-    Write-Host "http://localhost:3001" -ForegroundColor Yellow
+    Write-Host $TaxApiUrl -ForegroundColor Yellow
     Write-Host "- PostgreSQL: " -NoNewline
-    Write-Host "localhost:5432" -ForegroundColor Yellow
-    Write-Host "- Monolith API: " -NoNewline
-    Write-Host "http://localhost:8080" -ForegroundColor Yellow
+    Write-Host $PostgresHost -ForegroundColor Yellow
     Write-Host ""
     Write-Host "To view logs: " -NoNewline
     Write-Host ".\run.ps1 logs $Mode" -ForegroundColor Cyan
@@ -170,9 +172,7 @@ function Test-System {
     Set-Location ..
 
     if ($testResult -ne 0) {
-        Write-Host ""
-        Write-Host "Tests failed!" -ForegroundColor Red
-        exit $testResult
+        throw "Tests failed!"
     }
 
     Write-Host ""
@@ -185,15 +185,10 @@ function Stop-System {
     Write-Host "Stopping Docker containers (mode: $Mode)..." -ForegroundColor Cyan
 
     docker compose -f $ComposeFile down
+    Assert-Success "Error stopping services"
 
-    if ($LASTEXITCODE -eq 0) {
-        Write-Host ""
-        Write-Host "Services stopped successfully!" -ForegroundColor Green
-    } else {
-        Write-Host ""
-        Write-Host "Error stopping services" -ForegroundColor Red
-        exit $LASTEXITCODE
-    }
+    Write-Host ""
+    Write-Host "Services stopped successfully!" -ForegroundColor Green
 }
 
 function Show-Logs {
@@ -206,39 +201,13 @@ function Show-Logs {
 
 function Run-All {
     Build-System
-
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host ""
-        Write-Host "Build failed! Aborting..." -ForegroundColor Red
-        exit $LASTEXITCODE
-    }
-
     Start-System
 
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host ""
-        Write-Host "Start failed! Aborting..." -ForegroundColor Red
-        exit $LASTEXITCODE
-    }
-
     Write-Host ""
-    $servicesReady = Wait-ForServices
-
-    if (-not $servicesReady) {
-        Write-Host ""
-        Write-Host "Services failed to become ready! Aborting..." -ForegroundColor Red
-        Stop-System
-        exit 1
-    }
+    Wait-ForServices
 
     Test-System
 
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host ""
-        Write-Host "Tests failed! Stopping services..." -ForegroundColor Red
-        Stop-System
-        exit $LASTEXITCODE
-    }
 
     Write-Host ""
     Write-Host "================================================" -ForegroundColor Green
@@ -248,12 +217,21 @@ function Run-All {
 }
 
 # Main execution
-switch ($Command) {
-    "build" { Build-System }
-    "start" { Start-System }
-    "test"  { Test-System }
-    "stop"  { Stop-System }
-    "logs"  { Show-Logs }
-    "all"   { Run-All }
+try {
+    switch ($Command) {
+        "build" { Build-System }
+        "start" { Start-System }
+        "test"  { Test-System }
+        "stop"  { Stop-System }
+        "logs"  { Show-Logs }
+        "all"   { Run-All }
+    }
+} catch {
+    Write-Host ""
+    Write-Host "Error: $_" -ForegroundColor Red
+    exit 1
 }
+
+# Explicit exit with code 0 on success
+exit 0
 

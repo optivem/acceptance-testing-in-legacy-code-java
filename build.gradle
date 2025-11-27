@@ -1,0 +1,28 @@
+// Root build file - coordinates all modules
+
+description = 'Modern Acceptance Testing in Legacy Code - Java'
+
+// Default task when running from root
+defaultTasks 'build'
+
+// Task to build everything
+task buildAll {
+    dependsOn ':frontend:build', ':backend:build'
+    description = 'Builds frontend and backend'
+    group = 'build'
+}
+
+// Task to run all tests
+task testAll {
+    dependsOn ':backend:test', ':system-test:test'
+    description = 'Runs all tests (backend unit tests and system tests)'
+    group = 'verification'
+}
+
+// Task to clean everything
+task cleanAll {
+    dependsOn ':frontend:clean', ':backend:clean', ':system-test:clean'
+    description = 'Cleans all modules'
+    group = 'build'
+}
+

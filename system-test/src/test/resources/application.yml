@@ -1,12 +1,12 @@
 test:
   eshop:
     ui:
-      baseUrl: http://localhost:8080
+      baseUrl: http://localhost:3001
     api:
-      baseUrl: http://localhost:8080/api
+      baseUrl: http://localhost:8081/api
   erp:
     api:
-      baseUrl: http://localhost:3000
+      baseUrl: http://localhost:9101
   tax:
     api:
-      baseUrl: http://localhost:3001
+      baseUrl: http://localhost:9201

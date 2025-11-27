@@ -1,0 +1,59 @@
+spring:
+  profiles:
+    active: e2e
+  jackson:
+    deserialization:
+      ACCEPT_FLOAT_AS_INT: false
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5401/eshop}
+    username: ${SPRING_DATASOURCE_USERNAME:eshop_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:eshop_password}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+server:
+  port: 8081
+
+allowed:
+  origins: ${ALLOWED_ORIGINS:http://localhost:3001}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: e2e
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+erp:
+  url: http://erp-api:3000
+tax:
+  url: http://tax-api:3000
+
+---
+spring:
+  config:
+    activate:
+      on-profile: qa
+erp:
+  url: http://erp-api:3000
+tax:
+  url: http://tax-api:3000
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+erp:
+  url: http://erp-api:3000
+tax:
+  url: http://tax-api:3000

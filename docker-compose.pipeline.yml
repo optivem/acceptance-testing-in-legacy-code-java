@@ -3,7 +3,7 @@ services:
   postgres:
     image: postgres:16-alpine
     ports:
-      - "5432:5432"
+      - "5401:5432"
     environment:
       - POSTGRES_DB=eshop
       - POSTGRES_USER=eshop_user
@@ -19,7 +19,7 @@ services:
   erp-api:
     image: williamyeh/json-server
     ports:
-      - "3000:3000"
+      - "9101:3000"
     volumes:
       - ./json-server-db.erp-api.json:/data/db.json
     command: --watch /data/db.json --host 0.0.0.0
@@ -27,20 +27,21 @@ services:
   tax-api:
     image: williamyeh/json-server
     ports:
-      - "3001:3001"
+      - "9201:3000"
     volumes:
       - ./json-server-db.tax-api.json:/data/db.json
-    command: --watch /data/db.json --host 0.0.0.0 --port 3001
+    command: --watch /data/db.json --host 0.0.0.0
 
-  monolith:
-    image: ghcr.io/optivem/modern-acceptance-testing-in-legacy-code-java/monolith:latest
+  backend:
+    image: ghcr.io/optivem/modern-acceptance-testing-in-legacy-code-java/backend:latest
     ports:
-      - "8080:8080"
+      - "8081:8081"
     environment:
       - SPRING_PROFILES_ACTIVE=e2e
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/eshop
       - SPRING_DATASOURCE_USERNAME=eshop_user
       - SPRING_DATASOURCE_PASSWORD=eshop_password
+      - ALLOWED_ORIGINS=http://localhost:3001,http://frontend:3001
     depends_on:
       postgres:
         condition: service_healthy
@@ -48,6 +49,15 @@ services:
         condition: service_started
       tax-api:
         condition: service_started
+
+  frontend:
+    image: ghcr.io/optivem/modern-acceptance-testing-in-legacy-code-java/frontend:latest
+    ports:
+      - "3001:3001"
+    environment:
+      - API_BASE_URL=http://localhost:8081
+    depends_on:
+      - backend
 
 volumes:
   postgres-data:

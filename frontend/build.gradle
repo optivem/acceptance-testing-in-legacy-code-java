@@ -1,0 +1,30 @@
+apply plugin: 'base'
+
+description = 'Optivem eShop - Frontend'
+
+// Frontend build tasks
+task npmInstall(type: Exec) {
+	def isWindows = System.getProperty('os.name').toLowerCase().contains('windows')
+	commandLine isWindows ? ['cmd', '/c', 'npm', 'install'] : ['npm', 'install']
+	inputs.file('package.json')
+	outputs.dir('node_modules')
+}
+
+task npmBuild(type: Exec) {
+	dependsOn npmInstall
+	def isWindows = System.getProperty('os.name').toLowerCase().contains('windows')
+	commandLine isWindows ? ['cmd', '/c', 'npm', 'run', 'build'] : ['npm', 'run', 'build']
+	inputs.dir('src')
+	inputs.file('tsconfig.json')
+	inputs.file('vite.config.ts')
+	outputs.dir('dist')
+}
+
+// Override clean task from base plugin
+clean {
+	delete 'node_modules'
+	delete 'dist'
+}
+
+build.dependsOn npmBuild
+
