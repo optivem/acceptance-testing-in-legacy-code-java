@@ -1,6 +1,0 @@
-rootProject.name = 'modern-acceptance-testing-in-legacy-code-java'
-
-include 'frontend'
-include 'backend'
-include 'system-test'
-

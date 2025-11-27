@@ -101,8 +101,20 @@ function Build-Frontend {
     Write-Host "Building frontend application..." -ForegroundColor Cyan
     Set-Location frontend
 
-    & .\gradlew.bat clean build
-    Assert-Success "Frontend build failed!"
+    if (-not (Test-Path "node_modules")) {
+        Write-Host "Installing frontend dependencies..." -ForegroundColor Yellow
+        npm install
+        if ($LASTEXITCODE -ne 0) {
+            Set-Location ..
+            throw "Frontend dependency installation failed!"
+        }
+    }
+
+    npm run build
+    if ($LASTEXITCODE -ne 0) {
+        Set-Location ..
+        throw "Frontend build failed!"
+    }
 
     Write-Host ""
     Write-Host "Frontend build completed successfully!" -ForegroundColor Green
