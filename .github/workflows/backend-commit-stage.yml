@@ -1,20 +1,20 @@
-name: commit-stage-frontend
+name: backend-commit-stage
 
 on:
   push:
     branches: [ "main" ]
     paths:
-        - 'frontend/**'
-        - '.github/workflows/commit-stage-frontend.yml'
+        - 'backend/**'
+        - '.github/workflows/backend-commit-stage.yml'
   pull_request:
     branches: [ "main" ]
     paths:
-        - 'frontend/**'
-        - '.github/workflows/commit-stage-frontend.yml'
+        - 'backend/**'
+        - '.github/workflows/backend-commit-stage.yml'
   workflow_dispatch:
 
 concurrency:
-  group: commit-stage-frontend-${{ github.ref }}
+  group: commit-stage-backend-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -34,11 +34,6 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '22'
-
     - name: Setup Java
       uses: actions/setup-java@v4
       with:
@@ -51,18 +46,18 @@ jobs:
     - name: Make Gradle Wrapper executable
       run: chmod +x ./gradlew
       shell: bash
-      working-directory: frontend
+      working-directory: backend
 
     - name: Build with Gradle Wrapper
       run: ./gradlew build
-      working-directory: frontend
+      working-directory: backend
 
     - name: Publish Docker Image
       id: publish
       uses: optivem/publish-docker-image-action@v1
       with:
-        working-directory: frontend
-        image-name: frontend
+        working-directory: backend
+        image-name: backend
         registry: ghcr.io
         registry-username: ${{ github.actor }}
         image-namespace: ${{ github.repository }}
