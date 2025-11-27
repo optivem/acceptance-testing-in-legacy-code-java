@@ -1,20 +1,20 @@
-name: commit-stage-monolith
+name: commit-stage-frontend
 
 on:
   push:
     branches: [ "main" ]
     paths:
-        - 'monolith/**'
-        - '.github/workflows/commit-stage-monolith.yml'
+        - 'frontend/**'
+        - '.github/workflows/commit-stage-frontend.yml'
   pull_request:
     branches: [ "main" ]
     paths:
-        - 'monolith/**'
-        - '.github/workflows/commit-stage-monolith.yml'
+        - 'frontend/**'
+        - '.github/workflows/commit-stage-frontend.yml'
   workflow_dispatch:
 
 concurrency:
-  group: commit-stage-monolith-${{ github.ref }}
+  group: commit-stage-frontend-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -51,18 +51,18 @@ jobs:
     - name: Make Gradle Wrapper executable
       run: chmod +x ./gradlew
       shell: bash
-      working-directory: monolith
+      working-directory: frontend
 
     - name: Build with Gradle Wrapper
       run: ./gradlew build
-      working-directory: monolith
+      working-directory: frontend
 
     - name: Publish Docker Image
       id: publish
       uses: optivem/publish-docker-image-action@v1
       with:
-        working-directory: monolith
-        image-name: monolith
+        working-directory: frontend
+        image-name: frontend
         registry: ghcr.io
         registry-username: ${{ github.actor }}
         image-namespace: ${{ github.repository }}
