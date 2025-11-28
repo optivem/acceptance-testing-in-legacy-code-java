@@ -8,14 +8,26 @@ $Config = @{
 
     # System Components (our application services)
     SystemComponents = @(
-        @{ Name = "Frontend"; Url = "http://localhost:3001"; ContainerName = "frontend"; LogLines = 50 }
-        @{ Name = "Backend API"; Url = "http://localhost:8081/health"; ContainerName = "backend"; LogLines = 50 }
+        @{ Name = "Frontend";
+            Url = "http://localhost:3001";
+            ContainerName = "frontend";
+            BuildPath = "frontend";
+            BuildCommand = "npm run build" }
+        @{ Name = "Backend API";
+            Url = "http://localhost:8081/health";
+            ContainerName = "backend";
+            BuildPath = "backend";
+            BuildCommand = "& .\gradlew.bat clean build" }
     )
 
     # External Systems (third-party/mock APIs)
     ExternalSystems = @(
-        @{ Name = "ERP API"; Url = "http://localhost:9001/erp/health"; ContainerName = "external"; LogLines = 20 }
-        @{ Name = "Tax API"; Url = "http://localhost:9001/tax/health"; ContainerName = "external"; LogLines = 20 }
+        @{ Name = "ERP API";
+            Url = "http://localhost:9001/erp/health";
+            ContainerName = "external" }
+        @{ Name = "Tax API";
+            Url = "http://localhost:9001/tax/health";
+            ContainerName = "external" }
     )
 
     # Test Configuration

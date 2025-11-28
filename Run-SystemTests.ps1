@@ -3,18 +3,18 @@ param(
     [ValidateSet("local", "pipeline")]
     [string]$Mode = "local",
 
-    [switch]$TestOnly
+    [switch]$TestOnly,
+
+    [int]$LogLines = 50
 )
 
-# Import build scripts
-. .\backend\Build-Backend.ps1
-. .\frontend\Build-Frontend.ps1
 
 # Load configuration
 $Config = . .\Run-SystemTests.Config.ps1
 
 # Script Configuration
 $ErrorActionPreference = "Continue"
+$MaxAttempts = 10
 $ComposeFile = if ($Mode -eq "pipeline") { "docker-compose.pipeline.yml" } else { "docker-compose.local.yml" }
 
 # Extract configuration values
@@ -26,21 +26,26 @@ $TestReportPath = $Config.TestReportPath
 $SystemComponents = $Config.SystemComponents
 $ExternalSystems = $Config.ExternalSystems
 
+# Remember starting location
+$InitialLocation = Get-Location
+
 function Execute-Command {
     param(
         [string]$Command,
-        [string]$SubFolder = $null
+        [string]$Path = $null
     )
 
-    if ($SubFolder) {
-        Set-Location $SubFolder
+    if ($Path) {
+        Write-Host "Changing directory to: $Path" -ForegroundColor Cyan
+        Set-Location $Path
     }
 
     Write-Host "$Command" -ForegroundColor Cyan
     $Result = Invoke-Expression $Command
 
-    if ($SubFolder) {
-        Set-Location ..
+    if ($Path) {
+        Write-Host "Changing directory to: $InitialLocation" -ForegroundColor Cyan
+        Set-Location $InitialLocation
     }
 
     if ($LASTEXITCODE -ne 0) {
@@ -55,9 +60,7 @@ function Wait-ForService {
     param(
         [string]$Url,
         [string]$ServiceName,
-        [string]$ContainerName,
-        [int]$MaxAttempts = 10,
-        [int]$LogLines = 50
+        [string]$ContainerName
     )
 
     $attempt = 0
@@ -84,22 +87,26 @@ function Wait-ForService {
 function Wait-ForServices {
     Write-Host "Waiting for external systems..." -ForegroundColor Yellow
     foreach ($system in $ExternalSystems) {
-        Wait-ForService -Url $system.Url -ServiceName $system.Name -ContainerName $system.ContainerName -LogLines $system.LogLines
+        Wait-ForService -Url $system.Url -ServiceName $system.Name -ContainerName $system.ContainerName
     }
 
     Write-Host "Waiting for system components..." -ForegroundColor Yellow
     foreach ($component in $SystemComponents) {
-        Wait-ForService -Url $component.Url -ServiceName $component.Name -ContainerName $component.ContainerName -LogLines $component.LogLines
+        Wait-ForService -Url $component.Url -ServiceName $component.Name -ContainerName $component.ContainerName
     }
 
     Write-Host ""
     Write-Host "All services are ready!" -ForegroundColor Green
 }
 
+
+
 function Build-System {
     if ($Mode -eq "local") {
-        Build-Backend
-        Build-Frontend
+        foreach ($component in $SystemComponents) {
+            Write-Host "Building $($component.Name)..." -ForegroundColor Cyan
+            Execute-Command -Command $component.BuildCommand -Path $component.BuildPath
+        }
     } else {
         Write-Host "Pipeline mode: Skipping build (using pre-built Docker images)" -ForegroundColor Cyan
     }
@@ -138,7 +145,7 @@ function Start-System {
 }
 
 function Test-System {
-    Execute-Command -Command $TestCommand -SubFolder "system-test"
+    Execute-Command -Command $TestCommand -Path "system-test"
 
     Write-Host ""
     Write-Host "All tests passed!" -ForegroundColor Green
@@ -157,6 +164,8 @@ function Write-Heading {
     Write-Host "================================================" -ForegroundColor $Color
     Write-Host ""
 }
+
+
 
 # Main execution
 try {
@@ -182,8 +191,10 @@ try {
 } catch {
     Write-Host ""
     Write-Host "ERROR: $_" -ForegroundColor Red
+    Set-Location $InitialLocation
     exit 1
 }
 
-# Explicit exit with code 0 on success
+# Restore location and exit with code 0 on success
+Set-Location $InitialLocation
 exit 0
