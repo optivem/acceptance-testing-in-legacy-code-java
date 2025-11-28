@@ -1,8 +1,8 @@
 package com.optivem.eshop.systemtest.smoketests.external;
 
-import com.optivem.eshop.systemtest.core.clients.commons.Closer;
+import com.optivem.eshop.systemtest.core.drivers.commons.clients.Closer;
 import com.optivem.eshop.systemtest.core.drivers.DriverFactory;
-import com.optivem.eshop.systemtest.core.drivers.external.TaxApiDriver;
+import com.optivem.eshop.systemtest.core.drivers.external.tax.api.TaxApiDriver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,10 +1,10 @@
 package com.optivem.eshop.systemtest.e2etests;
 
-import com.optivem.eshop.systemtest.core.clients.commons.Closer;
-import com.optivem.eshop.systemtest.core.commons.dtos.enums.OrderStatus;
+import com.optivem.eshop.systemtest.core.drivers.commons.clients.Closer;
+import com.optivem.eshop.systemtest.core.drivers.system.commons.enums.OrderStatus;
 import com.optivem.eshop.systemtest.core.drivers.DriverFactory;
-import com.optivem.eshop.systemtest.core.drivers.external.ErpApiDriver;
-import com.optivem.eshop.systemtest.core.drivers.external.TaxApiDriver;
+import com.optivem.eshop.systemtest.core.drivers.external.erp.api.ErpApiDriver;
+import com.optivem.eshop.systemtest.core.drivers.external.tax.api.TaxApiDriver;
 import com.optivem.eshop.systemtest.core.drivers.system.ShopDriver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

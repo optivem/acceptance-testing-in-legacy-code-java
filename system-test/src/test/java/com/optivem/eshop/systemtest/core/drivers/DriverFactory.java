@@ -1,10 +1,10 @@
 package com.optivem.eshop.systemtest.core.drivers;
 
 import com.optivem.eshop.systemtest.TestConfiguration;
-import com.optivem.eshop.systemtest.core.drivers.external.ErpApiDriver;
-import com.optivem.eshop.systemtest.core.drivers.external.TaxApiDriver;
-import com.optivem.eshop.systemtest.core.drivers.system.ShopApiDriver;
-import com.optivem.eshop.systemtest.core.drivers.system.ShopUiDriver;
+import com.optivem.eshop.systemtest.core.drivers.external.erp.api.ErpApiDriver;
+import com.optivem.eshop.systemtest.core.drivers.external.tax.api.TaxApiDriver;
+import com.optivem.eshop.systemtest.core.drivers.system.shop.api.ShopApiDriver;
+import com.optivem.eshop.systemtest.core.drivers.system.shop.ui.ShopUiDriver;
 
 public class DriverFactory {
 
