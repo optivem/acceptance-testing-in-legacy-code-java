@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
-import static com.optivem.eshop.systemtest.core.commons.assertions.ResultAssert.assertThatResult;
+import static com.optivem.eshop.systemtest.core.drivers.commons.ResultAssert.assertThatResult;
 
 class ApiE2eTest extends BaseE2eTest {
 
@@ -18,25 +18,25 @@ class ApiE2eTest extends BaseE2eTest {
     @Test
     void shouldRejectOrderWithNullQuantity() {
         var result = shopDriver.placeOrder("some-sku", null, "US");
-        assertThatResult(result).isFailureWithError("Quantity must not be empty");
+        assertThatResult(result).isFailure("Quantity must not be empty");
     }
 
     @Test
     void shouldRejectOrderWithNullSku() {
         var result = shopDriver.placeOrder(null, "5", "US");
-        assertThatResult(result).isFailureWithError("SKU must not be empty");
+        assertThatResult(result).isFailure("SKU must not be empty");
     }
 
     @Test
     void shouldRejectOrderWithNullCountry() {
         var result = shopDriver.placeOrder("some-sku", "5", null);
-        assertThatResult(result).isFailureWithError("Country must not be empty");
+        assertThatResult(result).isFailure("Country must not be empty");
     }
 
     @Test
     void shouldNotCancelNonExistentOrder() {
         var result = shopDriver.cancelOrder("NON-EXISTENT-ORDER-99999");
-        assertThatResult(result).isFailureWithError("Order NON-EXISTENT-ORDER-99999 does not exist.");
+        assertThatResult(result).isFailure("Order NON-EXISTENT-ORDER-99999 does not exist.");
     }
 
     @Test
@@ -54,7 +54,7 @@ class ApiE2eTest extends BaseE2eTest {
 
         // Try to cancel the same order again - should fail
         var secondCancelResult = shopDriver.cancelOrder(orderNumber);
-        assertThatResult(secondCancelResult).isFailureWithError("Order has already been cancelled");
+        assertThatResult(secondCancelResult).isFailure("Order has already been cancelled");
     }
 }
 

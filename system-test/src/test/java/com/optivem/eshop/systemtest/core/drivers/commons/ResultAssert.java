@@ -1,6 +1,5 @@
-package com.optivem.eshop.systemtest.core.commons.assertions;
+package com.optivem.eshop.systemtest.core.drivers.commons;
 
-import com.optivem.eshop.systemtest.core.drivers.commons.Result;
 import org.assertj.core.api.AbstractAssert;
 
 public class ResultAssert extends AbstractAssert<ResultAssert, Result<?>> {
@@ -29,20 +28,10 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result<?>> {
         return this;
     }
 
-    public ResultAssert isFailureWithError(String errorMessage) {
+    public ResultAssert isFailure(String errorMessage) {
         isFailure();
         if (!actual.getErrors().contains(errorMessage)) {
             failWithMessage("Expected result to contain error '%s' but errors were: %s", errorMessage, actual.getErrors());
-        }
-        return this;
-    }
-
-    public ResultAssert hasErrors(String... errorMessages) {
-        isFailure();
-        for (String errorMessage : errorMessages) {
-            if (!actual.getErrors().contains(errorMessage)) {
-                failWithMessage("Expected result to contain error '%s' but errors were: %s", errorMessage, actual.getErrors());
-            }
         }
         return this;
     }

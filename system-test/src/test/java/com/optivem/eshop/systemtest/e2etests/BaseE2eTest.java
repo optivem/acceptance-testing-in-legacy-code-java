@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import static com.optivem.eshop.systemtest.core.commons.assertions.ResultAssert.assertThatResult;
+import static com.optivem.eshop.systemtest.core.drivers.commons.ResultAssert.assertThatResult;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class BaseE2eTest {
@@ -124,13 +124,13 @@ public abstract class BaseE2eTest {
     @Test
     void shouldRejectOrderWithNonExistentSku() {
         var result = shopDriver.placeOrder("NON-EXISTENT-SKU-12345", "5", "US");
-        assertThatResult(result).isFailureWithError("Product does not exist for SKU: NON-EXISTENT-SKU-12345");
+        assertThatResult(result).isFailure("Product does not exist for SKU: NON-EXISTENT-SKU-12345");
     }
 
     @Test
     void shouldNotBeAbleToViewNonExistentOrder() {
         var result = shopDriver.viewOrder("NON-EXISTENT-ORDER-12345");
-        assertThatResult(result).isFailureWithError("Order NON-EXISTENT-ORDER-12345 does not exist.");
+        assertThatResult(result).isFailure("Order NON-EXISTENT-ORDER-12345 does not exist.");
     }
 
     @Test
@@ -138,7 +138,7 @@ public abstract class BaseE2eTest {
         var sku = "DEF-" + UUID.randomUUID();
         erpApiDriver.createProduct(sku, "30.00");
         var result = shopDriver.placeOrder(sku, "-3", "US");
-        assertThatResult(result).isFailureWithError("Quantity must be positive");
+        assertThatResult(result).isFailure("Quantity must be positive");
     }
 
     @Test
@@ -146,7 +146,7 @@ public abstract class BaseE2eTest {
         var sku = "GHI-" + UUID.randomUUID();
         erpApiDriver.createProduct(sku, "40.00");
         var result = shopDriver.placeOrder(sku, "0", "US");
-        assertThatResult(result).isFailureWithError("Quantity must be positive");
+        assertThatResult(result).isFailure("Quantity must be positive");
     }
 
 
@@ -161,7 +161,7 @@ public abstract class BaseE2eTest {
     @MethodSource("provideEmptySkuValues")
     void shouldRejectOrderWithEmptySku(String sku) {
         var result = shopDriver.placeOrder(sku, "5", "US");
-        assertThatResult(result).isFailureWithError("SKU must not be empty");
+        assertThatResult(result).isFailure("SKU must not be empty");
     }
 
     private static Stream<Arguments> provideEmptyQuantityValues() {
@@ -175,7 +175,7 @@ public abstract class BaseE2eTest {
     @MethodSource("provideEmptyQuantityValues")
     void shouldRejectOrderWithEmptyQuantity(String emptyQuantity) {
         var result = shopDriver.placeOrder("some-sku", emptyQuantity, "US");
-        assertThatResult(result).isFailureWithError("Quantity must not be empty");
+        assertThatResult(result).isFailure("Quantity must not be empty");
     }
 
     private static Stream<Arguments> provideNonIntegerQuantityValues() {
@@ -189,7 +189,7 @@ public abstract class BaseE2eTest {
     @MethodSource("provideNonIntegerQuantityValues")
     void shouldRejectOrderWithNonIntegerQuantity(String nonIntegerQuantity) {
         var result = shopDriver.placeOrder("some-sku", nonIntegerQuantity, "US");
-        assertThatResult(result).isFailureWithError("Quantity must be an integer");
+        assertThatResult(result).isFailure("Quantity must be an integer");
     }
 
     private static Stream<Arguments> provideEmptyCountryValues() {
@@ -203,7 +203,7 @@ public abstract class BaseE2eTest {
     @MethodSource("provideEmptyCountryValues")
     void shouldRejectOrderWithEmptyCountry(String emptyCountry) {
         var result = shopDriver.placeOrder("some-sku", "5", emptyCountry);
-        assertThatResult(result).isFailureWithError("Country must not be empty");
+        assertThatResult(result).isFailure("Country must not be empty");
     }
 
     @Test
@@ -211,7 +211,7 @@ public abstract class BaseE2eTest {
         var sku = "JKL-" + UUID.randomUUID();
         erpApiDriver.createProduct(sku, "25.00");
         var result = shopDriver.placeOrder(sku, "3", "XX");
-        assertThatResult(result).isFailureWithError("Country does not exist: XX");
+        assertThatResult(result).isFailure("Country does not exist: XX");
     }
 }
 
