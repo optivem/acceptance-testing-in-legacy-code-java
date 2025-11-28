@@ -23,6 +23,10 @@ $TestReportPath = "system-test\build\reports\tests\test\index.html"
 $ErrorActionPreference = "Continue"
 $ComposeFile = if ($Mode -eq "pipeline") { "docker-compose.pipeline.yml" } else { "docker-compose.local.yml" }
 
+# Import build scripts
+. .\backend\Build-Backend.ps1
+. .\frontend\Build-Frontend.ps1
+
 function Execute-Command {
     param(
         [string]$Command,
@@ -83,20 +87,6 @@ function Wait-ForServices {
     Wait-ForService -Url $TaxApiUrl -ServiceName "Tax API" -ContainerName "external" -LogLines 20
     Wait-ForService -Url $BackendUrl -ServiceName "Backend API" -ContainerName "backend" -LogLines 50
     Wait-ForService -Url $FrontendUrl -ServiceName "Frontend" -ContainerName "frontend" -LogLines 50
-}
-
-function Build-Backend {
-    Execute-Command -Command "& .\gradlew.bat clean build" -SubFolder "backend"
-}
-
-function Build-Frontend {
-    Set-Location frontend
-    if (-not (Test-Path "node_modules")) {
-        Execute-Command -Command "npm install"
-    }
-    Set-Location ..
-
-    Execute-Command -Command "npm run build" -SubFolder "frontend"
 }
 
 function Build-System {
