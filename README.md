@@ -32,16 +32,10 @@ Check that you have Powershell 7
 $PSVersionTable.PSVersion
 ```
 
-Check that you have Node 22+
-
-```shell
-node -v
-```
-
 ## Run Everything
 
 ```powershell
-.\Run-SystemTests.ps1 all
+.\Run-SystemTests.ps1
 ```
 
 This will:
@@ -54,48 +48,75 @@ This will:
 You can open these URLs in your browser:
 - **Frontend UI**: [http://localhost:3001](http://localhost:3001)
 - **Backend API**: [http://localhost:8081/api](http://localhost:8081/api)
-- **ERP API**: [http://localhost:9011](http://localhost:9011)
-- **Tax API**: [http://localhost:9012](http://localhost:9012)
+- **ERP API**: [http://localhost:9001/erp/health](http://localhost:9001/erp/health)
+- **Tax API**: [http://localhost:9001/tax/health](http://localhost:9001/tax/health)
 
 ## Separate Commands
 
-### Build
-Compiles the code and creates the Docker image (local mode only):
+### Run with Local Build (Default)
+Builds locally and runs all system tests:
 ```powershell
-.\Run-SystemTests.ps1 build
+.\Run-SystemTests.ps1
+# or explicitly:
+.\Run-SystemTests.ps1 local
 ```
 
-### Start Services
-Starts the Docker containers:
+### Run with Pipeline Images
+Uses pre-built Docker images from registry:
 ```powershell
-# Local mode (uses locally built code)
-.\Run-SystemTests.ps1 start
-
-# Pipeline mode (uses pre-built image from registry)
-.\Run-SystemTests.ps1 start pipeline
+.\Run-SystemTests.ps1 pipeline
 ```
+
+### Quick Test Re-run
+Skip build/start phases and just run tests (assumes services are already running):
+```powershell
+.\Run-SystemTests.ps1 -TestOnly
+```
+
+**Note:** The `-TestOnly` flag skips the build, stop, start, and wait phases. Use it when services are already running and you just want to re-run the tests quickly.
+
+### Individual Component Builds
+You can also build components separately:
+
+**Backend:**
+```powershell
+cd backend
+.\Build-Backend.ps1
+```
+
+**Frontend:**
+```powershell
+cd frontend
+.\Build-Frontend.ps1
+```
+
+### Docker Commands
+For manual Docker management:
+
+**View Logs:**
+```powershell
+docker compose -f docker-compose.local.yml logs
+# or for pipeline:
+docker compose -f docker-compose.pipeline.yml logs
+```
+
+**Stop Services:**
+```powershell
+docker compose -f docker-compose.local.yml down
+# or for pipeline:
+docker compose -f docker-compose.pipeline.yml down
+```
+
+**Service URLs:**
 
 You can open these URLs in your browser:
 - **Frontend UI**: [http://localhost:3001](http://localhost:3001)
 - **Backend API**: [http://localhost:8081/api](http://localhost:8081/api)
-- **ERP API**: [http://localhost:9011](http://localhost:9011)
-- **Tax API**: [http://localhost:9012](http://localhost:9012)
+- **ERP API**: [http://localhost:9001/erp/health](http://localhost:9001/erp/health)
+- **Tax API**: [http://localhost:9001/tax/health](http://localhost:9001/tax/health)
 - **PostgreSQL Database**: localhost:5401 (database: `eshop`, user: `eshop_user`, password: `eshop_password`)
 
-### Run Tests
-```powershell
-.\Run-SystemTests.ps1 test
-```
 
-### View Logs
-```powershell
-.\Run-SystemTests.ps1 logs
-```
-
-### Stop Services
-```powershell
-.\Run-SystemTests.ps1 stop
-```
 
 ## License
 

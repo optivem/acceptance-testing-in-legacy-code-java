@@ -3,7 +3,7 @@ param(
     [ValidateSet("local", "pipeline")]
     [string]$Mode = "local",
 
-    [switch]$NoBuild
+    [switch]$TestOnly
 )
 
 # Import build scripts
@@ -154,7 +154,7 @@ function Write-Heading {
 # Main execution
 try {
 
-    if (-not $NoBuild) {
+    if (-not $TestOnly) {
         Write-Heading -Text "Build System"
         Build-System
 
