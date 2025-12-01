@@ -3,8 +3,10 @@
 
 $Config = @{
     # Test Configuration
-    TestCommand = "& .\gradlew.bat clean test"
-    TestReportPath = "system-test\build\reports\tests\test\index.html"
+    SmokeTestCommand = "& .\gradlew.bat clean test --tests 'com.optivem.eshop.systemtest.smoketests.*'"
+    E2ETestCommand = "& .\gradlew.bat clean test --tests 'com.optivem.eshop.systemtest.e2etests.*'"
+
+    TestReportPath = "build\reports\tests\test\index.html"
 }
 
 # Export the configuration

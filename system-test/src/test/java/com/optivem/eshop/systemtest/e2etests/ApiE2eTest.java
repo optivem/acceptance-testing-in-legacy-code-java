@@ -11,7 +11,7 @@ import static com.optivem.eshop.systemtest.core.drivers.commons.ResultAssert.ass
 class ApiE2eTest extends BaseE2eTest {
 
     @Override
-    protected ShopDriver createDriver() {
+    protected ShopDriver createShopDriver() {
         return DriverFactory.createShopApiDriver();
     }
 

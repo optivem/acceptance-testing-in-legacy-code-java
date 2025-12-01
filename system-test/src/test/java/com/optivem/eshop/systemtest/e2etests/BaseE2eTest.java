@@ -28,12 +28,12 @@ public abstract class BaseE2eTest {
 
     @BeforeEach
     void setUp() {
-        shopDriver = createDriver();
+        shopDriver = createShopDriver();
         erpApiDriver = DriverFactory.createErpApiDriver();
         taxApiDriver = DriverFactory.createTaxApiDriver();
     }
 
-    protected abstract ShopDriver createDriver();
+    protected abstract ShopDriver createShopDriver();
 
     @AfterEach
     void tearDown() {

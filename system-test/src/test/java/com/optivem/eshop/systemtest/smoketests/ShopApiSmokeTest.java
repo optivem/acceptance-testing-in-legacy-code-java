@@ -6,7 +6,7 @@ import com.optivem.eshop.systemtest.core.drivers.system.ShopDriver;
 public class ShopApiSmokeTest extends BaseShopSmokeTest {
 
     @Override
-    protected ShopDriver createDriver() {
+    protected ShopDriver createShopDriver() {
         return DriverFactory.createShopApiDriver();
     }
 }

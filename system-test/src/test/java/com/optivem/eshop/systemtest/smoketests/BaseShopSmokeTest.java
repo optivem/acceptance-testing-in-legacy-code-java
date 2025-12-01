@@ -14,10 +14,10 @@ public abstract class BaseShopSmokeTest {
 
     @BeforeEach
     void setUp() {
-        shopDriver = createDriver();
+        shopDriver = createShopDriver();
     }
 
-    protected abstract ShopDriver createDriver();
+    protected abstract ShopDriver createShopDriver();
 
     @AfterEach
     void tearDown() {
