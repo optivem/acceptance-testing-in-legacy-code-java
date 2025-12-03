@@ -29,8 +29,8 @@ public class ShopSmokeTest {
         Closer.close(shopDriver);
     }
 
-    @Channel({ChannelType.UI, ChannelType.API})
     @TestTemplate
+    @Channel({ChannelType.UI, ChannelType.API})
     void shouldBeAbleToGoToShop() {
         var result = shopDriver.goToShop();
         assertThatResult(result).isSuccess();
