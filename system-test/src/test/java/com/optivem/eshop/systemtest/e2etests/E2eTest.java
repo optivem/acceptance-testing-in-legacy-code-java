@@ -202,17 +202,17 @@ public class E2eTest {
 
     private static Stream<Arguments> provideEmptyCountryValues() {
         return Stream.of(
-                Arguments.of(""),      // Empty string
-                Arguments.of("   ")    // Whitespace string
+                Arguments.of("", "Country must not be empty"),      // Empty string
+                Arguments.of("   ", "Country must not be empty")    // Whitespace string
         );
     }
 
     @TestTemplate
     @Channel({ChannelType.UI, ChannelType.API})
     @MethodSource("provideEmptyCountryValues")
-    void shouldRejectOrderWithEmptyCountry(String emptyCountry) {
+    void shouldRejectOrderWithEmptyCountry(String emptyCountry, String expectedErrorMessage) {
         var result = shopDriver.placeOrder("some-sku", "5", emptyCountry);
-        assertThatResult(result).isFailure("Country must not be empty");
+        assertThatResult(result).isFailure(expectedErrorMessage);
     }
 
     @TestTemplate
