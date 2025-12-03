@@ -20,7 +20,7 @@ import java.util.stream.Stream;
  * When a test method is annotated with @Channel and @TestTemplate, this extension
  * creates separate test invocations for each specified channel (e.g., UI, API).
  *
- * Also supports @CombinatorialInlineData to combine channel types with inline test data.
+ * Also supports @ChannelArgumentsSource to combine channel types with inline test data.
  */
 public class ChannelExtension implements TestTemplateInvocationContextProvider {
 
@@ -37,21 +37,21 @@ public class ChannelExtension implements TestTemplateInvocationContextProvider {
         Channel channelAnnotation = testMethod.getAnnotation(Channel.class);
         String[] channels = channelAnnotation.value();
 
-        // Check if the method has CombinatorialInlineSource annotations
-        CombinatorialInlineSource.Container containerAnnotation =
-                testMethod.getAnnotation(CombinatorialInlineSource.Container.class);
-        CombinatorialInlineSource singleAnnotation =
-                testMethod.getAnnotation(CombinatorialInlineSource.class);
+        // Check if the method has ChannelArgumentsSource annotations
+        ChannelArgumentsSource.Container containerAnnotation =
+                testMethod.getAnnotation(ChannelArgumentsSource.Container.class);
+        ChannelArgumentsSource singleAnnotation =
+                testMethod.getAnnotation(ChannelArgumentsSource.class);
 
         List<String[]> dataRows = new ArrayList<>();
 
         if (containerAnnotation != null) {
-            // Multiple @CombinatorialInlineSource annotations
-            for (CombinatorialInlineSource data : containerAnnotation.value()) {
+            // Multiple @ChannelArgumentsSource annotations
+            for (ChannelArgumentsSource data : containerAnnotation.value()) {
                 dataRows.add(data.value());
             }
         } else if (singleAnnotation != null) {
-            // Single @CombinatorialInlineSource annotation
+            // Single @ChannelArgumentsSource annotation
             dataRows.add(singleAnnotation.value());
         }
 

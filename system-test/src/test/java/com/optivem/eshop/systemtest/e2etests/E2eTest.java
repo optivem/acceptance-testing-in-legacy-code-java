@@ -3,7 +3,7 @@ package com.optivem.eshop.systemtest.e2etests;
 import com.optivem.eshop.systemtest.core.channels.Channel;
 import com.optivem.eshop.systemtest.core.channels.ChannelExtension;
 import com.optivem.eshop.systemtest.core.channels.ChannelType;
-import com.optivem.eshop.systemtest.core.channels.CombinatorialInlineSource;
+import com.optivem.eshop.systemtest.core.channels.ChannelArgumentsSource;
 import com.optivem.eshop.systemtest.core.drivers.commons.clients.Closer;
 import com.optivem.eshop.systemtest.core.drivers.system.commons.enums.OrderStatus;
 import com.optivem.eshop.systemtest.core.channels.ChannelType;
@@ -177,8 +177,8 @@ public class E2eTest {
 
     @TestTemplate
     @Channel({ChannelType.UI, ChannelType.API})
-    @CombinatorialInlineSource("")
-    @CombinatorialInlineSource("   ")
+    @ChannelArgumentsSource("")
+    @ChannelArgumentsSource("   ")
     void shouldRejectOrderWithEmptySku(String sku) {
         var result = shopDriver.placeOrder(sku, "5", "US");
         assertThatResult(result).isFailure("SKU must not be empty");
@@ -186,8 +186,8 @@ public class E2eTest {
 
     @TestTemplate
     @Channel({ChannelType.UI, ChannelType.API})
-    @CombinatorialInlineSource("")
-    @CombinatorialInlineSource("   ")
+    @ChannelArgumentsSource("")
+    @ChannelArgumentsSource("   ")
     void shouldRejectOrderWithEmptyQuantity(String emptyQuantity) {
         var result = shopDriver.placeOrder("some-sku", emptyQuantity, "US");
         assertThatResult(result).isFailure("Quantity must not be empty");
@@ -195,8 +195,8 @@ public class E2eTest {
 
     @TestTemplate
     @Channel({ChannelType.UI, ChannelType.API})
-    @CombinatorialInlineSource("3.5")
-    @CombinatorialInlineSource("lala")
+    @ChannelArgumentsSource("3.5")
+    @ChannelArgumentsSource("lala")
     void shouldRejectOrderWithNonIntegerQuantity(String nonIntegerQuantity) {
         var result = shopDriver.placeOrder("some-sku", nonIntegerQuantity, "US");
         assertThatResult(result).isFailure("Quantity must be an integer");
@@ -204,8 +204,8 @@ public class E2eTest {
 
     @TestTemplate
     @Channel({ChannelType.UI, ChannelType.API})
-    @CombinatorialInlineSource("")
-    @CombinatorialInlineSource("   ")
+    @ChannelArgumentsSource("")
+    @ChannelArgumentsSource("   ")
     void shouldRejectOrderWithEmptyCountry(String emptyCountry) {
         var result = shopDriver.placeOrder("some-sku", "5", emptyCountry);
         assertThatResult(result).isFailure("Country must not be empty");
