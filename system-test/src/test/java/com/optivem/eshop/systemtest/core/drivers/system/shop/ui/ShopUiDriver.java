@@ -1,5 +1,6 @@
 package com.optivem.eshop.systemtest.core.drivers.system.shop.ui;
 
+import com.optivem.eshop.systemtest.core.drivers.system.commons.dtos.PlaceOrderRequest;
 import com.optivem.eshop.systemtest.core.drivers.system.shop.ui.client.ShopUiClient;
 import com.optivem.eshop.systemtest.core.drivers.system.shop.ui.client.pages.HomePage;
 import com.optivem.eshop.systemtest.core.drivers.system.shop.ui.client.pages.NewOrderPage;
@@ -48,7 +49,11 @@ public class ShopUiDriver implements ShopDriver {
     }
 
     @Override
-    public Result<PlaceOrderResponse> placeOrder(String sku, String quantity, String country) {
+    public Result<PlaceOrderResponse> placeOrder(PlaceOrderRequest request) {
+        var sku = request.getSku();
+        var quantity = request.getQuantity();
+        var country = request.getCountry();
+
         ensureOnNewOrderPage();
         newOrderPage.inputSku(sku);
         newOrderPage.inputQuantity(quantity);

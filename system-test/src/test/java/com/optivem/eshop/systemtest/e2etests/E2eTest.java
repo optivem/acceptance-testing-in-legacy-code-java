@@ -1,5 +1,6 @@
 package com.optivem.eshop.systemtest.e2etests;
 
+import com.optivem.eshop.systemtest.core.drivers.system.commons.dtos.PlaceOrderRequest;
 import com.optivem.testing.channels.Channel;
 import com.optivem.testing.channels.ChannelExtension;
 import com.optivem.eshop.systemtest.core.channels.ChannelType;
@@ -53,7 +54,13 @@ public class E2eTest {
         var createProductResult = erpApiDriver.createProduct(sku, "20.00");
         assertThatResult(createProductResult).isSuccess();
 
-        var placeOrderResult = shopDriver.placeOrder(sku, "5", "US");
+        var placeOrderRequest = PlaceOrderRequest.builder()
+                .sku(sku)
+                .quantity("5")
+                .country("US")
+                .build();
+
+        var placeOrderResult = shopDriver.placeOrder(placeOrderRequest);
         assertThatResult(placeOrderResult).isSuccess();
 
         var orderNumber = placeOrderResult.getValue().getOrderNumber();
@@ -110,7 +117,13 @@ public class E2eTest {
         var createProductResult = erpApiDriver.createProduct(sku, "50.00");
         assertThatResult(createProductResult).isSuccess();
 
-        var placeOrderResult = shopDriver.placeOrder(sku, "2", "US");
+        var placeOrderRequest = PlaceOrderRequest.builder()
+                .sku(sku)
+                .quantity("2")
+                .country("US")
+                .build();
+
+        var placeOrderResult = shopDriver.placeOrder(placeOrderRequest);
         assertThatResult(placeOrderResult).isSuccess();
 
         var orderNumber = placeOrderResult.getValue().getOrderNumber();
@@ -133,7 +146,13 @@ public class E2eTest {
     @TestTemplate
     @Channel({ChannelType.UI, ChannelType.API})
     void shouldRejectOrderWithNonExistentSku() {
-        var result = shopDriver.placeOrder("NON-EXISTENT-SKU-12345", "5", "US");
+        var request = PlaceOrderRequest.builder()
+                .sku("NON-EXISTENT-SKU-12345")
+                .quantity("5")
+                .country("US")
+                .build();
+
+        var result = shopDriver.placeOrder(request);
         assertThatResult(result).isFailure("Product does not exist for SKU: NON-EXISTENT-SKU-12345");
     }
 
@@ -151,7 +170,13 @@ public class E2eTest {
         var createProductResult = erpApiDriver.createProduct(sku, "30.00");
         assertThatResult(createProductResult).isSuccess();
 
-        var result = shopDriver.placeOrder(sku, "-3", "US");
+        var request = PlaceOrderRequest.builder()
+                .sku(sku)
+                .quantity("-3")
+                .country("US")
+                .build();
+
+        var result = shopDriver.placeOrder(request);
         assertThatResult(result).isFailure("Quantity must be positive");
     }
 
@@ -162,7 +187,13 @@ public class E2eTest {
         var createProductResult = erpApiDriver.createProduct(sku, "40.00");
         assertThatResult(createProductResult).isSuccess();
 
-        var result = shopDriver.placeOrder(sku, "0", "US");
+        var request = PlaceOrderRequest.builder()
+                .sku(sku)
+                .quantity("0")
+                .country("US")
+                .build();
+
+        var result = shopDriver.placeOrder(request);
         assertThatResult(result).isFailure("Quantity must be positive");
     }
 
@@ -179,7 +210,13 @@ public class E2eTest {
     @TestDataSource("")
     @TestDataSource("   ")
     void shouldRejectOrderWithEmptySku(String sku) {
-        var result = shopDriver.placeOrder(sku, "5", "US");
+        var request = PlaceOrderRequest.builder()
+                .sku(sku)
+                .quantity("5")
+                .country("US")
+                .build();
+
+        var result = shopDriver.placeOrder(request);
         assertThatResult(result).isFailure("SKU must not be empty");
     }
 
@@ -187,7 +224,13 @@ public class E2eTest {
     @Channel({ChannelType.UI, ChannelType.API})
     @ArgumentsSource(EmptyQuantityArgumentsProvider.class)
     void shouldRejectOrderWithEmptyQuantity(String emptyQuantity, String expectedErrorMessage) {
-        var result = shopDriver.placeOrder("some-sku", emptyQuantity, "US");
+        var request = PlaceOrderRequest.builder()
+                .sku("some-sku")
+                .quantity(emptyQuantity)
+                .country("US")
+                .build();
+
+        var result = shopDriver.placeOrder(request);
         assertThatResult(result).isFailure(expectedErrorMessage);
     }
 
@@ -196,7 +239,13 @@ public class E2eTest {
     @TestDataSource("3.5")
     @TestDataSource("lala")
     void shouldRejectOrderWithNonIntegerQuantity(String nonIntegerQuantity) {
-        var result = shopDriver.placeOrder("some-sku", nonIntegerQuantity, "US");
+        var request = PlaceOrderRequest.builder()
+                .sku("some-sku")
+                .quantity(nonIntegerQuantity)
+                .country("US")
+                .build();
+
+        var result = shopDriver.placeOrder(request);
         assertThatResult(result).isFailure("Quantity must be an integer");
     }
 
@@ -211,7 +260,13 @@ public class E2eTest {
     @Channel({ChannelType.UI, ChannelType.API})
     @MethodSource("provideEmptyCountryValues")
     void shouldRejectOrderWithEmptyCountry(String emptyCountry, String expectedErrorMessage) {
-        var result = shopDriver.placeOrder("some-sku", "5", emptyCountry);
+        var request = PlaceOrderRequest.builder()
+                .sku("some-sku")
+                .quantity("5")
+                .country(emptyCountry)
+                .build();
+
+        var result = shopDriver.placeOrder(request);
         assertThatResult(result).isFailure(expectedErrorMessage);
     }
 
@@ -222,28 +277,52 @@ public class E2eTest {
         var createProductResult = erpApiDriver.createProduct(sku, "25.00");
         assertThatResult(createProductResult).isSuccess();
 
-        var result = shopDriver.placeOrder(sku, "3", "XX");
+        var request = PlaceOrderRequest.builder()
+                .sku(sku)
+                .quantity("3")
+                .country("XX")
+                .build();
+
+        var result = shopDriver.placeOrder(request);
         assertThatResult(result).isFailure("Country does not exist: XX");
     }
 
     @TestTemplate
     @Channel({ChannelType.API})
     void shouldRejectOrderWithNullQuantity() {
-        var result = shopDriver.placeOrder("some-sku", null, "US");
+        var request = PlaceOrderRequest.builder()
+                .sku("some-sku")
+                .quantity(null)
+                .country("US")
+                .build();
+
+        var result = shopDriver.placeOrder(request);
         assertThatResult(result).isFailure("Quantity must not be empty");
     }
 
     @TestTemplate
     @Channel({ChannelType.API})
     void shouldRejectOrderWithNullSku() {
-        var result = shopDriver.placeOrder(null, "5", "US");
+        var request = PlaceOrderRequest.builder()
+                .sku(null)
+                .quantity("5")
+                .country("US")
+                .build();
+
+        var result = shopDriver.placeOrder(request);
         assertThatResult(result).isFailure("SKU must not be empty");
     }
 
     @TestTemplate
     @Channel({ChannelType.API})
     void shouldRejectOrderWithNullCountry() {
-        var result = shopDriver.placeOrder("some-sku", "5", null);
+        var request = PlaceOrderRequest.builder()
+                .sku("some-sku")
+                .quantity("5")
+                .country(null)
+                .build();
+
+        var result = shopDriver.placeOrder(request);
         assertThatResult(result).isFailure("Country must not be empty");
     }
 
@@ -263,7 +342,13 @@ public class E2eTest {
         var createProductResult = erpApiDriver.createProduct(sku, "35.00");
         assertThatResult(createProductResult).isSuccess();
 
-        var placeOrderResult = shopDriver.placeOrder(sku, "3", "US");
+        var request = PlaceOrderRequest.builder()
+                .sku(sku)
+                .quantity("3")
+                .country("US")
+                .build();
+
+        var placeOrderResult = shopDriver.placeOrder(request);
         assertThatResult(placeOrderResult).isSuccess();
 
         var orderNumber = placeOrderResult.getValue().getOrderNumber();
