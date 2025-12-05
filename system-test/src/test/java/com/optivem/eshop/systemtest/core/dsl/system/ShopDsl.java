@@ -2,10 +2,12 @@ package com.optivem.eshop.systemtest.core.dsl.system;
 
 import com.optivem.eshop.systemtest.core.drivers.system.ShopDriver;
 import com.optivem.eshop.systemtest.core.dsl.commons.DslContext;
+import com.optivem.eshop.systemtest.core.dsl.system.commands.confirm.ConfirmShopOpened;
 import com.optivem.eshop.systemtest.core.dsl.system.commands.execute.CancelOrder;
 import com.optivem.eshop.systemtest.core.dsl.system.commands.execute.GoToShop;
 import com.optivem.eshop.systemtest.core.dsl.system.commands.execute.PlaceOrder;
 import com.optivem.eshop.systemtest.core.dsl.system.commands.execute.ViewOrder;
+import com.optivem.lang.Closer;
 
 public class ShopDsl {
     private final ShopDriver driver;
@@ -20,6 +22,10 @@ public class ShopDsl {
         return new GoToShop(driver, context);
     }
 
+    public ConfirmShopOpened confirmShopOpened() {
+        return new ConfirmShopOpened(driver, context);
+    }
+
     public PlaceOrder placeOrder() {
         return new PlaceOrder(driver, context);
     }
@@ -31,5 +37,4 @@ public class ShopDsl {
     public ViewOrder viewOrder() {
         return new ViewOrder(driver, context);
     }
-
 }

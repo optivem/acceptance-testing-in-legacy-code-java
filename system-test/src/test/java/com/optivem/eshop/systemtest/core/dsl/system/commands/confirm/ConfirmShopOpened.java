@@ -1,4 +1,19 @@
 package com.optivem.eshop.systemtest.core.dsl.system.commands.confirm;
 
-public class ConfirmShopOpened {
+import com.optivem.eshop.systemtest.core.drivers.system.ShopDriver;
+import com.optivem.eshop.systemtest.core.dsl.commons.DslContext;
+import com.optivem.eshop.systemtest.core.dsl.system.commands.BaseShopCommand;
+
+import static com.optivem.testing.assertions.ResultAssert.assertThatResult;
+
+public class ConfirmShopOpened extends BaseShopCommand {
+    public ConfirmShopOpened(ShopDriver driver, DslContext context) {
+        super(driver, context);
+    }
+
+    @Override
+    public void execute() {
+        var result = context.results().getResult("goToShop", Void.class);
+        assertThatResult(result).isSuccess();
+    }
 }
