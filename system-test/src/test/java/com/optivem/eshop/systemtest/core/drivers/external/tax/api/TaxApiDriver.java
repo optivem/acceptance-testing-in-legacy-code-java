@@ -1,9 +1,9 @@
 package com.optivem.eshop.systemtest.core.drivers.external.tax.api;
 
-import com.optivem.eshop.systemtest.core.drivers.commons.clients.Closer;
-import com.optivem.eshop.systemtest.core.drivers.commons.clients.HttpGateway;
+import com.optivem.commons.utils.Closer;
+import com.optivem.commons.http.HttpGateway;
 import com.optivem.eshop.systemtest.core.drivers.external.tax.api.client.TaxApiClient;
-import com.optivem.eshop.systemtest.core.drivers.commons.Result;
+import com.optivem.commons.utils.Result;
 
 import java.net.http.HttpClient;
 

@@ -1,9 +1,9 @@
 package com.optivem.eshop.systemtest.core.drivers.external.erp.api.client.controllers;
 
-import com.optivem.eshop.systemtest.core.drivers.commons.clients.HttpGateway;
-import com.optivem.eshop.systemtest.core.drivers.commons.clients.TestHttpUtils;
+import com.optivem.commons.http.HttpGateway;
+import com.optivem.commons.http.HttpUtils;
 import com.optivem.eshop.systemtest.core.drivers.external.erp.api.client.dtos.CreateProductRequest;
-import com.optivem.eshop.systemtest.core.drivers.commons.Result;
+import com.optivem.commons.utils.Result;
 
 public class ProductController {
 
@@ -26,6 +26,6 @@ public class ProductController {
 
         var httpResponse = httpClient.post(ENDPOINT, request);
 
-        return TestHttpUtils.getCreatedResultOrFailure(httpResponse);
+        return HttpUtils.getCreatedResultOrFailure(httpResponse);
     }
 }

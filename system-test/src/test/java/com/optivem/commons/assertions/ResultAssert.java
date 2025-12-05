@@ -1,5 +1,6 @@
-package com.optivem.eshop.systemtest.core.drivers.commons;
+package com.optivem.commons.assertions;
 
+import com.optivem.commons.utils.Result;
 import org.assertj.core.api.AbstractAssert;
 
 public class ResultAssert extends AbstractAssert<ResultAssert, Result<?>> {

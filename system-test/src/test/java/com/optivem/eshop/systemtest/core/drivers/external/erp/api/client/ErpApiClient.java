@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest.core.drivers.external.erp.api.client;
 
-import com.optivem.eshop.systemtest.core.drivers.commons.clients.HttpGateway;
+import com.optivem.commons.http.HttpGateway;
 import com.optivem.eshop.systemtest.core.drivers.external.erp.api.client.controllers.HealthController;
 import com.optivem.eshop.systemtest.core.drivers.external.erp.api.client.controllers.ProductController;
 

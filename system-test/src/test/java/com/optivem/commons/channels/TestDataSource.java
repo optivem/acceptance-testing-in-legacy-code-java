@@ -1,4 +1,4 @@
-package com.optivem.eshop.systemtest.core.channels.library;
+package com.optivem.commons.channels;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;

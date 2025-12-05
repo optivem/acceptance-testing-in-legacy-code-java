@@ -1,4 +1,4 @@
-package com.optivem.eshop.systemtest.core.channels.library;
+package com.optivem.commons.channels;
 
 /**
  * Thread-local context holder for the current channel being tested.

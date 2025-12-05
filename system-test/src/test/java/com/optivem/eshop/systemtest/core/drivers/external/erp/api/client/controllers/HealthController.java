@@ -1,8 +1,8 @@
 package com.optivem.eshop.systemtest.core.drivers.external.erp.api.client.controllers;
 
-import com.optivem.eshop.systemtest.core.drivers.commons.clients.HttpGateway;
-import com.optivem.eshop.systemtest.core.drivers.commons.clients.TestHttpUtils;
-import com.optivem.eshop.systemtest.core.drivers.commons.Result;
+import com.optivem.commons.http.HttpGateway;
+import com.optivem.commons.http.HttpUtils;
+import com.optivem.commons.utils.Result;
 
 public class HealthController {
 
@@ -16,7 +16,7 @@ public class HealthController {
 
     public Result<Void> checkHealth() {
         var httpResponse = httpClient.get(ENDPOINT);
-        return TestHttpUtils.getOkResultOrFailure(httpResponse);
+        return HttpUtils.getOkResultOrFailure(httpResponse);
     }
 }
 

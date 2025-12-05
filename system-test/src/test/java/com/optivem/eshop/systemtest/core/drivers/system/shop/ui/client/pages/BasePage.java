@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest.core.drivers.system.shop.ui.client.pages;
 
-import com.optivem.eshop.systemtest.core.drivers.commons.clients.TestPageClient;
+import com.optivem.commons.playwright.PageGateway;
 
 import java.util.List;
 
@@ -10,9 +10,9 @@ public abstract class BasePage {
     private static final String SUCCESS_NOTIFICATION_SELECTOR = "[role='alert'].success";
     private static final String ERROR_NOTIFICATION_SELECTOR = "[role='alert'].error";
 
-    protected final TestPageClient pageClient;
+    protected final PageGateway pageClient;
 
-    public BasePage(TestPageClient pageClient) {
+    public BasePage(PageGateway pageClient) {
         this.pageClient = pageClient;
     }
 

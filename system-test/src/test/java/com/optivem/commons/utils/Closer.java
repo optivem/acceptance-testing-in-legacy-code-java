@@ -1,4 +1,4 @@
-package com.optivem.eshop.systemtest.core.drivers.commons.clients;
+package com.optivem.commons.utils;
 
 public class Closer {
     public static void close(AutoCloseable closeable) {

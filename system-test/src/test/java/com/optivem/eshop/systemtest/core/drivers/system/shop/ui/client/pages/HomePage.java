@@ -1,13 +1,13 @@
 package com.optivem.eshop.systemtest.core.drivers.system.shop.ui.client.pages;
 
-import com.optivem.eshop.systemtest.core.drivers.commons.clients.TestPageClient;
+import com.optivem.commons.playwright.PageGateway;
 
 public class HomePage extends BasePage {
 
     private static final String SHOP_BUTTON_SELECTOR = "a[href='/shop.html']";
     private static final String ORDER_HISTORY_BUTTON_SELECTOR = "a[href='/order-history.html']";
 
-    public HomePage(TestPageClient pageClient) {
+    public HomePage(PageGateway pageClient) {
         super(pageClient);
     }
 

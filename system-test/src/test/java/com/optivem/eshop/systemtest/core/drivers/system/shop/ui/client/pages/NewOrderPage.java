@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest.core.drivers.system.shop.ui.client.pages;
 
-import com.optivem.eshop.systemtest.core.drivers.commons.clients.TestPageClient;
+import com.optivem.commons.playwright.PageGateway;
 
 import java.util.regex.Pattern;
 
@@ -13,7 +13,7 @@ public class NewOrderPage extends BasePage {
     private static final String ORDER_NUMBER_REGEX = "Success! Order has been created with Order Number ([\\w-]+)";
     private static final int ORDER_NUMBER_MATCHER_GROUP = 1;
 
-    public NewOrderPage(TestPageClient pageClient) {
+    public NewOrderPage(PageGateway pageClient) {
         super(pageClient);
     }
 

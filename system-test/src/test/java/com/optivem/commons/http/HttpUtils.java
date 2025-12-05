@@ -1,8 +1,7 @@
-package com.optivem.eshop.systemtest.core.drivers.commons.clients;
+package com.optivem.commons.http;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.optivem.eshop.systemtest.core.drivers.commons.dtos.ProblemDetailResponse;
-import com.optivem.eshop.systemtest.core.drivers.commons.Result;
+import com.optivem.commons.utils.Result;
 import org.springframework.http.HttpStatus;
 
 import java.net.URI;
@@ -10,7 +9,7 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestHttpUtils {
+public class HttpUtils {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static <T> T readResponse(HttpResponse<String> httpResponse, Class<T> responseType) {
@@ -63,19 +62,19 @@ public class TestHttpUtils {
     }
 
     private static <T> Result<T> getResultOrFailure(HttpResponse<String> httpResponse, Class<T> responseType, HttpStatus successStatus) {
-        var isSuccess = TestHttpUtils.hasStatusCode(httpResponse, successStatus);
+        var isSuccess = HttpUtils.hasStatusCode(httpResponse, successStatus);
 
         if(!isSuccess) {
             var errorMessages = getErrorMessages(httpResponse);
             return Result.failure(errorMessages);
         }
 
-        var response = TestHttpUtils.readResponse(httpResponse, responseType);
+        var response = HttpUtils.readResponse(httpResponse, responseType);
         return Result.success(response);
     }
 
     private static Result<Void> getResultOrFailure(HttpResponse<String> httpResponse, HttpStatus successStatus) {
-        var isSuccess = TestHttpUtils.hasStatusCode(httpResponse, successStatus);
+        var isSuccess = HttpUtils.hasStatusCode(httpResponse, successStatus);
 
         if(!isSuccess) {
             var errorMessages = getErrorMessages(httpResponse);

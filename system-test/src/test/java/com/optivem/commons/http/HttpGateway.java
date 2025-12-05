@@ -1,4 +1,4 @@
-package com.optivem.eshop.systemtest.core.drivers.commons.clients;
+package com.optivem.commons.http;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -30,7 +30,7 @@ public class HttpGateway {
 
     public HttpResponse<String> post(String path, Object requestBody) {
         var uri = getUri(path);
-        var jsonBody = TestHttpUtils.serializeRequest(requestBody);
+        var jsonBody = HttpUtils.serializeRequest(requestBody);
 
         var request = HttpRequest.newBuilder()
                 .uri(uri)
@@ -54,7 +54,7 @@ public class HttpGateway {
     }
 
     private URI getUri(String path) {
-        return TestHttpUtils.getUri(baseUrl, path);
+        return HttpUtils.getUri(baseUrl, path);
     }
 
     private HttpResponse<String> sendRequest(HttpRequest httpRequest) {

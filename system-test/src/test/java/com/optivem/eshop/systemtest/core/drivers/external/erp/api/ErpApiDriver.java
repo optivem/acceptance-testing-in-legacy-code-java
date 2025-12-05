@@ -1,9 +1,9 @@
 package com.optivem.eshop.systemtest.core.drivers.external.erp.api;
 
-import com.optivem.eshop.systemtest.core.drivers.commons.clients.Closer;
-import com.optivem.eshop.systemtest.core.drivers.commons.clients.HttpGateway;
+import com.optivem.commons.utils.Closer;
+import com.optivem.commons.http.HttpGateway;
 import com.optivem.eshop.systemtest.core.drivers.external.erp.api.client.ErpApiClient;
-import com.optivem.eshop.systemtest.core.drivers.commons.Result;
+import com.optivem.commons.utils.Result;
 
 import java.net.http.HttpClient;
 

@@ -1,4 +1,4 @@
-package com.optivem.eshop.systemtest.core.channels.library;
+package com.optivem.commons.channels;
 
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;

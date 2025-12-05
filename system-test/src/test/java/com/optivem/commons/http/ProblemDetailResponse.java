@@ -1,4 +1,4 @@
-package com.optivem.eshop.systemtest.core.drivers.commons.dtos;
+package com.optivem.commons.http;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

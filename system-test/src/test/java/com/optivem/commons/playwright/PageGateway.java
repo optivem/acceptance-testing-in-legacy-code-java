@@ -1,4 +1,4 @@
-package com.optivem.eshop.systemtest.core.drivers.commons.clients;
+package com.optivem.commons.playwright;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
@@ -6,7 +6,7 @@ import com.microsoft.playwright.options.WaitForSelectorState;
 
 import java.math.BigDecimal;
 
-public class TestPageClient {
+public class PageGateway {
     private final Page page;
     private final String baseUrl;
     private final int timeoutMilliseconds;
@@ -14,13 +14,13 @@ public class TestPageClient {
     private static final int DEFAULT_TIMEOUT_SECONDS = 10;
     private static final int DEFAULT_TIMEOUT_MILLISECONDS = DEFAULT_TIMEOUT_SECONDS * 1000;
 
-    private TestPageClient(Page page, String baseUrl, int timeoutMilliseconds) {
+    private PageGateway(Page page, String baseUrl, int timeoutMilliseconds) {
         this.page = page;
         this.baseUrl = baseUrl;
         this.timeoutMilliseconds = timeoutMilliseconds;
     }
 
-    public TestPageClient(Page page, String baseUrl) {
+    public PageGateway(Page page, String baseUrl) {
         this(page, baseUrl, DEFAULT_TIMEOUT_MILLISECONDS);
     }
 
