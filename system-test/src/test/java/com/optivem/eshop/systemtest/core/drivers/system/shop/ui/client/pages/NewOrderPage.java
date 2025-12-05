@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest.core.drivers.system.shop.ui.client.pages;
 
-import com.optivem.commons.playwright.PageGateway;
+import com.optivem.playwright.PageGateway;
 
 import java.util.regex.Pattern;
 

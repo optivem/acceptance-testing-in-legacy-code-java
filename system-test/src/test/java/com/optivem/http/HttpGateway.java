@@ -1,4 +1,4 @@
-package com.optivem.commons.http;
+package com.optivem.http;
 
 import java.net.URI;
 import java.net.http.HttpClient;

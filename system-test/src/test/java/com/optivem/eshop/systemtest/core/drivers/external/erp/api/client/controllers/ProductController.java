@@ -1,9 +1,9 @@
 package com.optivem.eshop.systemtest.core.drivers.external.erp.api.client.controllers;
 
-import com.optivem.commons.http.HttpGateway;
-import com.optivem.commons.http.HttpUtils;
+import com.optivem.http.HttpGateway;
+import com.optivem.http.HttpUtils;
 import com.optivem.eshop.systemtest.core.drivers.external.erp.api.client.dtos.CreateProductRequest;
-import com.optivem.commons.utils.Result;
+import com.optivem.functional.Result;
 
 public class ProductController {
 

@@ -1,4 +1,4 @@
-package com.optivem.commons.playwright;
+package com.optivem.playwright;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;

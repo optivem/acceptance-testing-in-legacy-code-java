@@ -1,4 +1,4 @@
-package com.optivem.commons.channels;
+package com.optivem.channels;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

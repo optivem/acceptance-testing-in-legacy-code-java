@@ -1,10 +1,10 @@
 package com.optivem.eshop.systemtest.e2etests;
 
-import com.optivem.commons.channels.Channel;
-import com.optivem.commons.channels.ChannelExtension;
+import com.optivem.channels.Channel;
+import com.optivem.channels.ChannelExtension;
 import com.optivem.eshop.systemtest.core.channels.ChannelType;
-import com.optivem.commons.channels.TestDataSource;
-import com.optivem.commons.utils.Closer;
+import com.optivem.channels.TestDataSource;
+import com.optivem.io.Closer;
 import com.optivem.eshop.systemtest.core.drivers.system.commons.enums.OrderStatus;
 import com.optivem.eshop.systemtest.core.drivers.DriverFactory;
 import com.optivem.eshop.systemtest.core.drivers.external.erp.api.ErpApiDriver;
@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import static com.optivem.commons.assertions.ResultAssert.assertThatResult;
+import static com.optivem.assertions.ResultAssert.assertThatResult;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(ChannelExtension.class)

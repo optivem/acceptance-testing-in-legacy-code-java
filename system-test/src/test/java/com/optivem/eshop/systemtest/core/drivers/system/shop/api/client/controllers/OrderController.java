@@ -1,11 +1,11 @@
 package com.optivem.eshop.systemtest.core.drivers.system.shop.api.client.controllers;
 
-import com.optivem.commons.http.HttpGateway;
-import com.optivem.commons.http.HttpUtils;
+import com.optivem.http.HttpGateway;
+import com.optivem.http.HttpUtils;
 import com.optivem.eshop.systemtest.core.drivers.system.commons.dtos.GetOrderResponse;
 import com.optivem.eshop.systemtest.core.drivers.system.commons.dtos.PlaceOrderRequest;
 import com.optivem.eshop.systemtest.core.drivers.system.commons.dtos.PlaceOrderResponse;
-import com.optivem.commons.utils.Result;
+import com.optivem.functional.Result;
 
 public class OrderController {
 

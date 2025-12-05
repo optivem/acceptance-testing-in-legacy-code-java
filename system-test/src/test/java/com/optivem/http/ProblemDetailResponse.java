@@ -1,4 +1,4 @@
-package com.optivem.commons.http;
+package com.optivem.http;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

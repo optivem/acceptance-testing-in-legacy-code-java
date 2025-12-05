@@ -1,7 +1,7 @@
-package com.optivem.commons.http;
+package com.optivem.http;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.optivem.commons.utils.Result;
+import com.optivem.functional.Result;
 import org.springframework.http.HttpStatus;
 
 import java.net.URI;

@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest.core.drivers.external.tax.api.client;
 
-import com.optivem.commons.http.HttpGateway;
+import com.optivem.http.HttpGateway;
 import com.optivem.eshop.systemtest.core.drivers.external.tax.api.client.controllers.HealthController;
 
 public class TaxApiClient {
