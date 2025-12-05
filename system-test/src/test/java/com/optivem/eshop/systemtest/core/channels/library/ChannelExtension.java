@@ -6,6 +6,8 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
+import org.junit.jupiter.params.provider.ArgumentsProvider;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.lang.reflect.Method;
@@ -38,9 +40,24 @@ public class ChannelExtension implements TestTemplateInvocationContextProvider {
 
         List<Object[]> dataRows = new ArrayList<>();
 
+        // Check if the method has @ArgumentsSource annotation
+        ArgumentsSource argumentsSourceAnnotation = testMethod.getAnnotation(ArgumentsSource.class);
+        if (argumentsSourceAnnotation != null) {
+            // Handle @ArgumentsSource - instantiate the provider class
+            Class<? extends ArgumentsProvider> providerClass = argumentsSourceAnnotation.value();
+            try {
+                ArgumentsProvider provider = providerClass.getDeclaredConstructor().newInstance();
+                provider.provideArguments(context).forEach(arg -> {
+                    Object[] arguments = arg.get();
+                    dataRows.add(arguments);
+                });
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to instantiate @ArgumentsSource provider: " + providerClass.getName(), e);
+            }
+        }
         // Check if the method has @MethodSource annotation
-        MethodSource methodSourceAnnotation = testMethod.getAnnotation(MethodSource.class);
-        if (methodSourceAnnotation != null) {
+        else if (testMethod.isAnnotationPresent(MethodSource.class)) {
+            MethodSource methodSourceAnnotation = testMethod.getAnnotation(MethodSource.class);
             // Handle @MethodSource - invoke the provider method
             String[] methodNames = methodSourceAnnotation.value();
             if (methodNames.length == 0) {

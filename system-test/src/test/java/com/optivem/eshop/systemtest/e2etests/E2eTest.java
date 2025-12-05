@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.math.BigDecimal;
@@ -184,11 +185,10 @@ public class E2eTest {
 
     @TestTemplate
     @Channel({ChannelType.UI, ChannelType.API})
-    @TestDataSource("")
-    @TestDataSource("   ")
-    void shouldRejectOrderWithEmptyQuantity(String emptyQuantity) {
+    @ArgumentsSource(EmptyQuantityArgumentsProvider.class)
+    void shouldRejectOrderWithEmptyQuantity(String emptyQuantity, String expectedErrorMessage) {
         var result = shopDriver.placeOrder("some-sku", emptyQuantity, "US");
-        assertThatResult(result).isFailure("Quantity must not be empty");
+        assertThatResult(result).isFailure(expectedErrorMessage);
     }
 
     @TestTemplate
