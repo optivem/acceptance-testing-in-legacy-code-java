@@ -35,4 +35,8 @@ public class ResultContext {
 
     public <T> void register(String command, String key, Result<T> result) {
     }
+
+    public <T> Result<T> get(String command, String key, Class<T> type) {
+        return null;
+    }
 }
