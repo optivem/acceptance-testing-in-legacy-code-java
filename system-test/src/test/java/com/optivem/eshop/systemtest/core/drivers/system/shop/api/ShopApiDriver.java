@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest.core.drivers.system.shop.api;
 
-import com.optivem.io.Closer;
+import com.optivem.lang.Closer;
 import com.optivem.http.HttpGateway;
 import com.optivem.eshop.systemtest.core.drivers.system.shop.api.client.ShopApiClient;
 import com.optivem.eshop.systemtest.core.drivers.system.commons.dtos.GetOrderResponse;

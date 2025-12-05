@@ -1,17 +1,17 @@
 package com.optivem.eshop.systemtest.smoketests;
 
-import com.optivem.channels.Channel;
-import com.optivem.channels.ChannelExtension;
+import com.optivem.testing.channels.Channel;
+import com.optivem.testing.channels.ChannelExtension;
 import com.optivem.eshop.systemtest.core.channels.ChannelType;
 import com.optivem.eshop.systemtest.core.drivers.DriverFactory;
 import com.optivem.eshop.systemtest.core.drivers.system.ShopDriver;
-import com.optivem.io.Closer;
+import com.optivem.lang.Closer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static com.optivem.assertions.ResultAssert.assertThatResult;
+import static com.optivem.testing.assertions.ResultAssert.assertThatResult;
 
 @ExtendWith(ChannelExtension.class)
 public class ShopSmokeTest {

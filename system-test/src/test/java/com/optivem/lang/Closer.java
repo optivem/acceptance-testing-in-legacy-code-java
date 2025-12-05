@@ -1,4 +1,4 @@
-package com.optivem.io;
+package com.optivem.lang;
 
 public class Closer {
     public static void close(AutoCloseable closeable) {

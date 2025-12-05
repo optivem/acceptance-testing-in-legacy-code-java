@@ -1,7 +1,7 @@
 package com.optivem.eshop.systemtest.core.drivers.system.shop.ui.client;
 
 import com.microsoft.playwright.*;
-import com.optivem.io.Closer;
+import com.optivem.lang.Closer;
 import com.optivem.playwright.PageGateway;
 import com.optivem.eshop.systemtest.core.drivers.system.shop.ui.client.pages.HomePage;
 import org.springframework.http.HttpStatus;
