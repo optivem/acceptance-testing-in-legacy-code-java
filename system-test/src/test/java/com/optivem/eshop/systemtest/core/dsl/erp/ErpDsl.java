@@ -17,8 +17,8 @@ public class ErpDsl {
         this.context = context;
     }
 
-    public void goToErp() {
-        new GoToErp(driver, context).execute();
+    public GoToErp goToErp() {
+        return new GoToErp(driver, context);
     }
 
     public void confirmErpOpened() {

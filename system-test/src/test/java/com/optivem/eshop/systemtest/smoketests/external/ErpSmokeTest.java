@@ -29,8 +29,9 @@ public class ErpSmokeTest {
 
     @Test
     void shouldBeAbleToGoToErp() {
-        erp.goToErp();
-        erp.confirmErpOpened();
+        erp.goToErp()
+                .execute()
+                .expectSuccess();
     }
 }
 

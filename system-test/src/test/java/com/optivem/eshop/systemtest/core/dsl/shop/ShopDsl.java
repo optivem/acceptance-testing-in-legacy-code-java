@@ -17,8 +17,8 @@ public class ShopDsl {
         this.context = context;
     }
 
-    public void goToShop() {
-        new GoToShop(driver, context).execute();
+    public GoToShop goToShop() {
+        return new GoToShop(driver, context);
     }
 
     public void confirmShopOpened() {

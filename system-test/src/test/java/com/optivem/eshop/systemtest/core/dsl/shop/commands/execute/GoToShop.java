@@ -1,10 +1,12 @@
 package com.optivem.eshop.systemtest.core.dsl.shop.commands.execute;
 
 import com.optivem.eshop.systemtest.core.drivers.system.ShopDriver;
+import com.optivem.eshop.systemtest.core.dsl.commons.commands.CommandResult;
+import com.optivem.eshop.systemtest.core.dsl.commons.commands.VoidSuccessResult;
 import com.optivem.eshop.systemtest.core.dsl.commons.context.DslContext;
 import com.optivem.eshop.systemtest.core.dsl.shop.commands.BaseShopCommand;
 
-public class GoToShop extends BaseShopCommand<Void> {
+public class GoToShop extends BaseShopCommand<CommandResult<Void, VoidSuccessResult>> {
     public static final String COMMAND_NAME = "GoToShop";
 
     public GoToShop(ShopDriver driver, DslContext context) {
@@ -12,10 +14,10 @@ public class GoToShop extends BaseShopCommand<Void> {
     }
 
     @Override
-    public Void execute() {
+    public CommandResult<Void, VoidSuccessResult> execute() {
         var result = driver.goToShop();
         context.results().registerResult(COMMAND_NAME, result);
-        return null;
+        return new CommandResult<>(result, context, VoidSuccessResult::new);
     }
 }
 
