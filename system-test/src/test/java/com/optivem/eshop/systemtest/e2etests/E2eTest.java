@@ -102,15 +102,12 @@ public class E2eTest {
     void shouldCancelOrder() {
         erp.createProduct()
                 .sku(SKU)
-                .unitPrice("50.00")
                 .execute()
                 .shouldSucceed();
 
         shop.placeOrder()
                 .orderNumber(ORDER_NUMBER)
                 .sku(SKU)
-                .quantity("2")
-                .country("US")
                 .execute()
                 .shouldSucceed();
 
@@ -125,10 +122,6 @@ public class E2eTest {
                 .shouldSucceed()
                 .orderNumber(ORDER_NUMBER)
                 .sku(SKU)
-                .quantity(2)
-                .country("US")
-                .unitPrice("50.00")
-                .originalPrice("100.00")
                 .status(OrderStatus.CANCELLED);
     }
 
@@ -137,8 +130,6 @@ public class E2eTest {
     void shouldRejectOrderWithNonExistentSku() {
         shop.placeOrder()
                 .sku("NON-EXISTENT-SKU-12345")
-                .quantity("5")
-                .country("US")
                 .execute()
                 .shouldFail()
                 .errorMessage("Product does not exist for SKU: NON-EXISTENT-SKU-12345");
@@ -158,9 +149,7 @@ public class E2eTest {
     @Channel({ChannelType.UI, ChannelType.API})
     void shouldRejectOrderWithNegativeQuantity() {
         shop.placeOrder()
-                .sku("SOME-SKU-12345")
                 .quantity("-10")
-                .country("US")
                 .execute()
                 .shouldFail()
                 .errorMessage("Quantity must be positive");
@@ -172,7 +161,6 @@ public class E2eTest {
         shop.placeOrder()
                 .sku("ANOTHER-SKU-67890")
                 .quantity("0")
-                .country("US")
                 .execute()
                 .shouldFail()
                 .errorMessage("Quantity must be positive");
@@ -185,8 +173,6 @@ public class E2eTest {
     void shouldRejectOrderWithEmptySku(String sku) {
         shop.placeOrder()
                 .sku(sku)
-                .quantity("5")
-                .country("US")
                 .execute()
                 .shouldFail()
                 .errorMessage("SKU must not be empty");
@@ -197,9 +183,7 @@ public class E2eTest {
     @ArgumentsSource(EmptyQuantityArgumentsProvider.class)
     void shouldRejectOrderWithEmptyQuantity(String emptyQuantity, String expectedErrorMessage) {
         shop.placeOrder()
-                .sku("some-sku")
                 .quantity(emptyQuantity)
-                .country("US")
                 .execute()
                 .shouldFail()
                 .errorMessage(expectedErrorMessage);
@@ -211,9 +195,7 @@ public class E2eTest {
     @TestDataSource("lala")
     void shouldRejectOrderWithNonIntegerQuantity(String nonIntegerQuantity) {
         shop.placeOrder()
-                .sku("some-sku")
                 .quantity(nonIntegerQuantity)
-                .country("US")
                 .execute()
                 .shouldFail()
                 .errorMessage("Quantity must be an integer");
@@ -231,8 +213,6 @@ public class E2eTest {
     @MethodSource("provideEmptyCountryValues")
     void shouldRejectOrderWithEmptyCountry(String emptyCountry, String expectedErrorMessage) {
         shop.placeOrder()
-                .sku("some-sku")
-                .quantity("5")
                 .country(emptyCountry)
                 .execute()
                 .shouldFail()
@@ -244,13 +224,11 @@ public class E2eTest {
     void shouldRejectOrderWithUnsupportedCountry() {
         erp.createProduct()
                 .sku(SKU)
-                .unitPrice("15.00")
                 .execute()
                 .shouldSucceed();
 
         shop.placeOrder()
                 .sku(SKU)
-                .quantity("5")
                 .country("XX")
                 .execute()
                 .shouldFail()
@@ -261,9 +239,7 @@ public class E2eTest {
     @Channel({ChannelType.API})
     void shouldRejectOrderWithNullQuantity() {
         shop.placeOrder()
-                .sku("some-sku")
                 .quantity(null)
-                .country("US")
                 .execute()
                 .shouldFail()
                 .errorMessage("Quantity must not be empty");
@@ -274,8 +250,6 @@ public class E2eTest {
     void shouldRejectOrderWithNullSku() {
         shop.placeOrder()
                 .sku(null)
-                .quantity("5")
-                .country("US")
                 .execute()
                 .shouldFail()
                 .errorMessage("SKU must not be empty");
@@ -285,8 +259,6 @@ public class E2eTest {
     @Channel({ChannelType.API})
     void shouldRejectOrderWithNullCountry() {
         shop.placeOrder()
-                .sku("some-sku")
-                .quantity("5")
                 .country(null)
                 .execute()
                 .shouldFail()
@@ -310,15 +282,12 @@ public class E2eTest {
     void shouldNotCancelAlreadyCancelledOrder() {
         erp.createProduct()
                 .sku(SKU)
-                .unitPrice("35.00")
                 .execute()
                 .shouldSucceed();
 
         shop.placeOrder()
                 .orderNumber(ORDER_NUMBER)
                 .sku(SKU)
-                .quantity("3")
-                .country("US")
                 .execute()
                 .shouldSucceed();
 

@@ -13,8 +13,16 @@ public class PlaceOrder extends BaseShopCommand<CommandResult<PlaceOrderResponse
     private String quantity;
     private String country;
 
+    private static final String DEFAULT_SKU = "DEFAULT-SKU";
+    private static final String DEFAULT_QUANTITY = "1";
+    private static final String DEFAULT_COUNTRY = "US";
+
     public PlaceOrder(ShopDriver driver, DslContext context) {
         super(driver, context);
+
+        sku(DEFAULT_SKU);
+        quantity(DEFAULT_QUANTITY);
+        country(DEFAULT_COUNTRY);
     }
 
     public PlaceOrder orderNumber(String orderNumberResultAlias) {
