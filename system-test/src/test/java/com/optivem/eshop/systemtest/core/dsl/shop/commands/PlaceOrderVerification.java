@@ -1,13 +1,13 @@
 package com.optivem.eshop.systemtest.core.dsl.shop.commands;
 
 import com.optivem.eshop.systemtest.core.drivers.system.commons.dtos.PlaceOrderResponse;
-import com.optivem.eshop.systemtest.core.dsl.commons.commands.BaseSuccessResult;
+import com.optivem.eshop.systemtest.core.dsl.commons.commands.BaseSuccessVerification;
 import com.optivem.eshop.systemtest.core.dsl.commons.context.Context;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("UnusedReturnValue")
-public class PlaceOrderVerification extends BaseSuccessResult<PlaceOrderResponse> {
+public class PlaceOrderVerification extends BaseSuccessVerification<PlaceOrderResponse> {
 
     public PlaceOrderVerification(PlaceOrderResponse response, Context context) {
         super(response, context);
