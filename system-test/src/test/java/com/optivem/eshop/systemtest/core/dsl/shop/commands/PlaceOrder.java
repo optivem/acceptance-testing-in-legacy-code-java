@@ -7,7 +7,7 @@ import com.optivem.eshop.systemtest.core.dsl.commons.commands.CommandResult;
 import com.optivem.eshop.systemtest.core.dsl.commons.context.DslContext;
 import com.optivem.eshop.systemtest.core.dsl.shop.commands.base.BaseShopCommand;
 
-public class PlaceOrder extends BaseShopCommand<CommandResult<PlaceOrderResponse, PlaceOrderVerifications>> {
+public class PlaceOrder extends BaseShopCommand<CommandResult<PlaceOrderResponse, PlaceOrderVerification>> {
     private String orderNumberResultAlias;
     private String skuParamAlias;
     private String quantity;
@@ -38,7 +38,7 @@ public class PlaceOrder extends BaseShopCommand<CommandResult<PlaceOrderResponse
     }
 
     @Override
-    public CommandResult<PlaceOrderResponse, PlaceOrderVerifications> execute() {
+    public CommandResult<PlaceOrderResponse, PlaceOrderVerification> execute() {
         var sku = context.params().getOrGenerateAliasValue(skuParamAlias);
 
         var request = PlaceOrderRequest.builder()
@@ -53,6 +53,6 @@ public class PlaceOrder extends BaseShopCommand<CommandResult<PlaceOrderResponse
             context.results().setAliasValue(orderNumberResultAlias, orderNumber);
         }
 
-        return new CommandResult<>(result, context, PlaceOrderVerifications::new);
+        return new CommandResult<>(result, context, PlaceOrderVerification::new);
     }
 }

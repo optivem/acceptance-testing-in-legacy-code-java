@@ -6,7 +6,7 @@ import com.optivem.eshop.systemtest.core.dsl.commons.commands.CommandResult;
 import com.optivem.eshop.systemtest.core.dsl.commons.context.DslContext;
 import com.optivem.eshop.systemtest.core.dsl.shop.commands.base.BaseShopCommand;
 
-public class ViewOrder extends BaseShopCommand<CommandResult<GetOrderResponse, ViewOrderVerifications>> {
+public class ViewOrder extends BaseShopCommand<CommandResult<GetOrderResponse, ViewOrderVerification>> {
     private String orderNumberResultAlias;
 
     public ViewOrder(ShopDriver driver, DslContext context) {
@@ -19,12 +19,12 @@ public class ViewOrder extends BaseShopCommand<CommandResult<GetOrderResponse, V
     }
 
     @Override
-    public CommandResult<GetOrderResponse, ViewOrderVerifications> execute() {
+    public CommandResult<GetOrderResponse, ViewOrderVerification> execute() {
         var orderNumber = context.results().getAliasValue(orderNumberResultAlias);
 
         var result = driver.viewOrder(orderNumber);
 
-        return new CommandResult<>(result, context, ViewOrderVerifications::new);
+        return new CommandResult<>(result, context, ViewOrderVerification::new);
     }
 }
 

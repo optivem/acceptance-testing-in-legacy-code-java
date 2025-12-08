@@ -7,19 +7,19 @@ import com.optivem.eshop.systemtest.core.dsl.commons.context.DslContext;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("UnusedReturnValue")
-public class PlaceOrderVerifications extends BaseSuccessResult<PlaceOrderResponse> {
+public class PlaceOrderVerification extends BaseSuccessResult<PlaceOrderResponse> {
 
-    public PlaceOrderVerifications(PlaceOrderResponse response, DslContext context) {
+    public PlaceOrderVerification(PlaceOrderResponse response, DslContext context) {
         super(response, context);
     }
 
-    public PlaceOrderVerifications shouldHaveOrderNumber(String orderNumberResultAlias) {
+    public PlaceOrderVerification shouldHaveOrderNumber(String orderNumberResultAlias) {
         var expectedOrderNumber = context.results().getAliasValue(orderNumberResultAlias);
         assertThat(response.getOrderNumber()).isEqualTo(expectedOrderNumber);
         return this;
     }
 
-    public PlaceOrderVerifications shouldHaveOrderNumberStartingWith(String prefix) {
+    public PlaceOrderVerification shouldHaveOrderNumberStartingWith(String prefix) {
         assertThat(response.getOrderNumber()).startsWith(prefix);
         return this;
     }
