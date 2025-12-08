@@ -11,12 +11,18 @@ public class ParamContext {
         this.map = new HashMap<>();
     }
 
-    public String getOrGenerateAliasValue(String alias) {
-        if(!map.containsKey(alias)) {
-            var value = generateRandomValue(alias);
-            map.put(alias, value);
+    public String generateAliasValue(String alias) {
+        if(map.containsKey(alias)) {
+            throw new IllegalStateException("Alias already exists: " + alias);
         }
 
+        var value = generateRandomValue(alias);
+        map.put(alias, value);
+
+        return value;
+    }
+
+    public String getAliasValue(String alias) {
         return map.get(alias);
     }
 
@@ -24,4 +30,6 @@ public class ParamContext {
         var suffix = UUID.randomUUID().toString().substring(0, 8);
         return alias + "-" + suffix;
     }
+
+
 }

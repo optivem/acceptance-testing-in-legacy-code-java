@@ -115,7 +115,7 @@ public class ConfirmOrderViewed extends BaseShopCommand<Void> {
         assertThat(viewOrderResponse.getOrderNumber()).isEqualTo(expectedOrderNumber);
 
         if (skuParamAlias != null) {
-            var expectedSku = context.params().getOrGenerateAliasValue(skuParamAlias);
+            var expectedSku = context.params().getAliasValue(skuParamAlias);
             assertThat(viewOrderResponse.getSku()).isEqualTo(expectedSku);
         }
 
@@ -177,7 +177,7 @@ public class ConfirmOrderViewed extends BaseShopCommand<Void> {
         if (verifyTotalPriceGreaterThanZero) {
             var totalPrice = viewOrderResponse.getTotalPrice();
             assertThat(totalPrice)
-                    .withFailMessage("Total price should be positive")
+                    .withFailMessage("Total price should be positive, but was: %s", totalPrice)
                     .isGreaterThan(BigDecimal.ZERO);
         }
 
