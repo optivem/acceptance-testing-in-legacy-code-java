@@ -48,9 +48,6 @@ public class PlaceOrder extends BaseShopCommand<PlaceOrderResult> {
                 .build();
         var result = driver.placeOrder(request);
 
-        // Store the result for confirmation
-        context.results().registerResult(COMMAND_NAME, orderNumberResultAlias, result);
-
         // If successful, extract and store the order number as an alias
         if (result.isSuccess()) {
             var orderNumber = result.getValue().getOrderNumber();
