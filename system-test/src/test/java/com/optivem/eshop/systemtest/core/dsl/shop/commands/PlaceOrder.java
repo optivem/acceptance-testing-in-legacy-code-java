@@ -6,6 +6,7 @@ import com.optivem.eshop.systemtest.core.drivers.system.commons.dtos.PlaceOrderR
 import com.optivem.eshop.systemtest.core.dsl.commons.commands.CommandResult;
 import com.optivem.eshop.systemtest.core.dsl.commons.context.Context;
 import com.optivem.eshop.systemtest.core.dsl.shop.commands.base.BaseShopCommand;
+import com.optivem.eshop.systemtest.core.dsl.shop.verifications.PlaceOrderVerification;
 
 public class PlaceOrder extends BaseShopCommand<PlaceOrderResponse, PlaceOrderVerification> {
     private String orderNumberResultAlias;

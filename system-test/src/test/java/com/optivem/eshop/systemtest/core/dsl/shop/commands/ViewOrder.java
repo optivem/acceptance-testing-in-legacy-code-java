@@ -5,6 +5,7 @@ import com.optivem.eshop.systemtest.core.drivers.system.commons.dtos.GetOrderRes
 import com.optivem.eshop.systemtest.core.dsl.commons.commands.CommandResult;
 import com.optivem.eshop.systemtest.core.dsl.commons.context.Context;
 import com.optivem.eshop.systemtest.core.dsl.shop.commands.base.BaseShopCommand;
+import com.optivem.eshop.systemtest.core.dsl.shop.verifications.ViewOrderVerification;
 
 public class ViewOrder extends BaseShopCommand<GetOrderResponse, ViewOrderVerification> {
     private String orderNumberResultAlias;

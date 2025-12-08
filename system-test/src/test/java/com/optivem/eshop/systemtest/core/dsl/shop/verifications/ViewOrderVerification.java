@@ -1,4 +1,4 @@
-package com.optivem.eshop.systemtest.core.dsl.shop.commands;
+package com.optivem.eshop.systemtest.core.dsl.shop.verifications;
 
 import com.optivem.eshop.systemtest.core.drivers.system.commons.dtos.GetOrderResponse;
 import com.optivem.eshop.systemtest.core.drivers.system.commons.enums.OrderStatus;
