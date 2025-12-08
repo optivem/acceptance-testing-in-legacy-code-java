@@ -5,7 +5,6 @@ import com.optivem.eshop.systemtest.core.dsl.commons.DslContext;
 import com.optivem.results.Result;
 
 import static com.optivem.testing.assertions.ResultAssert.assertThatResult;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class PlaceOrderResult {
     private final Result<PlaceOrderResponse> result;
@@ -24,29 +23,6 @@ public class PlaceOrderResult {
     public FailureResult expectFailure() {
         assertThatResult(result).isFailure();
         return new FailureResult(result, context);
-    }
-
-    public static class PlaceOrderSuccessResult {
-        private final PlaceOrderResponse response;
-        private final DslContext context;
-
-        private PlaceOrderSuccessResult(PlaceOrderResponse response, DslContext context) {
-            this.response = response;
-            this.context = context;
-        }
-
-        public PlaceOrderSuccessResult expectOrderNumber(String orderNumberResultAlias) {
-            var expectedOrderNumber = context.results().getAliasValue(orderNumberResultAlias);
-            assertThat(response.getOrderNumber()).isEqualTo(expectedOrderNumber);
-            return this;
-        }
-
-        public PlaceOrderSuccessResult expectOrderNumberStartsWith(String prefix) {
-            assertThat(response.getOrderNumber()).startsWith(prefix);
-            return this;
-        }
-
-
     }
 }
 
