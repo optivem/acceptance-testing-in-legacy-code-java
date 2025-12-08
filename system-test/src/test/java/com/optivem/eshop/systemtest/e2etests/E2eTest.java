@@ -74,11 +74,7 @@ public class E2eTest {
                 .sku(SKU)
                 .quantity("5")
                 .country("US")
-                .execute();
-
-        shop.confirmOrderPlaced()
-                .orderNumber(ORDER_NUMBER)
-                .orderNumberStartsWith("ORD-")
+                .expectOrderNumberStartsWith("ORD-")
                 .execute();
 
         shop.viewOrder()

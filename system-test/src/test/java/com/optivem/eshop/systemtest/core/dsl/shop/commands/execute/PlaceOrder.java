@@ -5,6 +5,9 @@ import com.optivem.eshop.systemtest.core.drivers.system.commons.dtos.PlaceOrderR
 import com.optivem.eshop.systemtest.core.dsl.commons.DslContext;
 import com.optivem.eshop.systemtest.core.dsl.shop.commands.BaseShopCommand;
 
+import static com.optivem.testing.assertions.ResultAssert.assertThatResult;
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class PlaceOrder extends BaseShopCommand<Void> {
     public static final String COMMAND_NAME = "PlaceOrder";
 
@@ -12,6 +15,7 @@ public class PlaceOrder extends BaseShopCommand<Void> {
     private String skuParamAlias;
     private String quantity;
     private String country;
+    private String expectedOrderNumberPrefix;
 
     public PlaceOrder(ShopDriver driver, DslContext context) {
         super(driver, context);
@@ -37,6 +41,11 @@ public class PlaceOrder extends BaseShopCommand<Void> {
         return this;
     }
 
+    public PlaceOrder expectOrderNumberStartsWith(String expectedOrderNumberPrefix) {
+        this.expectedOrderNumberPrefix = expectedOrderNumberPrefix;
+        return this;
+    }
+
     @Override
     public Void execute() {
         var sku = context.params().getAliasValue(skuParamAlias);
@@ -51,10 +60,16 @@ public class PlaceOrder extends BaseShopCommand<Void> {
         // Store the result for confirmation
         context.results().registerResult(COMMAND_NAME, orderNumberResultAlias, result);
 
+        // Assert that the order was placed successfully
+        assertThatResult(result).isSuccess();
+
         // If successful, extract and store the order number as an alias
-        if (result.isSuccess()) {
-            var orderNumber = result.getValue().getOrderNumber();
-            context.results().setAliasValue(orderNumberResultAlias, orderNumber);
+        var orderNumber = result.getValue().getOrderNumber();
+        context.results().setAliasValue(orderNumberResultAlias, orderNumber);
+
+        // Verify order number prefix if specified
+        if (expectedOrderNumberPrefix != null) {
+            assertThat(orderNumber).startsWith(expectedOrderNumberPrefix);
         }
 
         return null;
