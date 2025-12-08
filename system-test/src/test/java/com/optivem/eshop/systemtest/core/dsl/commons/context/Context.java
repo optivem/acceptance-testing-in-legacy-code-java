@@ -1,11 +1,11 @@
 package com.optivem.eshop.systemtest.core.dsl.commons.context;
 
-public class DslContext {
+public class Context {
 
     private final ParamContext paramContext;
     private final ResultContext resultContext;
 
-    public DslContext() {
+    public Context() {
         this.paramContext = new ParamContext();
         this.resultContext = new ResultContext();
     }
@@ -18,3 +18,4 @@ public class DslContext {
         return resultContext;
     }
 }
+

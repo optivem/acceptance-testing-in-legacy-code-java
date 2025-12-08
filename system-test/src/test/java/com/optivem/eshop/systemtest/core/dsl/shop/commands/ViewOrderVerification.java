@@ -3,7 +3,7 @@ package com.optivem.eshop.systemtest.core.dsl.shop.commands;
 import com.optivem.eshop.systemtest.core.drivers.system.commons.dtos.GetOrderResponse;
 import com.optivem.eshop.systemtest.core.drivers.system.commons.enums.OrderStatus;
 import com.optivem.eshop.systemtest.core.dsl.commons.commands.BaseSuccessResult;
-import com.optivem.eshop.systemtest.core.dsl.commons.context.DslContext;
+import com.optivem.eshop.systemtest.core.dsl.commons.context.Context;
 
 import java.math.BigDecimal;
 
@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SuppressWarnings("UnusedReturnValue")
 public class ViewOrderVerification extends BaseSuccessResult<GetOrderResponse> {
 
-    public ViewOrderVerification(GetOrderResponse response, DslContext context) {
+    public ViewOrderVerification(GetOrderResponse response, Context context) {
         super(response, context);
     }
 

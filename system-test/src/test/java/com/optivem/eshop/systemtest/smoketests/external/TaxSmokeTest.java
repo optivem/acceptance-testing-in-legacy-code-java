@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest.smoketests.external;
 
-import com.optivem.eshop.systemtest.core.dsl.commons.context.DslContext;
+import com.optivem.eshop.systemtest.core.dsl.commons.context.Context;
 import com.optivem.eshop.systemtest.core.dsl.tax.TaxDsl;
 import com.optivem.lang.Closer;
 import com.optivem.eshop.systemtest.core.drivers.DriverFactory;
@@ -18,7 +18,7 @@ public class TaxSmokeTest {
     void setUp() {
         this.taxApiDriver = DriverFactory.createTaxApiDriver();
 
-        var context = new DslContext();
+        var context = new Context();
         tax = new TaxDsl(taxApiDriver, context);
     }
 

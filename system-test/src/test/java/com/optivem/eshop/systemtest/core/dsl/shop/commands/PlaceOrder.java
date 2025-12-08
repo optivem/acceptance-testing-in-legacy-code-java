@@ -4,7 +4,7 @@ import com.optivem.eshop.systemtest.core.drivers.system.ShopDriver;
 import com.optivem.eshop.systemtest.core.drivers.system.commons.dtos.PlaceOrderRequest;
 import com.optivem.eshop.systemtest.core.drivers.system.commons.dtos.PlaceOrderResponse;
 import com.optivem.eshop.systemtest.core.dsl.commons.commands.CommandResult;
-import com.optivem.eshop.systemtest.core.dsl.commons.context.DslContext;
+import com.optivem.eshop.systemtest.core.dsl.commons.context.Context;
 import com.optivem.eshop.systemtest.core.dsl.shop.commands.base.BaseShopCommand;
 
 public class PlaceOrder extends BaseShopCommand<PlaceOrderResponse, PlaceOrderVerification> {
@@ -17,7 +17,7 @@ public class PlaceOrder extends BaseShopCommand<PlaceOrderResponse, PlaceOrderVe
     private static final String DEFAULT_QUANTITY = "1";
     private static final String DEFAULT_COUNTRY = "US";
 
-    public PlaceOrder(ShopDriver driver, DslContext context) {
+    public PlaceOrder(ShopDriver driver, Context context) {
         super(driver, context);
 
         sku(DEFAULT_SKU);

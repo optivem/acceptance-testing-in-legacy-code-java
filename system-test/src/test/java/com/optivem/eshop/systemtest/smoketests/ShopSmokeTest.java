@@ -1,7 +1,7 @@
 package com.optivem.eshop.systemtest.smoketests;
 
 import com.optivem.eshop.systemtest.core.drivers.system.ShopDriver;
-import com.optivem.eshop.systemtest.core.dsl.commons.context.DslContext;
+import com.optivem.eshop.systemtest.core.dsl.commons.context.Context;
 import com.optivem.eshop.systemtest.core.dsl.shop.ShopDsl;
 import com.optivem.testing.channels.Channel;
 import com.optivem.testing.channels.ChannelExtension;
@@ -24,7 +24,7 @@ public class ShopSmokeTest {
     void setUp() {
         this.shopDriver = DriverFactory.createShopDriver();
 
-        var context = new DslContext();
+        var context = new Context();
         shop = new ShopDsl(shopDriver, context);
     }
 

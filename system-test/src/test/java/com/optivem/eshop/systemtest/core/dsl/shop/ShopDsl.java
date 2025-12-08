@@ -1,7 +1,7 @@
 package com.optivem.eshop.systemtest.core.dsl.shop;
 
 import com.optivem.eshop.systemtest.core.drivers.system.ShopDriver;
-import com.optivem.eshop.systemtest.core.dsl.commons.context.DslContext;
+import com.optivem.eshop.systemtest.core.dsl.commons.context.Context;
 import com.optivem.eshop.systemtest.core.dsl.shop.commands.CancelOrder;
 import com.optivem.eshop.systemtest.core.dsl.shop.commands.GoToShop;
 import com.optivem.eshop.systemtest.core.dsl.shop.commands.PlaceOrder;
@@ -9,9 +9,9 @@ import com.optivem.eshop.systemtest.core.dsl.shop.commands.ViewOrder;
 
 public class ShopDsl {
     private final ShopDriver driver;
-    private final DslContext context;
+    private final Context context;
 
-    public ShopDsl(ShopDriver driver, DslContext context) {
+    public ShopDsl(ShopDriver driver, Context context) {
         this.driver = driver;
         this.context = context;
     }

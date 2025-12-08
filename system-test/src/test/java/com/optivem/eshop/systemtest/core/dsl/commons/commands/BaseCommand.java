@@ -1,12 +1,12 @@
 package com.optivem.eshop.systemtest.core.dsl.commons.commands;
 
-import com.optivem.eshop.systemtest.core.dsl.commons.context.DslContext;
+import com.optivem.eshop.systemtest.core.dsl.commons.context.Context;
 
-public abstract class BaseCommand<TDriver, TResponse, TVerification> implements DslCommand<CommandResult<TResponse, TVerification>> {
+public abstract class BaseCommand<TDriver, TResponse, TVerification> implements Command<CommandResult<TResponse, TVerification>> {
     protected final TDriver driver;
-    protected final DslContext context;
+    protected final Context context;
 
-    protected BaseCommand(TDriver driver, DslContext context) {
+    protected BaseCommand(TDriver driver, Context context) {
         this.driver = driver;
         this.context = context;
     }

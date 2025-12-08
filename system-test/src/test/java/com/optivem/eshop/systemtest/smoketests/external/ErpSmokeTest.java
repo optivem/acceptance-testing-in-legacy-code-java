@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest.smoketests.external;
 
-import com.optivem.eshop.systemtest.core.dsl.commons.context.DslContext;
+import com.optivem.eshop.systemtest.core.dsl.commons.context.Context;
 import com.optivem.eshop.systemtest.core.dsl.erp.ErpDsl;
 import com.optivem.lang.Closer;
 import com.optivem.eshop.systemtest.core.drivers.DriverFactory;
@@ -18,7 +18,7 @@ public class ErpSmokeTest {
     void setUp() {
         this.erpApiDriver = DriverFactory.createErpApiDriver();
 
-        var context = new DslContext();
+        var context = new Context();
         erp = new ErpDsl(erpApiDriver, context);
     }
 

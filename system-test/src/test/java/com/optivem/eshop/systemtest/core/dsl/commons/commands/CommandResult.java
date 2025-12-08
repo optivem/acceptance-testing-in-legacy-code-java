@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest.core.dsl.commons.commands;
 
-import com.optivem.eshop.systemtest.core.dsl.commons.context.DslContext;
+import com.optivem.eshop.systemtest.core.dsl.commons.context.Context;
 import com.optivem.results.Result;
 
 import java.util.function.BiFunction;
@@ -9,13 +9,13 @@ import static com.optivem.testing.assertions.ResultAssert.assertThatResult;
 
 public class CommandResult<TResponse, TVerification> {
     private final Result<TResponse> result;
-    private final DslContext context;
-    private final BiFunction<TResponse, DslContext, TVerification> verificationFactory;
+    private final Context context;
+    private final BiFunction<TResponse, Context, TVerification> verificationFactory;
 
     public CommandResult(
             Result<TResponse> result,
-            DslContext context,
-            BiFunction<TResponse, DslContext, TVerification> verificationFactory) {
+            Context context,
+            BiFunction<TResponse, Context, TVerification> verificationFactory) {
         this.result = result;
         this.context = context;
         this.verificationFactory = verificationFactory;

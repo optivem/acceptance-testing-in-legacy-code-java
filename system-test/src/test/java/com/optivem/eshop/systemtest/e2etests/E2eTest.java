@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest.e2etests;
 
-import com.optivem.eshop.systemtest.core.dsl.commons.context.DslContext;
+import com.optivem.eshop.systemtest.core.dsl.commons.context.Context;
 import com.optivem.eshop.systemtest.core.dsl.erp.ErpDsl;
 import com.optivem.eshop.systemtest.core.dsl.shop.ShopDsl;
 import com.optivem.eshop.systemtest.e2etests.providers.EmptyQuantityArgumentsProvider;
@@ -38,7 +38,7 @@ public class E2eTest {
         shopDriver = DriverFactory.createShopDriver();
         erpApiDriver = DriverFactory.createErpApiDriver();
 
-        var context = new DslContext();
+        var context = new Context();
         shop = new ShopDsl(shopDriver, context);
         erp = new ErpDsl(erpApiDriver, context);
     }

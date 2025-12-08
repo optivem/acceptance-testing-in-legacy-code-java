@@ -3,7 +3,7 @@ package com.optivem.eshop.systemtest.core.dsl.erp.commands;
 import com.optivem.eshop.systemtest.core.drivers.external.erp.api.ErpApiDriver;
 import com.optivem.eshop.systemtest.core.dsl.commons.commands.CommandResult;
 import com.optivem.eshop.systemtest.core.dsl.commons.commands.VoidVerification;
-import com.optivem.eshop.systemtest.core.dsl.commons.context.DslContext;
+import com.optivem.eshop.systemtest.core.dsl.commons.context.Context;
 import com.optivem.eshop.systemtest.core.dsl.erp.commands.base.BaseErpCommand;
 
 public class CreateProduct extends BaseErpCommand<Void, VoidVerification> {
@@ -12,7 +12,7 @@ public class CreateProduct extends BaseErpCommand<Void, VoidVerification> {
     private String skuParamAlias;
     private String unitPrice;
 
-    public CreateProduct(ErpApiDriver driver, DslContext context) {
+    public CreateProduct(ErpApiDriver driver, Context context) {
         super(driver, context);
 
         unitPrice(DEFAULT_UNIT_PRICE);

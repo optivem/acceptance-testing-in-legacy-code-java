@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest.core.dsl.commons.commands;
 
-import com.optivem.eshop.systemtest.core.dsl.commons.context.DslContext;
+import com.optivem.eshop.systemtest.core.dsl.commons.context.Context;
 import com.optivem.results.Result;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -8,9 +8,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SuppressWarnings("UnusedReturnValue")
 public class FailureVerification {
     private final Result<?> result;
-    private final DslContext context;
+    private final Context context;
 
-    public FailureVerification(Result<?> result, DslContext context) {
+    public FailureVerification(Result<?> result, Context context) {
         this.result = result;
         this.context = context;
     }
