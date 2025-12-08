@@ -4,6 +4,7 @@ import com.optivem.eshop.systemtest.core.drivers.external.tax.api.TaxApiDriver;
 import com.optivem.eshop.systemtest.core.dsl.commons.commands.CommandResult;
 import com.optivem.eshop.systemtest.core.dsl.commons.commands.VoidSuccessResult;
 import com.optivem.eshop.systemtest.core.dsl.commons.context.DslContext;
+import com.optivem.eshop.systemtest.core.dsl.tax.commands.base.BaseTaxCommand;
 
 public class GoToTax extends BaseTaxCommand<CommandResult<Void, VoidSuccessResult>> {
     public static final String COMMAND_NAME = "GoToTax";

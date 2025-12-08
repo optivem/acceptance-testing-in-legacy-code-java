@@ -4,6 +4,7 @@ import com.optivem.eshop.systemtest.core.drivers.system.ShopDriver;
 import com.optivem.eshop.systemtest.core.dsl.commons.commands.CommandResult;
 import com.optivem.eshop.systemtest.core.dsl.commons.commands.VoidSuccessResult;
 import com.optivem.eshop.systemtest.core.dsl.commons.context.DslContext;
+import com.optivem.eshop.systemtest.core.dsl.shop.commands.base.BaseShopCommand;
 
 public class CancelOrder extends BaseShopCommand<CommandResult<Void, VoidSuccessResult>> {
     public static final String COMMAND_NAME = "CancelOrder";

@@ -1,4 +1,4 @@
-package com.optivem.eshop.systemtest.core.dsl.shop.commands;
+package com.optivem.eshop.systemtest.core.dsl.shop.commands.base;
 
 import com.optivem.eshop.systemtest.core.drivers.system.ShopDriver;
 import com.optivem.eshop.systemtest.core.dsl.commons.commands.BaseCommand;
@@ -9,3 +9,4 @@ public abstract class BaseShopCommand<T> extends BaseCommand<ShopDriver, T> {
         super(driver, context);
     }
 }
+
