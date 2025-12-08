@@ -4,7 +4,7 @@ import com.optivem.eshop.systemtest.core.drivers.system.ShopDriver;
 import com.optivem.eshop.systemtest.core.dsl.commons.DslContext;
 import com.optivem.eshop.systemtest.core.dsl.shop.commands.BaseShopCommand;
 
-public class ViewOrder extends BaseShopCommand<Void> {
+public class ViewOrder extends BaseShopCommand<ViewOrderResult> {
     public static final String COMMAND_NAME = "ViewOrder";
 
     private String orderNumberResultAlias;
@@ -19,13 +19,13 @@ public class ViewOrder extends BaseShopCommand<Void> {
     }
 
     @Override
-    public Void execute() {
+    public ViewOrderResult execute() {
         var orderNumber = context.results().getAliasValue(orderNumberResultAlias);
 
         var result = driver.viewOrder(orderNumber);
 
         context.results().registerResult(COMMAND_NAME, orderNumberResultAlias, result);
-        return null;
+        return new ViewOrderResult(result, context);
     }
 }
 

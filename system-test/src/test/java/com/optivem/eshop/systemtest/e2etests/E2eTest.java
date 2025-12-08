@@ -80,23 +80,20 @@ public class E2eTest {
 
         shop.viewOrder()
                 .orderNumber(ORDER_NUMBER)
-                .execute();
-
-        shop.confirmOrderViewed()
-                .orderNumber(ORDER_NUMBER)
-                .sku(SKU)
-                .quantity(5)
-                .country("US")
-                .unitPrice("20.00")
-                .originalPrice("100.00")
-                .status(OrderStatus.PLACED)
-                .discountRateGreaterThanOrEqualToZero()
-                .discountAmountGreaterThanOrEqualToZero()
-                .subtotalPriceGreaterThanZero()
-                .taxRateGreaterThanOrEqualToZero()
-                .taxAmountGreaterThanOrEqualToZero()
-                .totalPriceGreaterThanZero()
-                .execute();
+                .execute()
+                .expectSuccess()
+                .expectSku(SKU)
+                .expectQuantity(5)
+                .expectCountry("US")
+                .expectUnitPrice("20.00")
+                .expectOriginalPrice("100.00")
+                .expectStatus(OrderStatus.PLACED)
+                .expectDiscountRateGreaterThanOrEqualToZero()
+                .expectDiscountAmountGreaterThanOrEqualToZero()
+                .expectSubtotalPriceGreaterThanZero()
+                .expectTaxRateGreaterThanOrEqualToZero()
+                .expectTaxAmountGreaterThanOrEqualToZero()
+                .expectTotalPriceGreaterThanZero();
     }
 
 
