@@ -3,7 +3,6 @@ package com.optivem.eshop.systemtest.e2etests;
 import com.optivem.eshop.systemtest.core.dsl.commons.context.DslContext;
 import com.optivem.eshop.systemtest.core.dsl.erp.ErpDsl;
 import com.optivem.eshop.systemtest.core.dsl.shop.ShopDsl;
-import com.optivem.eshop.systemtest.core.dsl.tax.TaxDsl;
 import com.optivem.eshop.systemtest.e2etests.providers.EmptyQuantityArgumentsProvider;
 import com.optivem.testing.channels.Channel;
 import com.optivem.testing.channels.ChannelExtension;
@@ -13,7 +12,6 @@ import com.optivem.lang.Closer;
 import com.optivem.eshop.systemtest.core.drivers.system.commons.enums.OrderStatus;
 import com.optivem.eshop.systemtest.core.drivers.DriverFactory;
 import com.optivem.eshop.systemtest.core.drivers.external.erp.api.ErpApiDriver;
-import com.optivem.eshop.systemtest.core.drivers.external.tax.api.TaxApiDriver;
 import com.optivem.eshop.systemtest.core.drivers.system.ShopDriver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,29 +29,24 @@ public class E2eTest {
 
     private ShopDriver shopDriver;
     private ErpApiDriver erpApiDriver;
-    private TaxApiDriver taxApiDriver;
 
     private ShopDsl shop;
     private ErpDsl erp;
-    private TaxDsl tax;
 
     @BeforeEach
     void setUp() {
         shopDriver = DriverFactory.createShopDriver();
         erpApiDriver = DriverFactory.createErpApiDriver();
-        taxApiDriver = DriverFactory.createTaxApiDriver();
 
         var context = new DslContext();
         shop = new ShopDsl(shopDriver, context);
         erp = new ErpDsl(erpApiDriver, context);
-        tax = new TaxDsl(taxApiDriver, context);
     }
 
     @AfterEach
     void tearDown() {
         Closer.close(shopDriver);
         Closer.close(erpApiDriver);
-        Closer.close(taxApiDriver);
     }
 
     private static final String ORDER_NUMBER = "order-number";
