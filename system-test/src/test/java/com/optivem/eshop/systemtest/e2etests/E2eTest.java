@@ -142,6 +142,7 @@ public class E2eTest {
 
         shop.confirmOrderPlaced()
                 .orderNumber(ORDER_NUMBER)
+                .orderNumberStartsWith("ORD-")
                 .execute();
 
         shop.viewOrder()
