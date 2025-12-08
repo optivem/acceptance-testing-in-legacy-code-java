@@ -6,6 +6,7 @@ import com.optivem.eshop.systemtest.core.dsl.erp.commands.confirm.ConfirmErpOpen
 import com.optivem.eshop.systemtest.core.dsl.erp.commands.confirm.ConfirmProductCreated;
 import com.optivem.eshop.systemtest.core.dsl.erp.commands.execute.CreateProduct;
 import com.optivem.eshop.systemtest.core.dsl.erp.commands.execute.GoToErp;
+import com.optivem.eshop.systemtest.core.dsl.erp.commands.given.GivenProduct;
 
 public class ErpDsl {
     private final ErpApiDriver driver;
@@ -30,6 +31,10 @@ public class ErpDsl {
 
     public ConfirmProductCreated confirmProductCreated() {
         return new ConfirmProductCreated(driver, context);
+    }
+
+    public GivenProduct givenProduct() {
+        return new GivenProduct(driver, context);
     }
 }
 
