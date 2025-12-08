@@ -1,5 +1,6 @@
 package com.optivem.eshop.systemtest.core.dsl.commons.commands;
 
+import com.optivem.eshop.systemtest.core.dsl.commons.commands.base.BaseSuccessVerification;
 import com.optivem.eshop.systemtest.core.dsl.commons.context.Context;
 
 @SuppressWarnings("UnusedReturnValue")

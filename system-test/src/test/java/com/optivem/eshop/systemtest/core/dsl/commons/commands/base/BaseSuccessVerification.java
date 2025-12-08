@@ -1,4 +1,4 @@
-package com.optivem.eshop.systemtest.core.dsl.commons.commands;
+package com.optivem.eshop.systemtest.core.dsl.commons.commands.base;
 
 import com.optivem.eshop.systemtest.core.dsl.commons.context.Context;
 
