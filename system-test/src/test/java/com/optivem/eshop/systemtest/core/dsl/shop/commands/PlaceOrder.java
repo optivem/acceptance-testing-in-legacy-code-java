@@ -47,7 +47,7 @@ public class PlaceOrder extends BaseShopCommand<PlaceOrderResponse, PlaceOrderVe
 
     @Override
     public CommandResult<PlaceOrderResponse, PlaceOrderVerification> execute() {
-        var sku = context.params().getOrGenerateAliasValue(skuParamAlias);
+        var sku = context.params().getAliasValue(skuParamAlias);
 
         var request = PlaceOrderRequest.builder()
                 .sku(sku)

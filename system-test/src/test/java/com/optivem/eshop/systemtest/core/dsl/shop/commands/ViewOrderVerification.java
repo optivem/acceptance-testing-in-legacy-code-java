@@ -26,7 +26,7 @@ public class ViewOrderVerification extends BaseSuccessVerification<GetOrderRespo
     }
 
     public ViewOrderVerification sku(String skuParamAlias) {
-        var expectedSku = context.params().getOrGenerateAliasValue(skuParamAlias);
+        var expectedSku = context.params().getAliasValue(skuParamAlias);
         var actualSku = response.getSku();
         assertThat(actualSku)
                 .withFailMessage("Expected SKU to be '%s', but was '%s'", expectedSku, actualSku)
