@@ -1,4 +1,4 @@
-package com.optivem.testing.channels;
+package com.optivem.testing.channel;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
