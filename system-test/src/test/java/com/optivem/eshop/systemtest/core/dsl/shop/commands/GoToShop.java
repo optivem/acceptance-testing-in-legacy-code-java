@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest.core.dsl.shop.commands;
 
-import com.optivem.eshop.systemtest.core.drivers.system.ShopDriver;
+import com.optivem.eshop.systemtest.core.drivers.system.shop.ShopDriver;
 import com.optivem.eshop.systemtest.core.dsl.commons.commands.CommandResult;
 import com.optivem.eshop.systemtest.core.dsl.commons.verifications.VoidVerification;
 import com.optivem.eshop.systemtest.core.dsl.commons.context.Context;

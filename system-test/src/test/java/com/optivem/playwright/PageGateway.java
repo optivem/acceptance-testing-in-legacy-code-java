@@ -24,14 +24,6 @@ public class PageGateway {
         this(page, baseUrl, DEFAULT_TIMEOUT_MILLISECONDS);
     }
 
-    public String getBaseUrl() {
-        return baseUrl;
-    }
-
-    public Page getPage() {
-        return page;
-    }
-
     public void fill(String selector, String text) {
         var input = page.locator(selector);
         wait(input);

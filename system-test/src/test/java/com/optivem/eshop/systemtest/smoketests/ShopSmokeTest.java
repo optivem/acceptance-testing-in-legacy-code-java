@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest.smoketests;
 
-import com.optivem.eshop.systemtest.core.drivers.system.ShopDriver;
+import com.optivem.eshop.systemtest.core.drivers.system.shop.ShopDriver;
 import com.optivem.eshop.systemtest.core.dsl.commons.context.Context;
 import com.optivem.eshop.systemtest.core.dsl.shop.ShopDsl;
 import com.optivem.testing.channels.Channel;

@@ -12,7 +12,7 @@ import com.optivem.lang.Closer;
 import com.optivem.eshop.systemtest.core.drivers.system.commons.enums.OrderStatus;
 import com.optivem.eshop.systemtest.core.drivers.DriverFactory;
 import com.optivem.eshop.systemtest.core.drivers.external.erp.api.ErpApiDriver;
-import com.optivem.eshop.systemtest.core.drivers.system.ShopDriver;
+import com.optivem.eshop.systemtest.core.drivers.system.shop.ShopDriver;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestTemplate;
