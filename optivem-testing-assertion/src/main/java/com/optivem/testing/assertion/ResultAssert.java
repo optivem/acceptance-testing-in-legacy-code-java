@@ -30,14 +30,5 @@ public class ResultAssert extends AbstractAssert<ResultAssert, Result<?>> {
         }
         return this;
     }
-
-    @SuppressWarnings("UnusedReturnValue")
-    public ResultAssert isFailure(String errorMessage) {
-        isFailure();
-        if (!actual.getErrors().contains(errorMessage)) {
-            failWithMessage("Expected result to contain error '%s' but errors were: %s", errorMessage, actual.getErrors());
-        }
-        return this;
-    }
 }
 
