@@ -2,8 +2,8 @@ package com.optivem.eshop.systemtest.smoketests;
 
 import com.optivem.eshop.systemtest.core.dsl.DslFactory;
 import com.optivem.eshop.systemtest.core.dsl.shop.ShopDsl;
-import com.optivem.testing.channel.Channel;
-import com.optivem.testing.channel.ChannelExtension;
+import com.optivem.testing.channels.Channel;
+import com.optivem.testing.channels.ChannelExtension;
 import com.optivem.eshop.systemtest.core.channels.ChannelType;
 import com.optivem.lang.Closer;
 import org.junit.jupiter.api.AfterEach;
