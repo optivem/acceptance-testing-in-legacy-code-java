@@ -7,7 +7,7 @@ import com.optivem.eshop.systemtest.core.dsl.commons.context.Context;
 import com.optivem.eshop.systemtest.core.dsl.erp.commands.base.BaseErpCommand;
 
 public class CreateProduct extends BaseErpCommand<Void, VoidVerification> {
-    private static final String DEFAULT_UNIT_PRICE = "20.00";
+    private static final double DEFAULT_UNIT_PRICE = 20.00;
 
     private String skuParamAlias;
     private String unitPrice;

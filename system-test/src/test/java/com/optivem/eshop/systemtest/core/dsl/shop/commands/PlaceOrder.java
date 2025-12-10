@@ -15,7 +15,7 @@ public class PlaceOrder extends BaseShopCommand<PlaceOrderResponse, PlaceOrderVe
     private String country;
 
     private static final String DEFAULT_SKU = "DEFAULT-SKU";
-    private static final String DEFAULT_QUANTITY = "1";
+    private static final int DEFAULT_QUANTITY = 1;
     private static final String DEFAULT_COUNTRY = "US";
 
     public PlaceOrder(ShopDriver driver, Context context) {
