@@ -22,7 +22,7 @@ public class PlaceOrderVerification extends BaseSuccessVerification<PlaceOrderRe
         return this;
     }
 
-    public PlaceOrderVerification orderNumberStartingWith(String prefix) {
+    public PlaceOrderVerification orderNumberStartsWith(String prefix) {
         var actualOrderNumber = response.getOrderNumber();
         assertThat(actualOrderNumber)
                 .withFailMessage("Expected order number to start with '%s', but was '%s'", prefix, actualOrderNumber)

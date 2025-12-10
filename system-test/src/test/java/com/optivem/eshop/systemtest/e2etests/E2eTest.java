@@ -54,7 +54,7 @@ public class E2eTest {
                 .execute()
                 .shouldSucceed()
                 .orderNumber(ORDER_NUMBER)
-                .orderNumberStartingWith("ORD-");
+                .orderNumberStartsWith("ORD-");
 
         dsl.shop().viewOrder()
                 .orderNumber(ORDER_NUMBER)
