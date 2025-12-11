@@ -1,7 +1,7 @@
 package com.optivem.eshop.systemtest.e2etests;
 
 import com.optivem.eshop.systemtest.core.dsl.Dsl;
-import com.optivem.eshop.systemtest.e2etests.providers.EmptyQuantityArgumentsProvider;
+import com.optivem.eshop.systemtest.e2etests.providers.EmptyArgumentsProvider;
 import com.optivem.testing.channels.Channel;
 import com.optivem.testing.channels.ChannelExtension;
 import com.optivem.eshop.systemtest.core.channels.ChannelType;
@@ -191,13 +191,13 @@ public class E2eTest {
 
     @TestTemplate
     @Channel({ChannelType.UI, ChannelType.API})
-    @ArgumentsSource(EmptyQuantityArgumentsProvider.class)
-    void shouldRejectOrderWithEmptyQuantity(String emptyQuantity, String expectedErrorMessage) {
+    @ArgumentsSource(EmptyArgumentsProvider.class)
+    void shouldRejectOrderWithEmptyQuantity(String emptyQuantity) {
         dsl.shop().placeOrder()
                 .quantity(emptyQuantity)
                 .execute()
                 .shouldFail()
-                .errorMessage(expectedErrorMessage);
+                .errorMessage("Quantity must not be empty");
     }
 
     @TestTemplate

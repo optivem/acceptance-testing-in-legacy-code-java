@@ -9,13 +9,13 @@ import java.util.stream.Stream;
 /**
  * Provides test arguments for empty quantity validation tests.
  */
-public class EmptyQuantityArgumentsProvider implements ArgumentsProvider {
+public class EmptyArgumentsProvider implements ArgumentsProvider {
 
     @Override
     public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
         return Stream.of(
-            Arguments.of("", "Quantity must not be empty"),      // Empty string
-            Arguments.of("   ", "Quantity must not be empty")    // Whitespace string
+            Arguments.of(""),      // Empty string
+            Arguments.of("   ")    // Whitespace string
         );
     }
 }
