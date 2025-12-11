@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import java.util.stream.Stream;
  * When a test method is annotated with @Channel and @TestTemplate, this extension
  * creates separate test invocations for each specified channel (e.g., UI, API).
  *
- * Also supports @DataSource to combine channel types with inline test data.
+ * Also supports @DataSource, @ValueSource, @MethodSource, and @ArgumentsSource to combine channel types with test data.
  */
 public class ChannelExtension implements TestTemplateInvocationContextProvider {
 
@@ -83,6 +84,11 @@ public class ChannelExtension implements TestTemplateInvocationContextProvider {
                     throw new RuntimeException("Failed to invoke @MethodSource provider: " + methodName, e);
                 }
             }
+        }
+        // Check if the method has @ValueSource annotation
+        else if (testMethod.isAnnotationPresent(ValueSource.class)) {
+            ValueSource valueSourceAnnotation = testMethod.getAnnotation(ValueSource.class);
+            extractValuesFromValueSource(valueSourceAnnotation, dataRows);
         } else {
             // Check if the method has DataSource annotations
             DataSource.Container containerAnnotation =
@@ -132,6 +138,55 @@ public class ChannelExtension implements TestTemplateInvocationContextProvider {
         results.add(row);
 
         return results;
+    }
+
+    /**
+     * Extracts arguments from a @ValueSource annotation.
+     * Supports strings, ints, longs, doubles, floats, shorts, bytes, chars, booleans, and classes.
+     */
+    private void extractValuesFromValueSource(ValueSource annotation, List<Object[]> dataRows) {
+        // Check each type of value in @ValueSource
+        if (annotation.strings().length > 0) {
+            for (String value : annotation.strings()) {
+                dataRows.add(new Object[]{value});
+            }
+        } else if (annotation.ints().length > 0) {
+            for (int value : annotation.ints()) {
+                dataRows.add(new Object[]{value});
+            }
+        } else if (annotation.longs().length > 0) {
+            for (long value : annotation.longs()) {
+                dataRows.add(new Object[]{value});
+            }
+        } else if (annotation.doubles().length > 0) {
+            for (double value : annotation.doubles()) {
+                dataRows.add(new Object[]{value});
+            }
+        } else if (annotation.floats().length > 0) {
+            for (float value : annotation.floats()) {
+                dataRows.add(new Object[]{value});
+            }
+        } else if (annotation.shorts().length > 0) {
+            for (short value : annotation.shorts()) {
+                dataRows.add(new Object[]{value});
+            }
+        } else if (annotation.bytes().length > 0) {
+            for (byte value : annotation.bytes()) {
+                dataRows.add(new Object[]{value});
+            }
+        } else if (annotation.chars().length > 0) {
+            for (char value : annotation.chars()) {
+                dataRows.add(new Object[]{value});
+            }
+        } else if (annotation.booleans().length > 0) {
+            for (boolean value : annotation.booleans()) {
+                dataRows.add(new Object[]{value});
+            }
+        } else if (annotation.classes().length > 0) {
+            for (Class<?> value : annotation.classes()) {
+                dataRows.add(new Object[]{value});
+            }
+        }
     }
 
     /**

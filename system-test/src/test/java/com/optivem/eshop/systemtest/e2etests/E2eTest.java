@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.stream.Stream;
 
@@ -201,8 +202,7 @@ public class E2eTest {
 
     @TestTemplate
     @Channel({ChannelType.UI, ChannelType.API})
-    @DataSource("3.5")
-    @DataSource("lala")
+    @ValueSource(strings = {"3.5", "lala"})
     void shouldRejectOrderWithNonIntegerQuantity(String nonIntegerQuantity) {
         dsl.shop().placeOrder()
                 .quantity(nonIntegerQuantity)
