@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest.smoketests.external;
 
-import com.optivem.eshop.systemtest.core.dsl.Dsl;
+import com.optivem.eshop.systemtest.dsl.Dsl;
 import com.optivem.lang.Closer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

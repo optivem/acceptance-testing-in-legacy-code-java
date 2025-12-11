@@ -1,13 +1,13 @@
 package com.optivem.eshop.systemtest.e2etests;
 
-import com.optivem.eshop.systemtest.core.dsl.Dsl;
+import com.optivem.eshop.systemtest.dsl.Dsl;
 import com.optivem.eshop.systemtest.e2etests.providers.EmptyArgumentsProvider;
 import com.optivem.testing.channels.Channel;
 import com.optivem.testing.channels.ChannelExtension;
-import com.optivem.eshop.systemtest.core.channels.ChannelType;
+import com.optivem.eshop.systemtest.dsl.shop.ChannelType;
 import com.optivem.testing.channels.DataSource;
 import com.optivem.lang.Closer;
-import com.optivem.eshop.systemtest.core.drivers.system.commons.enums.OrderStatus;
+import com.optivem.eshop.systemtest.dsl.shop.driver.commons.enums.OrderStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestTemplate;
