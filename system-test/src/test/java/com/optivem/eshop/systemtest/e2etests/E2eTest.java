@@ -64,7 +64,7 @@ public class E2eTest {
 
     @TestTemplate
     @Channel({ChannelType.UI, ChannelType.API})
-    void shouldPlaceOrderAndCalculateAllPrices() {
+    void shouldPlaceOrder() {
         dsl.erp().createProduct()
                 .sku(SKU)
                 .unitPrice(20.00)
