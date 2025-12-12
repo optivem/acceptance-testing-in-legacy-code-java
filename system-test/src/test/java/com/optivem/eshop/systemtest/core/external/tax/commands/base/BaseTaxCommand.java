@@ -1,0 +1,12 @@
+package com.optivem.eshop.systemtest.core.external.tax.commands.base;
+
+import com.optivem.eshop.systemtest.core.external.tax.driver.TaxDriver;
+import com.optivem.testing.dsl.BaseCommand;
+import com.optivem.testing.dsl.Context;
+
+public abstract class BaseTaxCommand<TResponse, TVerification> extends BaseCommand<TaxDriver, TResponse, TVerification> {
+    protected BaseTaxCommand(TaxDriver driver, Context context) {
+        super(driver, context);
+    }
+}
+

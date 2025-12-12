@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest;
 
-import com.optivem.eshop.systemtest.dsl.DslConfiguration;
+import com.optivem.eshop.systemtest.core.DslConfiguration;
 import org.yaml.snakeyaml.Yaml;
 
 import java.util.Map;

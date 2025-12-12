@@ -1,7 +1,6 @@
 package com.optivem.eshop.systemtest;
 
-import com.optivem.eshop.systemtest.dsl.Dsl;
-import com.optivem.eshop.systemtest.dsl.DslConfiguration;
+import com.optivem.eshop.systemtest.core.Dsl;
 
 public class DslFactory {
     public static Dsl create() {
