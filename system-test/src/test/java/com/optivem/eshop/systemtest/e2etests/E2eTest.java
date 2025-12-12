@@ -1,7 +1,7 @@
 package com.optivem.eshop.systemtest.e2etests;
 
-import com.optivem.eshop.systemtest.DslFactory;
-import com.optivem.eshop.systemtest.core.Dsl;
+import com.optivem.eshop.systemtest.AppDslFactory;
+import com.optivem.eshop.systemtest.core.AppDsl;
 import com.optivem.eshop.systemtest.e2etests.providers.EmptyArgumentsProvider;
 import com.optivem.testing.channels.Channel;
 import com.optivem.testing.channels.ChannelExtension;
@@ -24,16 +24,16 @@ import java.util.stream.Stream;
 @ExtendWith(ChannelExtension.class)
 public class E2eTest {
 
-    private Dsl dsl;
+    private AppDsl app;
 
     @BeforeEach
     void setUp() {
-        dsl = DslFactory.create();
+        app = AppDslFactory.create();
     }
 
     @AfterEach
     void tearDown() {
-        Closer.close(dsl);
+        Closer.close(app);
     }
 
     private static final String ORDER_NUMBER = "order-number";
@@ -42,19 +42,19 @@ public class E2eTest {
     @TestTemplate
     @Channel({ChannelType.UI, ChannelType.API})
     void shouldPlaceOrderWithCorrectOriginalPrice() {
-        dsl.erp().createProduct()
+        app.erp().createProduct()
                 .sku("ABC")
                 .unitPrice(20.00)
                 .execute()
                 .shouldSucceed();
 
-        dsl.shop().placeOrder().orderNumber("ORDER-1001")
+        app.shop().placeOrder().orderNumber("ORDER-1001")
                 .sku("ABC")
                 .quantity(5)
                 .execute()
                 .shouldSucceed();
 
-        dsl.shop().viewOrder().orderNumber("ORDER-1001").execute()
+        app.shop().viewOrder().orderNumber("ORDER-1001").execute()
                 .shouldSucceed()
                 .originalPrice(100.00);
     }
@@ -66,20 +66,20 @@ public class E2eTest {
     @DataSource({"15.50", "4", "62.00"})
     @DataSource({"99.99", "1", "99.99"})
     void shouldPlaceOrderWithCorrectOriginalPriceParameterized(String unitPrice, String quantity, String originalPrice) {
-        dsl.erp().createProduct()
+        app.erp().createProduct()
                 .sku("ABC")
                 .unitPrice(unitPrice)
                 .execute()
                 .shouldSucceed();
 
-        dsl.shop().placeOrder()
+        app.shop().placeOrder()
                 .orderNumber("ORDER-1001")
                 .sku("ABC")
                 .quantity(quantity)
                 .execute()
                 .shouldSucceed();
 
-        dsl.shop().viewOrder()
+        app.shop().viewOrder()
                 .orderNumber("ORDER-1001")
                 .execute()
                 .shouldSucceed()
@@ -89,7 +89,7 @@ public class E2eTest {
     @TestTemplate
     @Channel({ChannelType.UI, ChannelType.API})
     void shouldRejectOrderWithInvalidQuantity() {
-        dsl.shop().placeOrder()
+        app.shop().placeOrder()
                 .quantity("invalid-quantity")
                 .execute()
                 .shouldFail()
@@ -99,13 +99,13 @@ public class E2eTest {
     @TestTemplate
     @Channel({ChannelType.UI, ChannelType.API})
     void shouldPlaceOrder() {
-        dsl.erp().createProduct()
+        app.erp().createProduct()
                 .sku(SKU)
                 .unitPrice(20.00)
                 .execute()
                 .shouldSucceed();
 
-        dsl.shop().placeOrder()
+        app.shop().placeOrder()
                 .orderNumber(ORDER_NUMBER)
                 .sku(SKU)
                 .quantity(5)
@@ -115,7 +115,7 @@ public class E2eTest {
                 .orderNumber(ORDER_NUMBER)
                 .orderNumberStartsWith("ORD-");
 
-        dsl.shop().viewOrder()
+        app.shop().viewOrder()
                 .orderNumber(ORDER_NUMBER)
                 .execute()
                 .shouldSucceed()
@@ -137,23 +137,23 @@ public class E2eTest {
     @TestTemplate
     @Channel({ChannelType.UI, ChannelType.API})
     void shouldCancelOrder() {
-        dsl.erp().createProduct()
+        app.erp().createProduct()
                 .sku(SKU)
                 .execute()
                 .shouldSucceed();
 
-        dsl.shop().placeOrder()
+        app.shop().placeOrder()
                 .orderNumber(ORDER_NUMBER)
                 .sku(SKU)
                 .execute()
                 .shouldSucceed();
 
-        dsl.shop().cancelOrder()
+        app.shop().cancelOrder()
                 .orderNumber(ORDER_NUMBER)
                 .execute()
                 .shouldSucceed();
 
-        dsl.shop().viewOrder()
+        app.shop().viewOrder()
                 .orderNumber(ORDER_NUMBER)
                 .execute()
                 .shouldSucceed()
@@ -165,7 +165,7 @@ public class E2eTest {
     @TestTemplate
     @Channel({ChannelType.UI, ChannelType.API})
     void shouldRejectOrderWithNonExistentSku() {
-        dsl.shop().placeOrder()
+        app.shop().placeOrder()
                 .sku("NON-EXISTENT-SKU-12345")
                 .execute()
                 .shouldFail()
@@ -184,7 +184,7 @@ public class E2eTest {
     @Channel({ChannelType.UI, ChannelType.API})
     @MethodSource("provideNonExistentOrderValues")
     void shouldNotBeAbleToViewNonExistentOrder(String orderNumber, String expectedErrorMessage) {
-        dsl.shop().viewOrder()
+        app.shop().viewOrder()
                 .orderNumber(orderNumber)
                 .execute()
                 .shouldFail()
@@ -194,7 +194,7 @@ public class E2eTest {
     @TestTemplate
     @Channel({ChannelType.UI, ChannelType.API})
     void shouldRejectOrderWithNegativeQuantity() {
-        dsl.shop().placeOrder()
+        app.shop().placeOrder()
                 .quantity(-10)
                 .execute()
                 .shouldFail()
@@ -204,7 +204,7 @@ public class E2eTest {
     @TestTemplate
     @Channel({ChannelType.UI, ChannelType.API})
     void shouldRejectOrderWithZeroQuantity() {
-        dsl.shop().placeOrder()
+        app.shop().placeOrder()
                 .sku("ANOTHER-SKU-67890")
                 .quantity(0)
                 .execute()
@@ -216,7 +216,7 @@ public class E2eTest {
     @Channel({ChannelType.UI, ChannelType.API})
     @ArgumentsSource(EmptyArgumentsProvider.class)
     void shouldRejectOrderWithEmptySku(String sku) {
-        dsl.shop().placeOrder()
+        app.shop().placeOrder()
                 .sku(sku)
                 .execute()
                 .shouldFail()
@@ -227,7 +227,7 @@ public class E2eTest {
     @Channel({ChannelType.UI, ChannelType.API})
     @ArgumentsSource(EmptyArgumentsProvider.class)
     void shouldRejectOrderWithEmptyQuantity(String emptyQuantity) {
-        dsl.shop().placeOrder()
+        app.shop().placeOrder()
                 .quantity(emptyQuantity)
                 .execute()
                 .shouldFail()
@@ -238,7 +238,7 @@ public class E2eTest {
     @Channel({ChannelType.UI, ChannelType.API})
     @ValueSource(strings = {"3.5", "lala"})
     void shouldRejectOrderWithNonIntegerQuantity(String nonIntegerQuantity) {
-        dsl.shop().placeOrder()
+        app.shop().placeOrder()
                 .quantity(nonIntegerQuantity)
                 .execute()
                 .shouldFail()
@@ -249,7 +249,7 @@ public class E2eTest {
     @Channel({ChannelType.UI, ChannelType.API})
     @ArgumentsSource(EmptyArgumentsProvider.class)
     void shouldRejectOrderWithEmptyCountry(String emptyCountry) {
-        dsl.shop().placeOrder()
+        app.shop().placeOrder()
                 .country(emptyCountry)
                 .execute()
                 .shouldFail()
@@ -259,12 +259,12 @@ public class E2eTest {
     @TestTemplate
     @Channel({ChannelType.UI, ChannelType.API})
     void shouldRejectOrderWithUnsupportedCountry() {
-        dsl.erp().createProduct()
+        app.erp().createProduct()
                 .sku(SKU)
                 .execute()
                 .shouldSucceed();
 
-        dsl.shop().placeOrder()
+        app.shop().placeOrder()
                 .sku(SKU)
                 .country("XX")
                 .execute()
@@ -275,7 +275,7 @@ public class E2eTest {
     @TestTemplate
     @Channel({ChannelType.API})
     void shouldRejectOrderWithNullQuantity() {
-        dsl.shop().placeOrder()
+        app.shop().placeOrder()
                 .quantity(null)
                 .execute()
                 .shouldFail()
@@ -285,7 +285,7 @@ public class E2eTest {
     @TestTemplate
     @Channel({ChannelType.API})
     void shouldRejectOrderWithNullSku() {
-        dsl.shop().placeOrder()
+        app.shop().placeOrder()
                 .sku(null)
                 .execute()
                 .shouldFail()
@@ -295,7 +295,7 @@ public class E2eTest {
     @TestTemplate
     @Channel({ChannelType.API})
     void shouldRejectOrderWithNullCountry() {
-        dsl.shop().placeOrder()
+        app.shop().placeOrder()
                 .country(null)
                 .execute()
                 .shouldFail()
@@ -308,7 +308,7 @@ public class E2eTest {
     @DataSource({"NON-EXISTENT-ORDER-88888", "Order NON-EXISTENT-ORDER-88888 does not exist."})
     @DataSource({"NON-EXISTENT-ORDER-77777", "Order NON-EXISTENT-ORDER-77777 does not exist."})
     void shouldNotCancelNonExistentOrder(String orderNumber, String expectedErrorMessage) {
-        dsl.shop().cancelOrder()
+        app.shop().cancelOrder()
                 .orderNumber(orderNumber)
                 .execute()
                 .shouldFail()
@@ -318,23 +318,23 @@ public class E2eTest {
     @TestTemplate
     @Channel({ChannelType.API})
     void shouldNotCancelAlreadyCancelledOrder() {
-        dsl.erp().createProduct()
+        app.erp().createProduct()
                 .sku(SKU)
                 .execute()
                 .shouldSucceed();
 
-        dsl.shop().placeOrder()
+        app.shop().placeOrder()
                 .orderNumber(ORDER_NUMBER)
                 .sku(SKU)
                 .execute()
                 .shouldSucceed();
 
-        dsl.shop().cancelOrder()
+        app.shop().cancelOrder()
                 .orderNumber(ORDER_NUMBER)
                 .execute()
                 .shouldSucceed();
 
-        dsl.shop().cancelOrder()
+        app.shop().cancelOrder()
                 .orderNumber(ORDER_NUMBER)
                 .execute()
                 .shouldFail()

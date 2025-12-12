@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class DslConfiguration {
+public class AppConfiguration {
     private final String shopUiBaseUrl;
     private final String shopApiBaseUrl;
     private final String erpBaseUrl;

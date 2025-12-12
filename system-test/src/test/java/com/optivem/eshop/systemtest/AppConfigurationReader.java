@@ -1,29 +1,29 @@
 package com.optivem.eshop.systemtest;
 
-import com.optivem.eshop.systemtest.core.DslConfiguration;
+import com.optivem.eshop.systemtest.core.AppConfiguration;
 import org.yaml.snakeyaml.Yaml;
 
 import java.util.Map;
 
-public class DslConfigurationReader {
+public class AppConfigurationReader {
     
     private static final Map<String, Object> config;
     
     static {
         var yaml = new Yaml();
-        var inputStream = DslConfigurationReader.class
+        var inputStream = AppConfigurationReader.class
                 .getClassLoader()
                 .getResourceAsStream("application.yml");
         config = yaml.load(inputStream);
     }
 
-    public static DslConfiguration readConfiguration() {
+    public static AppConfiguration readConfiguration() {
         var shopUiBaseUrl = getNestedStringValue("test", "eshop", "ui", "baseUrl");
         var shopApiBaseUrl = getNestedStringValue("test", "eshop", "api", "baseUrl");
         var erpBaseUrl = getNestedStringValue("test", "erp", "api", "baseUrl");
         var taxBaseUrl = getNestedStringValue("test", "tax", "api", "baseUrl");
 
-        return new DslConfiguration(shopUiBaseUrl, shopApiBaseUrl, erpBaseUrl, taxBaseUrl);
+        return new AppConfiguration(shopUiBaseUrl, shopApiBaseUrl, erpBaseUrl, taxBaseUrl);
     }
     
     @SuppressWarnings("unchecked")

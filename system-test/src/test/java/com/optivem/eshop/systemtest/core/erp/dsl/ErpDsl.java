@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest.core.erp.dsl;
 
-import com.optivem.eshop.systemtest.core.DslConfiguration;
+import com.optivem.eshop.systemtest.core.AppConfiguration;
 import com.optivem.eshop.systemtest.core.erp.driver.ErpDriver;
 import com.optivem.testing.dsl.Context;
 import com.optivem.eshop.systemtest.core.erp.dsl.commands.CreateProduct;
@@ -13,12 +13,12 @@ public class ErpDsl implements Closeable {
     private final ErpDriver driver;
     private final Context context;
 
-    public ErpDsl(Context context, DslConfiguration configuration) {
+    public ErpDsl(Context context, AppConfiguration configuration) {
         this.driver = createDriver(configuration);
         this.context = context;
     }
 
-    private static ErpDriver createDriver(DslConfiguration configuration) {
+    private static ErpDriver createDriver(AppConfiguration configuration) {
         return new ErpDriver(configuration.getErpBaseUrl());
     }
 

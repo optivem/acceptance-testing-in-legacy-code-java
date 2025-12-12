@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest.core.shop.dsl;
 
-import com.optivem.eshop.systemtest.core.DslConfiguration;
+import com.optivem.eshop.systemtest.core.AppConfiguration;
 import com.optivem.eshop.systemtest.core.shop.ChannelType;
 import com.optivem.eshop.systemtest.core.shop.driver.ShopDriver;
 import com.optivem.eshop.systemtest.core.shop.driver.api.ShopApiDriver;
@@ -19,12 +19,12 @@ public class ShopDsl implements Closeable {
     private final ShopDriver driver;
     private final Context context;
 
-    public ShopDsl(Context context, DslConfiguration configuration) {
+    public ShopDsl(Context context, AppConfiguration configuration) {
         this.driver = createDriver(configuration);
         this.context = context;
     }
 
-    private static ShopDriver createDriver(DslConfiguration configuration) {
+    private static ShopDriver createDriver(AppConfiguration configuration) {
         var channel = ChannelContext.get();
         if (ChannelType.UI.equals(channel)) {
             return new ShopUiDriver(configuration.getShopUiBaseUrl());
