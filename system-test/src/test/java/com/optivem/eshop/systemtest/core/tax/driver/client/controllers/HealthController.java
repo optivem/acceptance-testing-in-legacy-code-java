@@ -1,4 +1,4 @@
-package com.optivem.eshop.systemtest.core.external.tax.driver.client.controllers;
+package com.optivem.eshop.systemtest.core.tax.driver.client.controllers;
 
 import com.optivem.http.HttpGateway;
 import com.optivem.http.HttpUtils;

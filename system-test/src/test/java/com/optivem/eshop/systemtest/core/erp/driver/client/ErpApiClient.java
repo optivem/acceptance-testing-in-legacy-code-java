@@ -1,8 +1,8 @@
-package com.optivem.eshop.systemtest.core.external.erp.driver.client;
+package com.optivem.eshop.systemtest.core.erp.driver.client;
 
 import com.optivem.http.HttpGateway;
-import com.optivem.eshop.systemtest.core.external.erp.driver.client.controllers.HealthController;
-import com.optivem.eshop.systemtest.core.external.erp.driver.client.controllers.ProductController;
+import com.optivem.eshop.systemtest.core.erp.driver.client.controllers.HealthController;
+import com.optivem.eshop.systemtest.core.erp.driver.client.controllers.ProductController;
 
 public class ErpApiClient {
 

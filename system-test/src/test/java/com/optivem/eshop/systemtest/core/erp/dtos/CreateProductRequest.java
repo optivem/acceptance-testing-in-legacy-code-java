@@ -1,4 +1,4 @@
-package com.optivem.eshop.systemtest.core.external.erp.dtos;
+package com.optivem.eshop.systemtest.core.erp.dtos;
 
 import lombok.Data;
 

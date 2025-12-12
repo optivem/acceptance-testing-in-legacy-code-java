@@ -1,4 +1,4 @@
-package com.optivem.eshop.systemtest.core.external.erp.driver.client.controllers;
+package com.optivem.eshop.systemtest.core.erp.driver.client.controllers;
 
 import com.optivem.http.HttpGateway;
 import com.optivem.http.HttpUtils;

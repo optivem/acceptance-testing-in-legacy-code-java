@@ -1,10 +1,10 @@
-package com.optivem.eshop.systemtest.core.external.erp.commands;
+package com.optivem.eshop.systemtest.core.erp.commands;
 
-import com.optivem.eshop.systemtest.core.external.erp.driver.ErpDriver;
+import com.optivem.eshop.systemtest.core.erp.driver.ErpDriver;
 import com.optivem.testing.dsl.CommandResult;
 import com.optivem.testing.dsl.VoidVerification;
 import com.optivem.testing.dsl.Context;
-import com.optivem.eshop.systemtest.core.external.erp.commands.base.BaseErpCommand;
+import com.optivem.eshop.systemtest.core.erp.commands.base.BaseErpCommand;
 
 public class CreateProduct extends BaseErpCommand<Void, VoidVerification> {
     private static final double DEFAULT_UNIT_PRICE = 20.00;

@@ -1,10 +1,10 @@
-package com.optivem.eshop.systemtest.core.external.erp;
+package com.optivem.eshop.systemtest.core.erp;
 
 import com.optivem.eshop.systemtest.core.DslConfiguration;
-import com.optivem.eshop.systemtest.core.external.erp.driver.ErpDriver;
+import com.optivem.eshop.systemtest.core.erp.driver.ErpDriver;
 import com.optivem.testing.dsl.Context;
-import com.optivem.eshop.systemtest.core.external.erp.commands.CreateProduct;
-import com.optivem.eshop.systemtest.core.external.erp.commands.GoToErp;
+import com.optivem.eshop.systemtest.core.erp.commands.CreateProduct;
+import com.optivem.eshop.systemtest.core.erp.commands.GoToErp;
 import com.optivem.lang.Closer;
 
 import java.io.Closeable;

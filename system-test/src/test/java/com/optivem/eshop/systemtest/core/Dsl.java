@@ -1,9 +1,9 @@
 package com.optivem.eshop.systemtest.core;
 
 import com.optivem.testing.dsl.Context;
-import com.optivem.eshop.systemtest.core.external.erp.ErpDsl;
+import com.optivem.eshop.systemtest.core.erp.ErpDsl;
 import com.optivem.eshop.systemtest.core.shop.ShopDsl;
-import com.optivem.eshop.systemtest.core.external.tax.TaxDsl;
+import com.optivem.eshop.systemtest.core.tax.TaxDsl;
 import com.optivem.lang.Closer;
 
 import java.io.Closeable;

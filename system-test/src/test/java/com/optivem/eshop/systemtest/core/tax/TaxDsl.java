@@ -1,9 +1,9 @@
-package com.optivem.eshop.systemtest.core.external.tax;
+package com.optivem.eshop.systemtest.core.tax;
 
 import com.optivem.eshop.systemtest.core.DslConfiguration;
-import com.optivem.eshop.systemtest.core.external.tax.driver.TaxDriver;
+import com.optivem.eshop.systemtest.core.tax.driver.TaxDriver;
 import com.optivem.testing.dsl.Context;
-import com.optivem.eshop.systemtest.core.external.tax.commands.GoToTax;
+import com.optivem.eshop.systemtest.core.tax.commands.GoToTax;
 import com.optivem.lang.Closer;
 
 import java.io.Closeable;
