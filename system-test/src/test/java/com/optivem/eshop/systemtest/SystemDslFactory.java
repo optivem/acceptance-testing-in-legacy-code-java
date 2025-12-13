@@ -4,7 +4,7 @@ import com.optivem.eshop.systemtest.core.SystemDsl;
 
 public class SystemDslFactory {
     public static SystemDsl create() {
-        var configuration = SystemConfigurationReader.readConfiguration();
+        var configuration = SystemConfigurationLoader.load();
         return new SystemDsl(configuration);
     }
 }

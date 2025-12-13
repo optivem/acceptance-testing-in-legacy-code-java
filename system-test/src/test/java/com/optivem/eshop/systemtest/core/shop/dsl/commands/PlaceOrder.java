@@ -1,8 +1,8 @@
 package com.optivem.eshop.systemtest.core.shop.dsl.commands;
 
 import com.optivem.eshop.systemtest.core.shop.driver.ShopDriver;
-import com.optivem.eshop.systemtest.core.shop.driver.dtos.PlaceOrderRequest;
-import com.optivem.eshop.systemtest.core.shop.driver.dtos.PlaceOrderResponse;
+import com.optivem.eshop.systemtest.core.shop.driver.dtos.requests.PlaceOrderRequest;
+import com.optivem.eshop.systemtest.core.shop.driver.dtos.responses.PlaceOrderResponse;
 import com.optivem.testing.dsl.CommandResult;
 import com.optivem.testing.dsl.Context;
 import com.optivem.eshop.systemtest.core.shop.dsl.commands.base.BaseShopCommand;
@@ -61,7 +61,7 @@ public class PlaceOrder extends BaseShopCommand<PlaceOrderResponse, PlaceOrderVe
                 .build();
         var result = driver.placeOrder(request);
 
-        if (result.isSuccess()) {
+        if (result.isSuccess() && orderNumberResultAlias != null) {
             var orderNumber = result.getValue().getOrderNumber();
             context.setResultEntry(orderNumberResultAlias, orderNumber);
         }

@@ -1,12 +1,12 @@
 package com.optivem.eshop.systemtest.core.shop.driver.ui;
 
-import com.optivem.eshop.systemtest.core.shop.driver.dtos.PlaceOrderRequest;
+import com.optivem.eshop.systemtest.core.shop.driver.dtos.requests.PlaceOrderRequest;
 import com.optivem.eshop.systemtest.core.shop.driver.ui.client.ShopUiClient;
 import com.optivem.eshop.systemtest.core.shop.driver.ui.client.pages.HomePage;
 import com.optivem.eshop.systemtest.core.shop.driver.ui.client.pages.NewOrderPage;
 import com.optivem.eshop.systemtest.core.shop.driver.ui.client.pages.OrderHistoryPage;
-import com.optivem.eshop.systemtest.core.shop.driver.dtos.GetOrderResponse;
-import com.optivem.eshop.systemtest.core.shop.driver.dtos.PlaceOrderResponse;
+import com.optivem.eshop.systemtest.core.shop.driver.dtos.responses.GetOrderResponse;
+import com.optivem.eshop.systemtest.core.shop.driver.dtos.responses.PlaceOrderResponse;
 import com.optivem.eshop.systemtest.core.shop.driver.dtos.enums.OrderStatus;
 import com.optivem.results.Result;
 import com.optivem.eshop.systemtest.core.shop.driver.ShopDriver;

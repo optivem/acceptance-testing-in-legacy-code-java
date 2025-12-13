@@ -3,11 +3,11 @@ package com.optivem.eshop.systemtest.core.tax.driver.client;
 import com.optivem.http.HttpGateway;
 import com.optivem.eshop.systemtest.core.tax.driver.client.controllers.HealthController;
 
-public class TaxApiClient {
+public class TaxClient {
 
     private final HealthController healthController;
 
-    public TaxApiClient(HttpGateway httpGateway) {
+    public TaxClient(HttpGateway httpGateway) {
         this.healthController = new HealthController(httpGateway);
     }
 

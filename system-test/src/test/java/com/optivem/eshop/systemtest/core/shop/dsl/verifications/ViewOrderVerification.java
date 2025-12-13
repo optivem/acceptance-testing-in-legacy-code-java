@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest.core.shop.dsl.verifications;
 
-import com.optivem.eshop.systemtest.core.shop.driver.dtos.GetOrderResponse;
+import com.optivem.eshop.systemtest.core.shop.driver.dtos.responses.GetOrderResponse;
 import com.optivem.eshop.systemtest.core.shop.driver.dtos.enums.OrderStatus;
 import com.optivem.testing.dsl.BaseSuccessVerification;
 import com.optivem.testing.dsl.Context;

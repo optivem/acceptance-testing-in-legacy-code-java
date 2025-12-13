@@ -5,19 +5,19 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.util.Map;
 
-public class SystemConfigurationReader {
+public class SystemConfigurationLoader {
     
     private static final Map<String, Object> config;
     
     static {
         var yaml = new Yaml();
-        var inputStream = SystemConfigurationReader.class
+        var inputStream = SystemConfigurationLoader.class
                 .getClassLoader()
                 .getResourceAsStream("application.yml");
         config = yaml.load(inputStream);
     }
 
-    public static SystemConfiguration readConfiguration() {
+    public static SystemConfiguration load() {
         var shopUiBaseUrl = getNestedStringValue("test", "eshop", "ui", "baseUrl");
         var shopApiBaseUrl = getNestedStringValue("test", "eshop", "api", "baseUrl");
         var erpBaseUrl = getNestedStringValue("test", "erp", "api", "baseUrl");

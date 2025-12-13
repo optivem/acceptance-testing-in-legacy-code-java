@@ -17,9 +17,13 @@ public class SystemDsl implements Closeable {
     private ErpDsl erp;
     private TaxDsl tax;
 
-    public SystemDsl(SystemConfiguration configuration) {
-        this.context = new Context();
+    public SystemDsl(Context context, SystemConfiguration configuration) {
+        this.context = context;
         this.configuration = configuration;
+    }
+
+    public SystemDsl(SystemConfiguration configuration) {
+        this(new Context(), configuration);
     }
 
     @Override

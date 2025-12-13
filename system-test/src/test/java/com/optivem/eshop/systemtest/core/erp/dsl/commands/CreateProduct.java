@@ -1,13 +1,14 @@
 package com.optivem.eshop.systemtest.core.erp.dsl.commands;
 
 import com.optivem.eshop.systemtest.core.erp.driver.ErpDriver;
-import com.optivem.eshop.systemtest.core.erp.driver.dtos.CreateProductRequest;
+import com.optivem.eshop.systemtest.core.erp.driver.dtos.requests.CreateProductRequest;
 import com.optivem.testing.dsl.CommandResult;
 import com.optivem.testing.dsl.VoidVerification;
 import com.optivem.testing.dsl.Context;
 import com.optivem.eshop.systemtest.core.erp.dsl.commands.base.BaseErpCommand;
 
 public class CreateProduct extends BaseErpCommand<Void, VoidVerification> {
+    private static final String DEFAULT_SKU = "DEFAULT_SKU";
     private static final double DEFAULT_UNIT_PRICE = 20.00;
     private static final String DEFAULT_TITLE = "Test Product Title";
     private static final String DEFAULT_DESCRIPTION = "Test Product Description";
@@ -24,11 +25,12 @@ public class CreateProduct extends BaseErpCommand<Void, VoidVerification> {
     public CreateProduct(ErpDriver driver, Context context) {
         super(driver, context);
 
-        unitPrice(DEFAULT_UNIT_PRICE);
-        title(DEFAULT_TITLE);
-        description(DEFAULT_DESCRIPTION);
-        category(DEFAULT_CATEGORY);
-        brand(DEFAULT_BRAND);
+        sku(DEFAULT_SKU)
+        .unitPrice(DEFAULT_UNIT_PRICE)
+        .title(DEFAULT_TITLE)
+        .description(DEFAULT_DESCRIPTION)
+        .category(DEFAULT_CATEGORY)
+        .brand(DEFAULT_BRAND);
     }
 
     public CreateProduct sku(String skuParamAlias) {

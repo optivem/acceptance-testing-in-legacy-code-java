@@ -4,12 +4,12 @@ import com.optivem.http.HttpGateway;
 import com.optivem.eshop.systemtest.core.erp.driver.client.controllers.HealthController;
 import com.optivem.eshop.systemtest.core.erp.driver.client.controllers.ProductController;
 
-public class ErpApiClient {
+public class ErpClient {
 
     private final HealthController healthController;
     private final ProductController productController;
 
-    public ErpApiClient(HttpGateway httpGateway) {
+    public ErpClient(HttpGateway httpGateway) {
         this.healthController = new HealthController(httpGateway);
         this.productController = new ProductController(httpGateway);
     }

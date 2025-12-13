@@ -44,7 +44,6 @@ public class ShopDsl implements Closeable {
         return new GoToShop(driver, context);
     }
 
-
     public PlaceOrder placeOrder() {
         return new PlaceOrder(driver, context);
     }
