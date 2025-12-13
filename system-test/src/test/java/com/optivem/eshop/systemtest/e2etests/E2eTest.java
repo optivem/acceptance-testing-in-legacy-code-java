@@ -170,7 +170,8 @@ public class E2eTest {
                 .sku("NON-EXISTENT-SKU-12345")
                 .execute()
                 .shouldFail()
-                .errorMessage("Product does not exist for SKU: NON-EXISTENT-SKU-12345");
+                .errorMessage("The request contains one or more validation errors")
+                .fieldErrorMessage("sku", "Product does not exist for SKU: NON-EXISTENT-SKU-12345");
     }
 
     private static Stream<Arguments> provideNonExistentOrderValues() {

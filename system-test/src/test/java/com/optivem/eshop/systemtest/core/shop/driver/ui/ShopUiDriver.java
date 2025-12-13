@@ -63,30 +63,31 @@ public class ShopUiDriver implements ShopDriver {
         var isSuccess = newOrderPage.hasSuccessNotification();
 
         if(!isSuccess) {
-            var errorMessages = newOrderPage.readErrorNotification();
+            var generalMessage = newOrderPage.readGeneralErrorMessage();
+            var fieldErrorTexts = newOrderPage.readFieldErrors();
             
-            if (errorMessages.isEmpty()) {
-                return Results.failure("Order placement failed");
-            }
-            
-            var firstMessage = errorMessages.get(0);
-            
-            // Distinguish between validation errors and business logic errors
-            if (isValidationError(firstMessage)) {
-                // Validation errors: return generic message + field errors
-                var fieldErrors = errorMessages.stream()
-                        .map(msg -> new Error.FieldError(extractFieldName(msg), msg))
+            if (fieldErrorTexts.isEmpty()) {
+                // Business logic error - no field errors
+                return Results.failure(generalMessage);
+            } else {
+                // Validation error with field errors
+                // Parse "fieldName: message" format
+                var fieldErrors = fieldErrorTexts.stream()
+                        .map(text -> {
+                            var parts = text.split(":", 2);
+                            if (parts.length == 2) {
+                                return new Error.FieldError(parts[0].trim(), parts[1].trim());
+                            }
+                            return new Error.FieldError("unknown", text);
+                        })
                         .toList();
                 
                 var error = Error.builder()
-                        .message("The request contains one or more validation errors")
+                        .message(generalMessage)
                         .fields(fieldErrors)
                         .build();
                 
                 return Results.failure(error);
-            } else {
-                // Business logic errors: return specific message directly
-                return Results.failure(firstMessage);
             }
         }
 
@@ -183,53 +184,6 @@ public class ShopUiDriver implements ShopDriver {
             orderHistoryPage = homePage.clickOrderHistory();
             currentPage = Pages.ORDER_HISTORY;
         }
-    }
-    
-    /**
-     * Determine if an error message is a validation error vs business logic error.
-     * Validation errors contain keywords like "must", "required", "cannot", "invalid".
-     * Business logic errors contain domain-specific messages.
-     */
-    private boolean isValidationError(String errorMessage) {
-        if (errorMessage == null || errorMessage.isEmpty()) {
-            return false;
-        }
-        
-        var lowerMessage = errorMessage.toLowerCase();
-        
-        // Validation error patterns
-        return lowerMessage.contains("must") || 
-               lowerMessage.contains("required") || 
-               lowerMessage.contains("cannot") || 
-               lowerMessage.contains("invalid") ||
-               lowerMessage.contains("should");
-    }
-    
-    /**
-     * Extract field name from error message.
-     * E.g., "Quantity must be positive" -> "quantity"
-     *       "SKU must not be empty" -> "sku"
-     *       "Country must not be empty" -> "country"
-     */
-    private String extractFieldName(String errorMessage) {
-        if (errorMessage == null || errorMessage.isEmpty()) {
-            return "unknown";
-        }
-        
-        var lowerMessage = errorMessage.toLowerCase();
-        
-        // Try to match common patterns: "Quantity must...", "SKU must...", etc.
-        if (lowerMessage.startsWith("quantity")) {
-            return "quantity";
-        } else if (lowerMessage.startsWith("sku")) {
-            return "sku";
-        } else if (lowerMessage.startsWith("country")) {
-            return "country";
-        }
-        
-        // Fallback: extract first word and lowercase it
-        var firstWord = errorMessage.split("\\s+")[0];
-        return firstWord.toLowerCase();
     }
 }
 

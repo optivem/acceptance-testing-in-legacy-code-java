@@ -5,6 +5,7 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitForSelectorState;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class PageGateway {
     private final Page page;
@@ -64,6 +65,12 @@ public class PageGateway {
         var locator = page.locator(selector);
         wait(locator);
         return locator.textContent();
+    }
+
+    public List<String> readAllTextContents(String selector) {
+        var locator = page.locator(selector);
+        wait(locator);
+        return locator.allTextContents();
     }
 
     public boolean exists(String selector) {
