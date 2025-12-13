@@ -277,7 +277,8 @@ public class E2eTest {
                 .country("XX")
                 .execute()
                 .shouldFail()
-                .errorMessage("Country does not exist: XX");
+                .errorMessage("The request contains one or more validation errors")
+                .fieldErrorMessage("country", "Country does not exist: XX");
     }
 
     @TestTemplate
