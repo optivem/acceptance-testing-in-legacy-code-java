@@ -1,4 +1,6 @@
-package com.optivem.lang;
+package com.optivem.eshop.systemtest.core.common.error;
+
+import com.optivem.lang.Result;
 
 public final class Results {
     private Results() {

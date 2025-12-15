@@ -1,7 +1,6 @@
 package com.optivem.http;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.optivem.lang.Error;
 import com.optivem.lang.Result;
 
 import java.net.URI;
@@ -75,21 +74,6 @@ public class JsonHttpClient<E> {
     public Result<Void, E> post(String path, Class<Void> responseType) {
         var httpResponse = post(path);
         return getResultOrFailure(httpResponse, responseType);
-    }
-
-    // Public utility for error conversion
-    
-    public static Error convertProblemDetailToError(ProblemDetailResponse problemDetail) {
-        var message = problemDetail.getDetail() != null ? problemDetail.getDetail() : "Request failed";
-
-        if (problemDetail.getErrors() != null && !problemDetail.getErrors().isEmpty()) {
-            var fieldErrors = problemDetail.getErrors().stream()
-                    .map(e -> new Error.FieldError(e.getField(), e.getMessage(), e.getCode()))
-                    .toList();
-            return Error.of(message, fieldErrors);
-        }
-
-        return Error.of(message);
     }
 
     // Private helper methods

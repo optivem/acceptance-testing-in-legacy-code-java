@@ -1,7 +1,7 @@
 package com.optivem.eshop.systemtest.core.shop.dsl.commands.base;
 
 import com.optivem.eshop.systemtest.core.common.dsl.ErrorFailureVerification;
-import com.optivem.lang.Error;
+import com.optivem.eshop.systemtest.core.common.error.Error;
 import com.optivem.lang.Result;
 import com.optivem.testing.dsl.UseCaseContext;
 import com.optivem.testing.dsl.UseCaseResult;

@@ -1,6 +1,5 @@
-package com.optivem.lang;
+package com.optivem.eshop.systemtest.core.common.error;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;

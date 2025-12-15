@@ -1,4 +1,4 @@
-package com.optivem.http;
+package com.optivem.eshop.systemtest.core.common.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,4 +20,3 @@ public class ProblemDetailResponse {
     private String timestamp;
     private List<ProblemDetailsFieldErrorResponse> errors;
 }
-
