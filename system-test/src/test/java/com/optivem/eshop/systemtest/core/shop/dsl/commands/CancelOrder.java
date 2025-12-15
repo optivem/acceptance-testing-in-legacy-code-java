@@ -1,12 +1,10 @@
 package com.optivem.eshop.systemtest.core.shop.dsl.commands;
 
-import com.optivem.eshop.systemtest.core.common.dsl.ErrorFailureVerification;
 import com.optivem.eshop.systemtest.core.shop.driver.ShopDriver;
-import com.optivem.lang.Error;
-import com.optivem.testing.dsl.UseCaseResult;
 import com.optivem.testing.dsl.UseCaseVoidSuccessVerification;
 import com.optivem.testing.dsl.UseCaseContext;
 import com.optivem.eshop.systemtest.core.shop.dsl.commands.base.BaseShopCommand;
+import com.optivem.eshop.systemtest.core.shop.dsl.commands.base.ShopUseCaseResult;
 
 public class CancelOrder extends BaseShopCommand<Void, UseCaseVoidSuccessVerification> {
     private String orderNumberResultAlias;
@@ -21,10 +19,10 @@ public class CancelOrder extends BaseShopCommand<Void, UseCaseVoidSuccessVerific
     }
 
     @Override
-    public UseCaseResult<Void, UseCaseVoidSuccessVerification, Error, ErrorFailureVerification> execute() {
+    public ShopUseCaseResult<Void, UseCaseVoidSuccessVerification> execute() {
         var orderNumber = context.getResultValue(orderNumberResultAlias);
         var result = driver.cancelOrder(orderNumber);
-        return new UseCaseResult<>(result, context, UseCaseVoidSuccessVerification::new, ErrorFailureVerification::new);
+        return new ShopUseCaseResult<>(result, context, UseCaseVoidSuccessVerification::new);
     }
 }
 

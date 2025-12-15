@@ -1,12 +1,10 @@
 package com.optivem.eshop.systemtest.core.erp.dsl.commands;
 
-import com.optivem.eshop.systemtest.core.common.dsl.ErrorFailureVerification;
 import com.optivem.eshop.systemtest.core.erp.driver.ErpDriver;
-import com.optivem.lang.Error;
-import com.optivem.testing.dsl.UseCaseResult;
 import com.optivem.testing.dsl.UseCaseVoidSuccessVerification;
 import com.optivem.testing.dsl.UseCaseContext;
 import com.optivem.eshop.systemtest.core.erp.dsl.commands.base.BaseErpCommand;
+import com.optivem.eshop.systemtest.core.erp.dsl.commands.base.ErpUseCaseResult;
 
 public class GoToErp extends BaseErpCommand<Void, UseCaseVoidSuccessVerification> {
     public GoToErp(ErpDriver driver, UseCaseContext context) {
@@ -14,9 +12,9 @@ public class GoToErp extends BaseErpCommand<Void, UseCaseVoidSuccessVerification
     }
 
     @Override
-    public UseCaseResult<Void, UseCaseVoidSuccessVerification, Error, ErrorFailureVerification> execute() {
+    public ErpUseCaseResult<Void, UseCaseVoidSuccessVerification> execute() {
         var result = driver.goToErp();
-        return new UseCaseResult<>(result, context, UseCaseVoidSuccessVerification::new, ErrorFailureVerification::new);
+        return new ErpUseCaseResult<>(result, context, UseCaseVoidSuccessVerification::new);
     }
 }
 

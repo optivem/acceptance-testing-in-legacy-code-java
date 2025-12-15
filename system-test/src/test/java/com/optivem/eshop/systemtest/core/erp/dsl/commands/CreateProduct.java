@@ -1,13 +1,11 @@
 package com.optivem.eshop.systemtest.core.erp.dsl.commands;
 
-import com.optivem.eshop.systemtest.core.common.dsl.ErrorFailureVerification;
 import com.optivem.eshop.systemtest.core.erp.driver.ErpDriver;
 import com.optivem.eshop.systemtest.core.erp.driver.dtos.requests.CreateProductRequest;
-import com.optivem.lang.Error;
-import com.optivem.testing.dsl.UseCaseResult;
 import com.optivem.testing.dsl.UseCaseVoidSuccessVerification;
 import com.optivem.testing.dsl.UseCaseContext;
 import com.optivem.eshop.systemtest.core.erp.dsl.commands.base.BaseErpCommand;
+import com.optivem.eshop.systemtest.core.erp.dsl.commands.base.ErpUseCaseResult;
 
 public class CreateProduct extends BaseErpCommand<Void, UseCaseVoidSuccessVerification> {
     private static final String DEFAULT_SKU = "DEFAULT_SKU";
@@ -70,7 +68,7 @@ public class CreateProduct extends BaseErpCommand<Void, UseCaseVoidSuccessVerifi
     }
 
     @Override
-    public UseCaseResult<Void, UseCaseVoidSuccessVerification, Error, ErrorFailureVerification> execute() {
+    public ErpUseCaseResult<Void, UseCaseVoidSuccessVerification> execute() {
         var sku = context.getParamValue(skuParamAlias);
 
         var request = CreateProductRequest.builder()
@@ -84,7 +82,7 @@ public class CreateProduct extends BaseErpCommand<Void, UseCaseVoidSuccessVerifi
 
         var result = driver.createProduct(request);
 
-        return new UseCaseResult<>(result, context, UseCaseVoidSuccessVerification::new, ErrorFailureVerification::new);
+        return new ErpUseCaseResult<>(result, context, UseCaseVoidSuccessVerification::new);
     }
 }
 
