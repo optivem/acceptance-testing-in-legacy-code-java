@@ -6,17 +6,17 @@ import java.util.function.BiFunction;
 
 import static com.optivem.testing.assertions.ResultAssert.assertThatResult;
 
-public class UseCaseResult<TSuccessResponse, TSuccessVerification, TFailureResponse, TFailureVerification extends UseCaseFailureVerification<TFailureResponse>> {
+public class UseCaseResult<TSuccessResponse, TSuccessVerification, TFailureResponse, TFailureVerification extends UseCaseFailureVerification<TFailureResponse, TContext>, TContext> {
     private final Result<TSuccessResponse, TFailureResponse> result;
-    private final UseCaseContext context;
-    private final BiFunction<TSuccessResponse, UseCaseContext, TSuccessVerification> verificationFactory;
-    private final BiFunction<Result<?, TFailureResponse>, UseCaseContext, TFailureVerification> failureVerificationFactory;
+    private final TContext context;
+    private final BiFunction<TSuccessResponse, TContext, TSuccessVerification> verificationFactory;
+    private final BiFunction<Result<?, TFailureResponse>, TContext, TFailureVerification> failureVerificationFactory;
 
     public UseCaseResult(
             Result<TSuccessResponse, TFailureResponse> result,
-            UseCaseContext context,
-            BiFunction<TSuccessResponse, UseCaseContext, TSuccessVerification> verificationFactory,
-            BiFunction<Result<?, TFailureResponse>, UseCaseContext, TFailureVerification> failureVerificationFactory) {
+            TContext context,
+            BiFunction<TSuccessResponse, TContext, TSuccessVerification> verificationFactory,
+            BiFunction<Result<?, TFailureResponse>, TContext, TFailureVerification> failureVerificationFactory) {
         this.result = result;
         this.context = context;
         this.verificationFactory = verificationFactory;

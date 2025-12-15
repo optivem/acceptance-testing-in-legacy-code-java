@@ -7,7 +7,7 @@ import com.optivem.testing.dsl.UseCaseContext;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("UnusedReturnValue")
-public class PlaceOrderVerification extends BaseUseCaseSuccessVerification<PlaceOrderResponse> {
+public class PlaceOrderVerification extends BaseUseCaseSuccessVerification<PlaceOrderResponse, UseCaseContext> {
 
     public PlaceOrderVerification(PlaceOrderResponse response, UseCaseContext context) {
         super(response, context);

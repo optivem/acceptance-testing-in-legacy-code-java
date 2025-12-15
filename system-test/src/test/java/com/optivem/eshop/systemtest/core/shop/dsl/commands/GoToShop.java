@@ -6,13 +6,13 @@ import com.optivem.testing.dsl.UseCaseContext;
 import com.optivem.eshop.systemtest.core.shop.dsl.commands.base.BaseShopCommand;
 import com.optivem.eshop.systemtest.core.shop.dsl.commands.base.ShopUseCaseResult;
 
-public class GoToShop extends BaseShopCommand<Void, UseCaseVoidSuccessVerification> {
+public class GoToShop extends BaseShopCommand<Void, UseCaseVoidSuccessVerification<UseCaseContext>> {
     public GoToShop(ShopDriver driver, UseCaseContext context) {
         super(driver, context);
     }
 
     @Override
-    public ShopUseCaseResult<Void, UseCaseVoidSuccessVerification> execute() {
+    public ShopUseCaseResult<Void, UseCaseVoidSuccessVerification<UseCaseContext>> execute() {
         var result = driver.goToShop();
         return new ShopUseCaseResult<>(result, context, UseCaseVoidSuccessVerification::new);
     }

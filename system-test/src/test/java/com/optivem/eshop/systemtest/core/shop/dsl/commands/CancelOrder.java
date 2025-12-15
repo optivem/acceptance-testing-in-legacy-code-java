@@ -6,7 +6,7 @@ import com.optivem.testing.dsl.UseCaseContext;
 import com.optivem.eshop.systemtest.core.shop.dsl.commands.base.BaseShopCommand;
 import com.optivem.eshop.systemtest.core.shop.dsl.commands.base.ShopUseCaseResult;
 
-public class CancelOrder extends BaseShopCommand<Void, UseCaseVoidSuccessVerification> {
+public class CancelOrder extends BaseShopCommand<Void, UseCaseVoidSuccessVerification<UseCaseContext>> {
     private String orderNumberResultAlias;
 
     public CancelOrder(ShopDriver driver, UseCaseContext context) {
@@ -19,7 +19,7 @@ public class CancelOrder extends BaseShopCommand<Void, UseCaseVoidSuccessVerific
     }
 
     @Override
-    public ShopUseCaseResult<Void, UseCaseVoidSuccessVerification> execute() {
+    public ShopUseCaseResult<Void, UseCaseVoidSuccessVerification<UseCaseContext>> execute() {
         var orderNumber = context.getResultValue(orderNumberResultAlias);
         var result = driver.cancelOrder(orderNumber);
         return new ShopUseCaseResult<>(result, context, UseCaseVoidSuccessVerification::new);

@@ -7,7 +7,7 @@ import com.optivem.testing.dsl.UseCaseFailureVerification;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ErrorFailureVerification extends UseCaseFailureVerification<Error> {
+public class ErrorFailureVerification extends UseCaseFailureVerification<Error, UseCaseContext> {
 
     public ErrorFailureVerification(Result<?, Error> result, UseCaseContext context) {
         super(result, context);

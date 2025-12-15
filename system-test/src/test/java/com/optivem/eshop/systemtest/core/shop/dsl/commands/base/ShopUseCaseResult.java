@@ -9,8 +9,8 @@ import com.optivem.testing.dsl.BaseUseCaseSuccessVerification;
 
 import java.util.function.BiFunction;
 
-public class ShopUseCaseResult<TSuccessResponse, TSuccessVerification extends BaseUseCaseSuccessVerification<TSuccessResponse>>
-        extends UseCaseResult<TSuccessResponse, TSuccessVerification, Error, ErrorFailureVerification> {
+public class ShopUseCaseResult<TSuccessResponse, TSuccessVerification extends BaseUseCaseSuccessVerification<TSuccessResponse, UseCaseContext>>
+        extends UseCaseResult<TSuccessResponse, TSuccessVerification, Error, ErrorFailureVerification, UseCaseContext> {
 
     public ShopUseCaseResult(
             Result<TSuccessResponse, Error> result,
