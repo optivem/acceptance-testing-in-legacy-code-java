@@ -23,44 +23,7 @@ public class JsonHttpClient<E> {
         this.baseUrl = baseUrl;
         this.errorType = errorType;
     }
-
-    public HttpResponse<String> get(String path) {
-        var uri = getUri(path);
-        var request = HttpRequest.newBuilder()
-                .uri(uri)
-                .GET()
-                .build();
-
-        return sendRequest(request);
-    }
-
-    public HttpResponse<String> post(String path, Object requestBody) {
-        var uri = getUri(path);
-        var jsonBody = serializeRequest(requestBody);
-
-        var request = HttpRequest.newBuilder()
-                .uri(uri)
-                .header(CONTENT_TYPE, APPLICATION_JSON)
-                .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
-                .build();
-
-        return sendRequest(request);
-    }
-
-    public HttpResponse<String> post(String path) {
-        var uri = getUri(path);
-
-        var request = HttpRequest.newBuilder()
-                .uri(uri)
-                .header(CONTENT_TYPE, APPLICATION_JSON)
-                .POST(HttpRequest.BodyPublishers.noBody())
-                .build();
-
-        return sendRequest(request);
-    }
-
-    // Result-based methods for fluent API
-    
+        
     public <T> Result<T, E> get(String path, Class<T> responseType) {
         var httpResponse = get(path);
         return getResultOrFailure(httpResponse, responseType);
@@ -84,6 +47,41 @@ public class JsonHttpClient<E> {
         } catch (Exception ex) {
             throw new RuntimeException("Failed to create URI for path: " + path, ex);
         }
+    }
+
+    private HttpResponse<String> get(String path) {
+        var uri = getUri(path);
+        var request = HttpRequest.newBuilder()
+                .uri(uri)
+                .GET()
+                .build();
+
+        return sendRequest(request);
+    }
+
+    private HttpResponse<String> post(String path, Object requestBody) {
+        var uri = getUri(path);
+        var jsonBody = serializeRequest(requestBody);
+
+        var request = HttpRequest.newBuilder()
+                .uri(uri)
+                .header(CONTENT_TYPE, APPLICATION_JSON)
+                .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
+                .build();
+
+        return sendRequest(request);
+    }
+
+    private HttpResponse<String> post(String path) {
+        var uri = getUri(path);
+
+        var request = HttpRequest.newBuilder()
+                .uri(uri)
+                .header(CONTENT_TYPE, APPLICATION_JSON)
+                .POST(HttpRequest.BodyPublishers.noBody())
+                .build();
+
+        return sendRequest(request);
     }
 
     private HttpResponse<String> sendRequest(HttpRequest httpRequest) {
