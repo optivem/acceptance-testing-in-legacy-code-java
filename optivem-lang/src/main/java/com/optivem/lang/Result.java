@@ -1,9 +1,6 @@
 package com.optivem.lang;
 
-import lombok.Getter;
-
 public class Result<T, E> {
-    @Getter
     private final boolean success;
     private final T value;
     private final E error;
@@ -24,6 +21,10 @@ public class Result<T, E> {
 
     public static <E> Result<Void, E> success() {
         return new Result<>(true, null, null);
+    }
+
+    public boolean isSuccess() {
+        return success;
     }
 
     public boolean isFailure() {
