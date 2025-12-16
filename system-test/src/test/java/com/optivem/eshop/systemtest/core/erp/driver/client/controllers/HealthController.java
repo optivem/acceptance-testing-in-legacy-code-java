@@ -1,8 +1,8 @@
 package com.optivem.eshop.systemtest.core.erp.driver.client.controllers;
 
-import com.optivem.eshop.systemtest.core.common.error.Error;
-import com.optivem.eshop.systemtest.core.common.error.ProblemDetailConverter;
-import com.optivem.eshop.systemtest.core.common.error.ProblemDetailResponse;
+import com.optivem.eshop.systemtest.core.commons.error.Error;
+import com.optivem.eshop.systemtest.core.commons.error.ProblemDetailConverter;
+import com.optivem.eshop.systemtest.core.commons.error.ProblemDetailResponse;
 import com.optivem.http.JsonHttpClient;
 import com.optivem.lang.Result;
 

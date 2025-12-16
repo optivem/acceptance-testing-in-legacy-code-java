@@ -2,9 +2,9 @@ package com.optivem.eshop.systemtest.core.erp.driver;
 
 import com.optivem.eshop.systemtest.core.erp.driver.dtos.requests.CreateProductRequest;
 import com.optivem.lang.Closer;
-import com.optivem.eshop.systemtest.core.common.error.Error;
+import com.optivem.eshop.systemtest.core.commons.error.Error;
 import com.optivem.http.JsonHttpClient;
-import com.optivem.eshop.systemtest.core.common.error.ProblemDetailResponse;
+import com.optivem.eshop.systemtest.core.commons.error.ProblemDetailResponse;
 import com.optivem.eshop.systemtest.core.erp.driver.client.ErpClient;
 import com.optivem.lang.Result;
 

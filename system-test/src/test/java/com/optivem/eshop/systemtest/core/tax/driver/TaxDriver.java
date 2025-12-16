@@ -1,9 +1,9 @@
 package com.optivem.eshop.systemtest.core.tax.driver;
 
 import com.optivem.lang.Closer;
-import com.optivem.eshop.systemtest.core.common.error.Error;
+import com.optivem.eshop.systemtest.core.commons.error.Error;
 import com.optivem.http.JsonHttpClient;
-import com.optivem.eshop.systemtest.core.common.error.ProblemDetailResponse;
+import com.optivem.eshop.systemtest.core.commons.error.ProblemDetailResponse;
 import com.optivem.eshop.systemtest.core.tax.driver.client.TaxClient;
 import com.optivem.lang.Result;
 

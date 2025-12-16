@@ -1,7 +1,7 @@
 package com.optivem.eshop.systemtest.core.erp.driver.client;
 
 import com.optivem.http.JsonHttpClient;
-import com.optivem.eshop.systemtest.core.common.error.ProblemDetailResponse;
+import com.optivem.eshop.systemtest.core.commons.error.ProblemDetailResponse;
 import com.optivem.eshop.systemtest.core.erp.driver.client.controllers.HealthController;
 import com.optivem.eshop.systemtest.core.erp.driver.client.controllers.ProductController;
 

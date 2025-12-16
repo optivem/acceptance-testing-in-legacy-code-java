@@ -1,6 +1,6 @@
-package com.optivem.eshop.systemtest.core.common.dsl;
+package com.optivem.eshop.systemtest.core.commons.dsl;
 
-import com.optivem.eshop.systemtest.core.common.error.Error;
+import com.optivem.eshop.systemtest.core.commons.error.Error;
 import com.optivem.testing.dsl.ResponseVerification;
 import com.optivem.testing.dsl.UseCaseContext;
 

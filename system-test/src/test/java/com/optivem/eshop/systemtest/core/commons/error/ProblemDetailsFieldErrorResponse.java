@@ -1,4 +1,4 @@
-package com.optivem.eshop.systemtest.core.common.error;
+package com.optivem.eshop.systemtest.core.commons.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
