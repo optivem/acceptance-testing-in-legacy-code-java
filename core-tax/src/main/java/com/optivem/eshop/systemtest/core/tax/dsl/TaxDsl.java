@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest.core.tax.dsl;
 
-import com.optivem.eshop.systemtest.core.SystemConfiguration;
+import com.optivem.eshop.systemtest.core.commons.SystemConfiguration;
 import com.optivem.eshop.systemtest.core.tax.driver.TaxDriver;
 import com.optivem.testing.dsl.UseCaseContext;
 import com.optivem.eshop.systemtest.core.tax.dsl.commands.GoToTax;

@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest.core.shop.dsl;
 
-import com.optivem.eshop.systemtest.core.SystemConfiguration;
+import com.optivem.eshop.systemtest.core.commons.SystemConfiguration;
 import com.optivem.eshop.systemtest.core.shop.ChannelType;
 import com.optivem.eshop.systemtest.core.shop.driver.ShopDriver;
 import com.optivem.eshop.systemtest.core.shop.driver.api.ShopApiDriver;

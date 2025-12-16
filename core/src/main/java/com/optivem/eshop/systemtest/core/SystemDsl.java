@@ -1,5 +1,6 @@
 package com.optivem.eshop.systemtest.core;
 
+import com.optivem.eshop.systemtest.core.commons.SystemConfiguration;
 import com.optivem.testing.dsl.UseCaseContext;
 import com.optivem.eshop.systemtest.core.erp.dsl.ErpDsl;
 import com.optivem.eshop.systemtest.core.shop.dsl.ShopDsl;

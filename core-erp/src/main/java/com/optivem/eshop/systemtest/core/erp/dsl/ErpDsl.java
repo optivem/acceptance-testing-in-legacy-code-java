@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest.core.erp.dsl;
 
-import com.optivem.eshop.systemtest.core.SystemConfiguration;
+import com.optivem.eshop.systemtest.core.commons.SystemConfiguration;
 import com.optivem.eshop.systemtest.core.erp.driver.ErpDriver;
 import com.optivem.testing.dsl.UseCaseContext;
 import com.optivem.eshop.systemtest.core.erp.dsl.commands.CreateProduct;
