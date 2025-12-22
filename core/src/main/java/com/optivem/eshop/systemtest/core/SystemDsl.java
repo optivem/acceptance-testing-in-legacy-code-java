@@ -40,7 +40,13 @@ public class SystemDsl implements Closeable {
     }
 
     public ErpDsl erp() {
-        return getOrCreate(erp, () -> erp = new ErpStubDsl(configuration.getErpBaseUrl(), context));
+        if (erp == null) {
+            erp = switch (configuration.getExternalSystemMode()) {
+                case REAL -> new ErpRealDsl(configuration.getErpBaseUrl(), context);
+                case STUB -> new ErpStubDsl(configuration.getErpBaseUrl(), context);
+            };
+        }
+        return erp;
     }
 
     public TaxDsl tax() {

@@ -10,4 +10,5 @@ public class SystemConfiguration {
     private final String shopApiBaseUrl;
     private final String erpBaseUrl;
     private final String taxBaseUrl;
+    private final ExternalSystemMode externalSystemMode;
 }

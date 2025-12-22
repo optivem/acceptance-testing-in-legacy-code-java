@@ -18,7 +18,7 @@ public class SystemConfigurationLoader {
         var erpBaseUrl = getNestedStringValue(config, "test", "erp", "api", "baseUrl");
         var taxBaseUrl = getNestedStringValue(config, "test", "tax", "api", "baseUrl");
 
-        return new SystemConfiguration(shopUiBaseUrl, shopApiBaseUrl, erpBaseUrl, taxBaseUrl);
+        return new SystemConfiguration(shopUiBaseUrl, shopApiBaseUrl, erpBaseUrl, taxBaseUrl, mode);
     }
 
     private static String getConfigFileName(ExternalSystemMode mode) {
