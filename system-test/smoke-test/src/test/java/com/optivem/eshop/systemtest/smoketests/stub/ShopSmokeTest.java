@@ -21,7 +21,7 @@ public class ShopSmokeTest {
 
     @BeforeEach
     void setUp() {
-        app = SystemDslFactory.create(EnvironmentMode.ACCEPTANCE, ExternalSystemMode.STUB);
+        app = SystemDslFactory.create();
     }
 
     @AfterEach

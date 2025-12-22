@@ -22,10 +22,12 @@ public class SystemConfigurationLoader {
     }
 
     private static String getConfigFileName(EnvironmentMode environmentMode, ExternalSystemMode externalSystemMode) {
-        // Only ACCEPTANCE environment can use STUB mode
-        if (externalSystemMode == ExternalSystemMode.STUB && environmentMode != EnvironmentMode.ACCEPTANCE) {
+        // Only LOCAL and ACCEPTANCE environments can use STUB mode
+        if (externalSystemMode == ExternalSystemMode.STUB &&
+            environmentMode != EnvironmentMode.LOCAL &&
+            environmentMode != EnvironmentMode.ACCEPTANCE) {
             throw new IllegalArgumentException(
-                String.format("STUB mode is only allowed for ACCEPTANCE environment. Cannot use STUB for %s environment.",
+                String.format("STUB mode is only allowed for LOCAL and ACCEPTANCE environments. Cannot use STUB for %s environment.",
                     environmentMode)
             );
         }

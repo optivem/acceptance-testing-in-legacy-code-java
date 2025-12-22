@@ -34,7 +34,7 @@ public class GherkinMigratedE2eTest {
 
     @BeforeEach
     void setUp() {
-        app = SystemDslFactory.create(EnvironmentMode.ACCEPTANCE, ExternalSystemMode.REAL);
+        app = SystemDslFactory.create();
         scenario = new ScenarioDsl(app);
     }
 

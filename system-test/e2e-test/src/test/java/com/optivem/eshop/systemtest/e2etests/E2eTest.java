@@ -30,7 +30,7 @@ public class E2eTest {
 
     @BeforeEach
     void setUp() {
-        app = SystemDslFactory.create(EnvironmentMode.ACCEPTANCE, ExternalSystemMode.REAL);
+        app = SystemDslFactory.create();
     }
 
     @AfterEach
