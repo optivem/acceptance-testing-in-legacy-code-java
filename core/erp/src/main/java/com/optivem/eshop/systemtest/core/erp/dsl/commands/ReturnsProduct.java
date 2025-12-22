@@ -1,7 +1,7 @@
 package com.optivem.eshop.systemtest.core.erp.dsl.commands;
 
 import com.optivem.eshop.systemtest.core.erp.driver.dtos.requests.ReturnsProductRequest;
-import com.optivem.eshop.systemtest.core.erp.driver.real.ErpRealDriver;
+import com.optivem.eshop.systemtest.core.erp.driver.ErpDriver;
 import com.optivem.testing.dsl.VoidResponseVerification;
 import com.optivem.testing.dsl.UseCaseContext;
 import com.optivem.eshop.systemtest.core.erp.dsl.commands.base.BaseErpCommand;
@@ -14,12 +14,13 @@ public class ReturnsProduct extends BaseErpCommand<Void, VoidResponseVerificatio
     private String skuParamAlias;
     private String unitPrice;
 
-    public ReturnsProduct(ErpRealDriver driver, UseCaseContext context) {
+    public ReturnsProduct(ErpDriver driver, UseCaseContext context) {
         super(driver, context);
 
         sku(DEFAULT_SKU);
         unitPrice(DEFAULT_UNIT_PRICE);
     }
+
 
     public ReturnsProduct sku(String skuParamAlias) {
         this.skuParamAlias = skuParamAlias;

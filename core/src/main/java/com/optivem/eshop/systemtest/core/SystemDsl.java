@@ -1,7 +1,9 @@
 package com.optivem.eshop.systemtest.core;
 
+import com.optivem.eshop.systemtest.core.erp.dsl.ErpRealDsl;
 import com.optivem.testing.dsl.UseCaseContext;
 import com.optivem.eshop.systemtest.core.erp.dsl.ErpDsl;
+import com.optivem.eshop.systemtest.core.erp.dsl.ErpStubDsl;
 import com.optivem.eshop.systemtest.core.shop.dsl.ShopDsl;
 import com.optivem.eshop.systemtest.core.tax.dsl.TaxDsl;
 import com.optivem.lang.Closer;
@@ -38,7 +40,7 @@ public class SystemDsl implements Closeable {
     }
 
     public ErpDsl erp() {
-        return getOrCreate(erp, () -> erp = new ErpDsl(configuration.getErpBaseUrl(), context));
+        return getOrCreate(erp, () -> erp = new ErpRealDsl(configuration.getErpBaseUrl(), context));
     }
 
     public TaxDsl tax() {

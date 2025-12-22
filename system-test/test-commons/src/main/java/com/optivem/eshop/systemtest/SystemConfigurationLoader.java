@@ -21,9 +21,10 @@ public class SystemConfigurationLoader {
         var shopUiBaseUrl = getNestedStringValue("test", "eshop", "ui", "baseUrl");
         var shopApiBaseUrl = getNestedStringValue("test", "eshop", "api", "baseUrl");
         var erpBaseUrl = getNestedStringValue("test", "erp", "api", "baseUrl");
+        var erpStubBaseUrl = getNestedStringValue("test", "erp", "stub", "baseUrl");
         var taxBaseUrl = getNestedStringValue("test", "tax", "api", "baseUrl");
 
-        return new SystemConfiguration(shopUiBaseUrl, shopApiBaseUrl, erpBaseUrl, taxBaseUrl);
+        return new SystemConfiguration(shopUiBaseUrl, shopApiBaseUrl, erpBaseUrl, erpStubBaseUrl, taxBaseUrl);
     }
     
     @SuppressWarnings("unchecked")

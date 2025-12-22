@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest.core.erp.dsl;
 
-import com.optivem.eshop.systemtest.core.erp.driver.real.ErpRealDriver;
+import com.optivem.eshop.systemtest.core.erp.driver.ErpDriver;
 import com.optivem.testing.dsl.UseCaseContext;
 import com.optivem.eshop.systemtest.core.erp.dsl.commands.ReturnsProduct;
 import com.optivem.eshop.systemtest.core.erp.dsl.commands.GoToErp;
@@ -8,12 +8,12 @@ import com.optivem.lang.Closer;
 
 import java.io.Closeable;
 
-public class ErpDsl implements Closeable {
-    private final ErpRealDriver driver;
-    private final UseCaseContext context;
+public abstract class ErpDsl implements Closeable {
+    protected final ErpDriver driver;
+    protected final UseCaseContext context;
 
-    public ErpDsl(String baseUrl, UseCaseContext context) {
-        this.driver = new ErpRealDriver(baseUrl);
+    protected ErpDsl(ErpDriver driver, UseCaseContext context) {
+        this.driver = driver;
         this.context = context;
     }
 
