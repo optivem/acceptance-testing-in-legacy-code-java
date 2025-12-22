@@ -13,21 +13,19 @@ import java.util.function.Supplier;
 
 public class SystemDsl implements Closeable {
     private final SystemConfiguration configuration;
-    private final ExternalSystemMode externalSystemMode;
     private final UseCaseContext context;
 
     private ShopDsl shop;
     private ErpDsl erp;
     private TaxDsl tax;
 
-    public SystemDsl(SystemConfiguration configuration, ExternalSystemMode externalSystemMode, UseCaseContext context) {
+    public SystemDsl(SystemConfiguration configuration, UseCaseContext context) {
         this.configuration = configuration;
-        this.externalSystemMode = externalSystemMode;
         this.context = context;
     }
 
-    public SystemDsl(SystemConfiguration configuration, ExternalSystemMode externalSystemMode) {
-        this(configuration, externalSystemMode, new UseCaseContext());
+    public SystemDsl(SystemConfiguration configuration) {
+        this(configuration, new UseCaseContext());
     }
 
     @Override
@@ -42,14 +40,7 @@ public class SystemDsl implements Closeable {
     }
 
     public ErpDsl erp() {
-        if(externalSystemMode == ExternalSystemMode.STUB) {
-            return getOrCreate(erp, () -> erp = new ErpStubDsl(configuration.getErpStubBaseUrl(), context));
-        }
-        else if(externalSystemMode == ExternalSystemMode.REAL) {
-            return getOrCreate(erp, () -> erp = new ErpRealDsl(configuration.getErpBaseUrl(), context));
-        } else {
-            throw new IllegalStateException("Unsupported ExternalSystemMode: " + externalSystemMode);
-        }
+        return getOrCreate(erp, () -> erp = new ErpStubDsl(configuration.getErpBaseUrl(), context));
     }
 
     public TaxDsl tax() {

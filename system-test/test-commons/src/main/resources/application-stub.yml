@@ -6,9 +6,10 @@ test:
       baseUrl: http://localhost:8081
   erp:
     api:
-      baseUrl: http://localhost:9001/erp
+      baseUrl: http://localhost:9002/erp
     stub:
       baseUrl: http://localhost:9002
   tax:
     api:
-      baseUrl: http://localhost:9001/tax
+      baseUrl: http://localhost:9002/tax
+

@@ -9,6 +9,5 @@ public class SystemConfiguration {
     private final String shopUiBaseUrl;
     private final String shopApiBaseUrl;
     private final String erpBaseUrl;
-    private final String erpStubBaseUrl;
     private final String taxBaseUrl;
 }
