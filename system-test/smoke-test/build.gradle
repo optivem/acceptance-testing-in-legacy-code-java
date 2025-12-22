@@ -30,6 +30,9 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 
+    // Enable parallel test execution at Gradle level
+    maxParallelForks = Runtime.runtime.availableProcessors()
+
     testLogging {
         events "passed", "skipped", "failed"
         showStandardStreams = true
