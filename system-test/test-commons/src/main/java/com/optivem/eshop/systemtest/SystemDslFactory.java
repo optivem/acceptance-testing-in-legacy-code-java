@@ -6,10 +6,10 @@ import com.optivem.eshop.systemtest.core.SystemDsl;
 public class SystemDslFactory {
 
     public static SystemDsl create() {
-        var environment = getRequiredSystemProperty("environment", "local|acceptance|qa|production");
+        var environmentMode = getRequiredSystemProperty("environmentMode", "local|acceptance|qa|production");
         var externalSystemMode = getRequiredSystemProperty("externalSystemMode", "stub|real");
 
-        var envMode = EnvironmentMode.valueOf(environment.toUpperCase());
+        var envMode = EnvironmentMode.valueOf(environmentMode.toUpperCase());
         var extMode = ExternalSystemMode.valueOf(externalSystemMode.toUpperCase());
 
         return create(envMode, extMode);
