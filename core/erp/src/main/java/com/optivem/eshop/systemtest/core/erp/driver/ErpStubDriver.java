@@ -2,18 +2,11 @@ package com.optivem.eshop.systemtest.core.erp.driver;
 
 import com.optivem.eshop.systemtest.core.erp.client.ErpStubClient;
 import com.optivem.eshop.systemtest.core.erp.client.dtos.ExtProductDetailsResponse;
-import com.optivem.eshop.systemtest.core.erp.driver.dtos.GetProductRequest;
 import com.optivem.eshop.systemtest.core.erp.driver.dtos.ReturnsProductRequest;
-import com.optivem.eshop.systemtest.core.erp.driver.dtos.GetProductResponse;
 import com.optivem.eshop.systemtest.core.erp.driver.dtos.error.ErpErrorResponse;
-import com.optivem.lang.Closer;
 import com.optivem.lang.Result;
-import com.github.tomakehurst.wiremock.client.WireMock;
 
 import java.math.BigDecimal;
-import java.net.http.HttpClient;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 /**
  * ErpStubDriver uses WireMock to stub ERP API responses.

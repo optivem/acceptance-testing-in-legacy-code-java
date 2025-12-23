@@ -9,8 +9,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.util.Optional;
-
 @ExtendWith(ChannelExtension.class)
 public class BaseSystemTest {
     protected SystemDsl app;

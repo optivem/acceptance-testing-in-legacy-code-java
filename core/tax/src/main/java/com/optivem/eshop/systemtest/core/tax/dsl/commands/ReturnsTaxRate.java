@@ -2,11 +2,11 @@ package com.optivem.eshop.systemtest.core.tax.dsl.commands;
 
 import com.optivem.eshop.systemtest.core.tax.driver.TaxDriver;
 import com.optivem.eshop.systemtest.core.tax.driver.dtos.ReturnsTaxRateRequest;
+import com.optivem.eshop.systemtest.core.tax.dsl.commands.base.BaseTaxCommand;
+import com.optivem.eshop.systemtest.core.tax.dsl.commands.base.TaxUseCaseResult;
 import com.optivem.testing.dsl.ExternalSystemMode;
 import com.optivem.testing.dsl.UseCaseContext;
 import com.optivem.testing.dsl.VoidResponseVerification;
-import com.optivem.eshop.systemtest.core.tax.dsl.commands.base.BaseTaxCommand;
-import com.optivem.eshop.systemtest.core.tax.dsl.commands.base.TaxUseCaseResult;
 
 public class ReturnsTaxRate extends BaseTaxCommand<Void, VoidResponseVerification<UseCaseContext>> {
     private static final String DEFAULT_COUNTRY = "DEFAULT_COUNTRY";

@@ -1,11 +1,11 @@
 package com.optivem.eshop.systemtest.e2etests;
 
+import com.optivem.eshop.systemtest.core.shop.ChannelType;
+import com.optivem.eshop.systemtest.core.shop.client.dtos.enums.OrderStatus;
 import com.optivem.eshop.systemtest.e2etests.base.BaseE2eTest;
 import com.optivem.eshop.systemtest.e2etests.providers.EmptyArgumentsProvider;
 import com.optivem.testing.channels.Channel;
-import com.optivem.eshop.systemtest.core.shop.ChannelType;
 import com.optivem.testing.channels.DataSource;
-import com.optivem.eshop.systemtest.core.shop.client.dtos.enums.OrderStatus;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsSource;

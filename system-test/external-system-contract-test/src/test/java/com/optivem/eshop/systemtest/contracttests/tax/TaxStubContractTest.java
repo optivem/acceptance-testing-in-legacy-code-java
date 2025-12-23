@@ -3,8 +3,6 @@ package com.optivem.eshop.systemtest.contracttests.tax;
 import com.optivem.testing.dsl.ExternalSystemMode;
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
-
 public class TaxStubContractTest extends BaseTaxContractTest {
 
     @Override

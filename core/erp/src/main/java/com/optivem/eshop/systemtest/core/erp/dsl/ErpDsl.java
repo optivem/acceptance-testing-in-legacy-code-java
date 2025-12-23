@@ -1,11 +1,11 @@
 package com.optivem.eshop.systemtest.core.erp.dsl;
 
 import com.optivem.eshop.systemtest.core.erp.driver.ErpDriver;
-import com.optivem.testing.dsl.UseCaseContext;
 import com.optivem.eshop.systemtest.core.erp.dsl.commands.GetProduct;
-import com.optivem.eshop.systemtest.core.erp.dsl.commands.ReturnsProduct;
 import com.optivem.eshop.systemtest.core.erp.dsl.commands.GoToErp;
+import com.optivem.eshop.systemtest.core.erp.dsl.commands.ReturnsProduct;
 import com.optivem.lang.Closer;
+import com.optivem.testing.dsl.UseCaseContext;
 
 import java.io.Closeable;
 

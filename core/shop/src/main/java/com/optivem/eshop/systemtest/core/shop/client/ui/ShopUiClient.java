@@ -1,9 +1,9 @@
 package com.optivem.eshop.systemtest.core.shop.client.ui;
 
 import com.microsoft.playwright.*;
+import com.optivem.eshop.systemtest.core.shop.client.ui.pages.HomePage;
 import com.optivem.lang.Closer;
 import com.optivem.playwright.PageClient;
-import com.optivem.eshop.systemtest.core.shop.client.ui.pages.HomePage;
 import org.springframework.http.HttpStatus;
 
 

@@ -1,17 +1,12 @@
 package com.optivem.eshop.systemtest.core.tax.driver;
 
-import com.optivem.eshop.systemtest.core.tax.driver.dtos.error.TaxErrorResponse;
-import com.optivem.eshop.systemtest.core.tax.client.TaxStubClient;
-import com.optivem.eshop.systemtest.core.tax.client.commons.TaxHttpClient;
-import com.optivem.eshop.systemtest.core.tax.driver.dtos.GetTaxRequest;
-import com.optivem.eshop.systemtest.core.tax.driver.dtos.ReturnsTaxRateRequest;
-import com.optivem.eshop.systemtest.core.tax.driver.dtos.GetTaxResponse;
-import com.optivem.lang.Closer;
-import com.optivem.lang.Result;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import com.optivem.eshop.systemtest.core.tax.client.TaxStubClient;
+import com.optivem.eshop.systemtest.core.tax.driver.dtos.ReturnsTaxRateRequest;
+import com.optivem.eshop.systemtest.core.tax.driver.dtos.error.TaxErrorResponse;
+import com.optivem.lang.Result;
 
 import java.net.URI;
-import java.net.http.HttpClient;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 

@@ -1,5 +1,6 @@
-package com.optivem.eshop.systemtest.core.commons.error;
+package com.optivem.eshop.systemtest.core.shop.driver.dtos.error;
 
+import com.optivem.eshop.systemtest.core.shop.client.dtos.error.ProblemDetailResponse;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class Error {
+public class SystemError {
     private final String message;
     private final List<FieldError> fields;
 
@@ -30,36 +31,36 @@ public class Error {
         }
     }
 
-    public static Error of(String message) {
-        return Error.builder()
+    public static SystemError of(String message) {
+        return SystemError.builder()
                 .message(message)
                 .build();
     }
 
-    public static Error of(String message, FieldError... fieldErrors) {
-        return Error.builder()
+    public static SystemError of(String message, FieldError... fieldErrors) {
+        return SystemError.builder()
                 .message(message)
                 .fields(Arrays.asList(fieldErrors))
                 .build();
     }
 
-    public static Error of(String message, List<FieldError> fieldErrors) {
-        return Error.builder()
+    public static SystemError of(String message, List<FieldError> fieldErrors) {
+        return SystemError.builder()
                 .message(message)
                 .fields(fieldErrors)
                 .build();
     }
 
-    public static Error from(ProblemDetailResponse problemDetail) {
+    public static SystemError from(ProblemDetailResponse problemDetail) {
         var message = problemDetail.getDetail() != null ? problemDetail.getDetail() : "Request failed";
 
         if (problemDetail.getErrors() != null && !problemDetail.getErrors().isEmpty()) {
             var fieldErrors = problemDetail.getErrors().stream()
-                    .map(e -> new Error.FieldError(e.getField(), e.getMessage(), e.getCode()))
+                    .map(e -> new SystemError.FieldError(e.getField(), e.getMessage(), e.getCode()))
                     .toList();
-            return Error.of(message, fieldErrors);
+            return SystemError.of(message, fieldErrors);
         }
 
-        return Error.of(message);
+        return SystemError.of(message);
     }
 }

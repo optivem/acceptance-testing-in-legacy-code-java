@@ -1,16 +1,16 @@
 package com.optivem.eshop.systemtest.core.shop.driver;
 
+import com.optivem.eshop.systemtest.core.shop.client.commons.Results;
+import com.optivem.eshop.systemtest.core.shop.client.dtos.GetOrderResponse;
 import com.optivem.eshop.systemtest.core.shop.client.dtos.PlaceOrderRequest;
+import com.optivem.eshop.systemtest.core.shop.client.dtos.PlaceOrderResponse;
+import com.optivem.eshop.systemtest.core.shop.client.dtos.enums.OrderStatus;
 import com.optivem.eshop.systemtest.core.shop.client.ui.ShopUiClient;
 import com.optivem.eshop.systemtest.core.shop.client.ui.pages.HomePage;
 import com.optivem.eshop.systemtest.core.shop.client.ui.pages.NewOrderPage;
 import com.optivem.eshop.systemtest.core.shop.client.ui.pages.OrderHistoryPage;
-import com.optivem.eshop.systemtest.core.shop.client.dtos.GetOrderResponse;
-import com.optivem.eshop.systemtest.core.shop.client.dtos.PlaceOrderResponse;
-import com.optivem.eshop.systemtest.core.shop.client.dtos.enums.OrderStatus;
-import com.optivem.eshop.systemtest.core.commons.error.Error;
+import com.optivem.eshop.systemtest.core.shop.driver.dtos.error.SystemError;
 import com.optivem.lang.Result;
-import com.optivem.eshop.systemtest.core.commons.error.Results;
 
 import java.util.Objects;
 
@@ -36,7 +36,7 @@ public class ShopUiDriver implements ShopDriver {
     }
 
     @Override
-    public Result<Void, Error> goToShop() {
+    public Result<Void, SystemError> goToShop() {
         homePage = client.openHomePage();
 
         if(!client.isStatusOk() || !client.isPageLoaded()) {
@@ -48,7 +48,7 @@ public class ShopUiDriver implements ShopDriver {
     }
 
     @Override
-    public Result<PlaceOrderResponse, Error> placeOrder(PlaceOrderRequest request) {
+    public Result<PlaceOrderResponse, SystemError> placeOrder(PlaceOrderRequest request) {
         var sku = request.getSku();
         var quantity = request.getQuantity();
         var country = request.getCountry();
@@ -75,13 +75,13 @@ public class ShopUiDriver implements ShopDriver {
                         .map(text -> {
                             var parts = text.split(":", 2);
                             if (parts.length == 2) {
-                                return new Error.FieldError(parts[0].trim(), parts[1].trim());
+                                return new SystemError.FieldError(parts[0].trim(), parts[1].trim());
                             }
-                            return new Error.FieldError("unknown", text);
+                            return new SystemError.FieldError("unknown", text);
                         })
                         .toList();
                 
-                var error = Error.builder()
+                var error = SystemError.builder()
                         .message(generalMessage)
                         .fields(fieldErrors)
                         .build();
@@ -96,7 +96,7 @@ public class ShopUiDriver implements ShopDriver {
     }
 
     @Override
-    public Result<GetOrderResponse, Error> viewOrder(String orderNumber) {
+    public Result<GetOrderResponse, SystemError> viewOrder(String orderNumber) {
         ensureOnOrderHistoryPage();
         orderHistoryPage.inputOrderNumber(orderNumber);
         orderHistoryPage.clickSearch();
@@ -143,7 +143,7 @@ public class ShopUiDriver implements ShopDriver {
     }
 
     @Override
-    public Result<Void, Error> cancelOrder(String orderNumberAlias) {
+    public Result<Void, SystemError> cancelOrder(String orderNumberAlias) {
         viewOrder(orderNumberAlias);
         orderHistoryPage.clickCancelOrder();
 

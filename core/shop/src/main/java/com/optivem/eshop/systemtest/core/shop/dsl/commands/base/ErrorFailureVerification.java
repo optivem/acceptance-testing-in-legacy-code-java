@@ -1,14 +1,14 @@
-package com.optivem.eshop.systemtest.core.commons.dsl;
+package com.optivem.eshop.systemtest.core.shop.dsl.commands.base;
 
-import com.optivem.eshop.systemtest.core.commons.error.Error;
+import com.optivem.eshop.systemtest.core.shop.driver.dtos.error.SystemError;
 import com.optivem.testing.dsl.ResponseVerification;
 import com.optivem.testing.dsl.UseCaseContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ErrorFailureVerification extends ResponseVerification<Error, UseCaseContext> {
+public class ErrorFailureVerification extends ResponseVerification<SystemError, UseCaseContext> {
 
-    public ErrorFailureVerification(Error error, UseCaseContext context) {
+    public ErrorFailureVerification(SystemError error, UseCaseContext context) {
         super(error, context);
     }
 

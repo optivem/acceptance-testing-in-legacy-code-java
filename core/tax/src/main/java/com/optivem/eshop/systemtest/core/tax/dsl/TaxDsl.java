@@ -1,11 +1,11 @@
 package com.optivem.eshop.systemtest.core.tax.dsl;
 
 import com.optivem.eshop.systemtest.core.tax.driver.TaxDriver;
-import com.optivem.testing.dsl.UseCaseContext;
 import com.optivem.eshop.systemtest.core.tax.dsl.commands.GetTaxRate;
 import com.optivem.eshop.systemtest.core.tax.dsl.commands.GoToTax;
 import com.optivem.eshop.systemtest.core.tax.dsl.commands.ReturnsTaxRate;
 import com.optivem.lang.Closer;
+import com.optivem.testing.dsl.UseCaseContext;
 
 import java.io.Closeable;
 

@@ -1,10 +1,6 @@
 package com.optivem.testing.channels;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Repeatable;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * Repeatable annotation to provide inline test arguments that will be combined with channel types.

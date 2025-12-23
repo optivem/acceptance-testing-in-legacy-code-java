@@ -1,7 +1,7 @@
 package com.optivem.eshop.systemtest.core.gherkin.then;
 
 import com.optivem.eshop.systemtest.core.SystemDsl;
-import com.optivem.eshop.systemtest.core.commons.dsl.ErrorFailureVerification;
+import com.optivem.eshop.systemtest.core.shop.dsl.commands.base.ErrorFailureVerification;
 import com.optivem.eshop.systemtest.core.shop.dsl.commands.base.ShopUseCaseResult;
 
 public class FailureVerificationBuilder {

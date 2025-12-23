@@ -1,13 +1,9 @@
 package com.optivem.eshop.systemtest.core.erp.driver;
 
-import com.optivem.eshop.systemtest.core.erp.client.dtos.error.ExtErpErrorResponse;
-import com.optivem.eshop.systemtest.core.erp.driver.dtos.GetProductRequest;
-import com.optivem.eshop.systemtest.core.erp.driver.dtos.ReturnsProductRequest;
-import com.optivem.eshop.systemtest.core.erp.driver.dtos.GetProductResponse;
 import com.optivem.eshop.systemtest.core.erp.client.ErpRealClient;
 import com.optivem.eshop.systemtest.core.erp.client.dtos.ExtProductDetailsRequest;
+import com.optivem.eshop.systemtest.core.erp.driver.dtos.ReturnsProductRequest;
 import com.optivem.eshop.systemtest.core.erp.driver.dtos.error.ErpErrorResponse;
-import com.optivem.lang.Closer;
 import com.optivem.lang.Result;
 
 public class ErpRealDriver extends BaseErpDriver<ErpRealClient> {

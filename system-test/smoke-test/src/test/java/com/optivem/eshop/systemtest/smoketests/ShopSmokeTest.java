@@ -1,17 +1,10 @@
 package com.optivem.eshop.systemtest.smoketests;
 
 import com.optivem.eshop.systemtest.BaseSystemTest;
-import com.optivem.eshop.systemtest.SystemDslFactory;
-import com.optivem.eshop.systemtest.core.SystemDsl;
 import com.optivem.eshop.systemtest.core.shop.ChannelType;
-import com.optivem.lang.Closer;
 import com.optivem.testing.channels.Channel;
-import com.optivem.testing.channels.ChannelExtension;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestTemplate;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 public class ShopSmokeTest extends BaseSystemTest {
 

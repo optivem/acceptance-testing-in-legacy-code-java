@@ -1,12 +1,10 @@
 package com.optivem.eshop.systemtest.core.erp.dsl.commands.base;
 
-import com.optivem.eshop.systemtest.core.commons.dsl.ErrorFailureVerification;
-import com.optivem.eshop.systemtest.core.commons.error.Error;
 import com.optivem.eshop.systemtest.core.erp.driver.dtos.error.ErpErrorResponse;
 import com.optivem.lang.Result;
+import com.optivem.testing.dsl.ResponseVerification;
 import com.optivem.testing.dsl.UseCaseContext;
 import com.optivem.testing.dsl.UseCaseResult;
-import com.optivem.testing.dsl.ResponseVerification;
 
 import java.util.function.BiFunction;
 

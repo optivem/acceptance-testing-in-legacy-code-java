@@ -1,16 +1,16 @@
 package com.optivem.eshop.systemtest.core.shop.dsl;
 
 import com.optivem.eshop.systemtest.core.shop.ChannelType;
-import com.optivem.eshop.systemtest.core.shop.driver.ShopDriver;
 import com.optivem.eshop.systemtest.core.shop.driver.ShopApiDriver;
+import com.optivem.eshop.systemtest.core.shop.driver.ShopDriver;
 import com.optivem.eshop.systemtest.core.shop.driver.ShopUiDriver;
-import com.optivem.testing.channels.ChannelContext;
-import com.optivem.testing.dsl.UseCaseContext;
 import com.optivem.eshop.systemtest.core.shop.dsl.commands.CancelOrder;
 import com.optivem.eshop.systemtest.core.shop.dsl.commands.GoToShop;
 import com.optivem.eshop.systemtest.core.shop.dsl.commands.PlaceOrder;
 import com.optivem.eshop.systemtest.core.shop.dsl.commands.ViewOrder;
 import com.optivem.lang.Closer;
+import com.optivem.testing.channels.ChannelContext;
+import com.optivem.testing.dsl.UseCaseContext;
 
 import java.io.Closeable;
 

@@ -1,13 +1,13 @@
 package com.optivem.eshop.systemtest.core.shop.driver;
 
-import com.optivem.eshop.systemtest.core.shop.client.dtos.PlaceOrderRequest;
-import com.optivem.lang.Closer;
-import com.optivem.eshop.systemtest.core.commons.error.Error;
-import com.optivem.http.JsonHttpClient;
-import com.optivem.eshop.systemtest.core.commons.error.ProblemDetailResponse;
 import com.optivem.eshop.systemtest.core.shop.client.api.ShopApiClient;
 import com.optivem.eshop.systemtest.core.shop.client.dtos.GetOrderResponse;
+import com.optivem.eshop.systemtest.core.shop.client.dtos.PlaceOrderRequest;
 import com.optivem.eshop.systemtest.core.shop.client.dtos.PlaceOrderResponse;
+import com.optivem.eshop.systemtest.core.shop.client.dtos.error.ProblemDetailResponse;
+import com.optivem.eshop.systemtest.core.shop.driver.dtos.error.SystemError;
+import com.optivem.http.JsonHttpClient;
+import com.optivem.lang.Closer;
 import com.optivem.lang.Result;
 
 import java.net.http.HttpClient;
@@ -23,22 +23,22 @@ public class ShopApiDriver implements ShopDriver {
     }
 
     @Override
-    public Result<Void, Error> goToShop() {
+    public Result<Void, SystemError> goToShop() {
         return apiClient.health().checkHealth();
     }
 
     @Override
-    public Result<PlaceOrderResponse, Error> placeOrder(PlaceOrderRequest request) {
+    public Result<PlaceOrderResponse, SystemError> placeOrder(PlaceOrderRequest request) {
         return apiClient.orders().placeOrder(request);
     }
 
     @Override
-    public Result<Void, Error> cancelOrder(String orderNumber) {
+    public Result<Void, SystemError> cancelOrder(String orderNumber) {
         return apiClient.orders().cancelOrder(orderNumber);
     }
 
     @Override
-    public Result<GetOrderResponse, Error> viewOrder(String orderNumber) {
+    public Result<GetOrderResponse, SystemError> viewOrder(String orderNumber) {
         return apiClient.orders().viewOrder(orderNumber);
     }
 

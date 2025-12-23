@@ -1,7 +1,7 @@
 package com.optivem.eshop.systemtest.core.shop.client.api.controllers;
 
-import com.optivem.eshop.systemtest.core.commons.error.Error;
-import com.optivem.eshop.systemtest.core.commons.error.ProblemDetailResponse;
+import com.optivem.eshop.systemtest.core.shop.client.dtos.error.ProblemDetailResponse;
+import com.optivem.eshop.systemtest.core.shop.driver.dtos.error.SystemError;
 import com.optivem.http.JsonHttpClient;
 import com.optivem.lang.Result;
 
@@ -15,9 +15,9 @@ public class HealthController {
         this.httpClient = httpClient;
     }
 
-    public Result<Void, Error> checkHealth() {
+    public Result<Void, SystemError> checkHealth() {
         return httpClient.get(ENDPOINT)
-                .mapError(Error::from);
+                .mapError(SystemError::from);
     }
 }
 

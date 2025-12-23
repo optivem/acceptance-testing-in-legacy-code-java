@@ -1,8 +1,8 @@
 package com.optivem.eshop.systemtest.core.erp.driver;
 
 import com.optivem.eshop.systemtest.core.erp.driver.dtos.GetProductRequest;
-import com.optivem.eshop.systemtest.core.erp.driver.dtos.ReturnsProductRequest;
 import com.optivem.eshop.systemtest.core.erp.driver.dtos.GetProductResponse;
+import com.optivem.eshop.systemtest.core.erp.driver.dtos.ReturnsProductRequest;
 import com.optivem.eshop.systemtest.core.erp.driver.dtos.error.ErpErrorResponse;
 import com.optivem.lang.Result;
 

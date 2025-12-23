@@ -1,7 +1,6 @@
 package com.optivem.wiremock;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.optivem.lang.Result;
 import wiremock.com.fasterxml.jackson.databind.ObjectMapper;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;

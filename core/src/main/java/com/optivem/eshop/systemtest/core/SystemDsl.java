@@ -1,14 +1,14 @@
 package com.optivem.eshop.systemtest.core;
 
-import com.optivem.eshop.systemtest.core.erp.dsl.ErpRealDsl;
-import com.optivem.eshop.systemtest.core.tax.dsl.TaxRealDsl;
-import com.optivem.eshop.systemtest.core.tax.dsl.TaxStubDsl;
-import com.optivem.testing.dsl.UseCaseContext;
 import com.optivem.eshop.systemtest.core.erp.dsl.ErpDsl;
+import com.optivem.eshop.systemtest.core.erp.dsl.ErpRealDsl;
 import com.optivem.eshop.systemtest.core.erp.dsl.ErpStubDsl;
 import com.optivem.eshop.systemtest.core.shop.dsl.ShopDsl;
 import com.optivem.eshop.systemtest.core.tax.dsl.TaxDsl;
+import com.optivem.eshop.systemtest.core.tax.dsl.TaxRealDsl;
+import com.optivem.eshop.systemtest.core.tax.dsl.TaxStubDsl;
 import com.optivem.lang.Closer;
+import com.optivem.testing.dsl.UseCaseContext;
 
 import java.io.Closeable;
 import java.util.function.Supplier;
