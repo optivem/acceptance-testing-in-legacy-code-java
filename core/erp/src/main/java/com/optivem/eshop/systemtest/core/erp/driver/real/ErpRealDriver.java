@@ -3,7 +3,7 @@ package com.optivem.eshop.systemtest.core.erp.driver.real;
 import com.optivem.eshop.systemtest.core.erp.driver.ErpDriver;
 import com.optivem.eshop.systemtest.core.erp.driver.dtos.requests.ReturnsProductRequest;
 import com.optivem.eshop.systemtest.core.erp.driver.real.client.ErpRealClient;
-import com.optivem.eshop.systemtest.core.erp.driver.real.dtos.requests.CreateProductRequest;
+import com.optivem.eshop.systemtest.core.erp.driver.real.client.dtos.requests.CreateProductRequest;
 import com.optivem.lang.Closer;
 import com.optivem.eshop.systemtest.core.commons.error.Error;
 import com.optivem.http.JsonHttpClient;

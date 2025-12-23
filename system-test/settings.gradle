@@ -1,8 +1,10 @@
 rootProject.name = 'system-test'
 
 include 'test-commons'
+include 'acceptance-test'
 include 'smoke-test'
 include 'e2e-test'
+include 'external-system-contract-test'
 
 // Include parent modules as dependencies
 includeBuild('..') {
