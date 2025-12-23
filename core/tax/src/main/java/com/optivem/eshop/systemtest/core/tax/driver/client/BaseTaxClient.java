@@ -3,12 +3,14 @@ package com.optivem.eshop.systemtest.core.tax.driver.client;
 import com.optivem.eshop.systemtest.core.tax.driver.client.commons.TaxHttpClient;
 import com.optivem.eshop.systemtest.core.tax.driver.client.controllers.HealthController;
 
-public class TaxClient {
+public abstract class BaseTaxClient {
 
+    protected final TaxHttpClient httpClient;
     private final HealthController healthController;
 
-    public TaxClient(TaxHttpClient taxHttpClient) {
-        this.healthController = new HealthController(taxHttpClient);
+    protected BaseTaxClient(TaxHttpClient httpClient) {
+        this.httpClient = httpClient;
+        this.healthController = new HealthController(httpClient);
     }
 
     public HealthController health() {

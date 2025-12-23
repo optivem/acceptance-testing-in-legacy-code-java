@@ -19,6 +19,8 @@ dependencies {
     api project(':libs:optivem-http')
     api project(':libs:optivem-testing-dsl')
 
+    implementation 'org.wiremock:wiremock-standalone:3.10.0'
+
     api 'org.assertj:assertj-core:3.24.2'
     compileOnly 'org.projectlombok:lombok:1.18.38'
     annotationProcessor 'org.projectlombok:lombok:1.18.38'

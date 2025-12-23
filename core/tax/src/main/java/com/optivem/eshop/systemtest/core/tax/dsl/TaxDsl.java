@@ -11,8 +11,8 @@ public class TaxDsl implements Closeable {
     private final TaxDriver driver;
     private final UseCaseContext context;
 
-    public TaxDsl(String baseUrl, UseCaseContext context) {
-        this.driver = new TaxDriver(baseUrl);
+    public TaxDsl(TaxDriver driver, UseCaseContext context) {
+        this.driver = driver;
         this.context = context;
     }
 
