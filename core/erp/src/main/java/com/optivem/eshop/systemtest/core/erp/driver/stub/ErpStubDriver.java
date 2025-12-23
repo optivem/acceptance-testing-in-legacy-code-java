@@ -1,13 +1,11 @@
 package com.optivem.eshop.systemtest.core.erp.driver.stub;
 
 import com.optivem.eshop.systemtest.core.commons.error.Error;
-import com.optivem.eshop.systemtest.core.commons.error.ProblemDetailResponse;
 import com.optivem.eshop.systemtest.core.erp.driver.ErpDriver;
-import com.optivem.eshop.systemtest.core.erp.client.stub.ErpStubClient;
+import com.optivem.eshop.systemtest.core.erp.client.ErpStubClient;
 import com.optivem.eshop.systemtest.core.erp.driver.dtos.requests.GetProductRequest;
 import com.optivem.eshop.systemtest.core.erp.driver.dtos.requests.ReturnsProductRequest;
 import com.optivem.eshop.systemtest.core.erp.driver.dtos.responses.GetProductResponse;
-import com.optivem.http.JsonHttpClient;
 import com.optivem.lang.Closer;
 import com.optivem.lang.Result;
 import com.github.tomakehurst.wiremock.client.WireMock;
@@ -38,7 +36,7 @@ public class ErpStubDriver implements ErpDriver {
 
     @Override
     public Result<Void, Error> goToErp() {
-        return erpClient.health().checkHealth();
+        return erpClient.checkHealth();
     }
 
     @Override
@@ -70,7 +68,7 @@ public class ErpStubDriver implements ErpDriver {
 
     @Override
     public Result<GetProductResponse, Error> getProduct(GetProductRequest request) {
-        return erpClient.products().getProduct(request.getSku())
+        return erpClient.getProduct(request.getSku())
                 .map(productDetails -> GetProductResponse.builder()
                         .sku(productDetails.getId())
                         .price(productDetails.getPrice())

@@ -4,8 +4,8 @@ import com.optivem.eshop.systemtest.core.erp.driver.ErpDriver;
 import com.optivem.eshop.systemtest.core.erp.driver.dtos.requests.GetProductRequest;
 import com.optivem.eshop.systemtest.core.erp.driver.dtos.requests.ReturnsProductRequest;
 import com.optivem.eshop.systemtest.core.erp.driver.dtos.responses.GetProductResponse;
-import com.optivem.eshop.systemtest.core.erp.client.real.ErpRealClient;
-import com.optivem.eshop.systemtest.core.erp.client.common.dtos.ExtProductDetailsRequest;
+import com.optivem.eshop.systemtest.core.erp.client.ErpRealClient;
+import com.optivem.eshop.systemtest.core.erp.client.dtos.ExtProductDetailsRequest;
 import com.optivem.lang.Closer;
 import com.optivem.eshop.systemtest.core.commons.error.Error;
 import com.optivem.lang.Result;
@@ -25,7 +25,7 @@ public class ErpRealDriver implements ErpDriver {
 
     @Override
     public Result<Void, Error> goToErp() {
-        return erpClient.health().checkHealth();
+        return erpClient.checkHealth();
     }
 
     @Override
@@ -39,12 +39,12 @@ public class ErpRealDriver implements ErpDriver {
                 .price(request.getPrice())
                 .build();
 
-        return erpClient.products().createProduct(createProductRequest);
+        return erpClient.createProduct(createProductRequest);
     }
 
     @Override
     public Result<GetProductResponse, Error> getProduct(GetProductRequest request) {
-        return erpClient.products().getProduct(request.getSku())
+        return erpClient.getProduct(request.getSku())
                 .map(productDetails -> GetProductResponse.builder()
                         .sku(productDetails.getId())
                         .price(productDetails.getPrice())

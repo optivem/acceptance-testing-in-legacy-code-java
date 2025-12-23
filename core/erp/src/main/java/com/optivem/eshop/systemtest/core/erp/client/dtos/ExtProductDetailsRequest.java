@@ -1,4 +1,4 @@
-package com.optivem.eshop.systemtest.core.erp.client.common.dtos;
+package com.optivem.eshop.systemtest.core.erp.client.dtos;
 
 import lombok.Builder;
 import lombok.Data;
