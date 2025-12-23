@@ -1,13 +1,12 @@
 package com.optivem.eshop.systemtest.core.erp.driver;
 
-import com.optivem.eshop.systemtest.core.commons.driver.Driver;
 import com.optivem.eshop.systemtest.core.commons.error.Error;
 import com.optivem.eshop.systemtest.core.erp.driver.dtos.GetProductRequest;
 import com.optivem.eshop.systemtest.core.erp.driver.dtos.ReturnsProductRequest;
 import com.optivem.eshop.systemtest.core.erp.driver.dtos.GetProductResponse;
 import com.optivem.lang.Result;
 
-public interface ErpDriver extends Driver {
+public interface ErpDriver extends AutoCloseable {
     Result<Void, Error> goToErp();
     Result<Void, Error> returnsProduct(ReturnsProductRequest request);
     Result<GetProductResponse, Error> getProduct(GetProductRequest request);

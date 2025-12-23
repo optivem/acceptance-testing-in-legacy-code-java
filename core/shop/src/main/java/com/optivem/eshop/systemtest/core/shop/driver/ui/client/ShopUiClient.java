@@ -1,14 +1,13 @@
 package com.optivem.eshop.systemtest.core.shop.driver.ui.client;
 
 import com.microsoft.playwright.*;
-import com.optivem.eshop.systemtest.core.commons.driver.Driver;
 import com.optivem.lang.Closer;
 import com.optivem.playwright.PageClient;
 import com.optivem.eshop.systemtest.core.shop.driver.ui.client.pages.HomePage;
 import org.springframework.http.HttpStatus;
 
 
-public class ShopUiClient implements Driver {
+public class ShopUiClient implements AutoCloseable {
 
     private static final String CONTENT_TYPE = "content-type";
     private static final String TEXT_HTML = "text/html";
