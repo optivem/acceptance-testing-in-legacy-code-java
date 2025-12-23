@@ -1,7 +1,9 @@
 package com.optivem.eshop.systemtest.core.erp.driver.real;
 
 import com.optivem.eshop.systemtest.core.erp.driver.ErpDriver;
+import com.optivem.eshop.systemtest.core.erp.driver.dtos.requests.GetProductRequest;
 import com.optivem.eshop.systemtest.core.erp.driver.dtos.requests.ReturnsProductRequest;
+import com.optivem.eshop.systemtest.core.erp.driver.dtos.responses.GetProductResponse;
 import com.optivem.eshop.systemtest.core.erp.driver.real.client.ErpRealClient;
 import com.optivem.eshop.systemtest.core.erp.driver.real.client.dtos.requests.CreateProductRequest;
 import com.optivem.lang.Closer;
@@ -45,6 +47,15 @@ public class ErpRealDriver implements ErpDriver {
                 .build();
 
         return erpClient.products().createProduct(createProductRequest);
+    }
+
+    @Override
+    public Result<GetProductResponse, Error> getProduct(GetProductRequest request) {
+        return erpClient.products().getProduct(request.getSku())
+                .map(productDetails -> GetProductResponse.builder()
+                        .sku(productDetails.getId())
+                        .price(productDetails.getPrice())
+                        .build());
     }
 
     @Override

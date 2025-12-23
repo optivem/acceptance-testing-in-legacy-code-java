@@ -1,5 +1,6 @@
 package com.optivem.eshop.systemtest.e2etests;
 
+import com.optivem.eshop.systemtest.BaseSystemTest;
 import com.optivem.eshop.systemtest.EnvironmentMode;
 import com.optivem.eshop.systemtest.SystemDslFactory;
 import com.optivem.eshop.systemtest.core.ExternalSystemMode;
@@ -22,22 +23,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.stream.Stream;
 
-
-@ExtendWith(ChannelExtension.class)
-public class E2eTest {
-
-    private SystemDsl app;
-
-    @BeforeEach
-    void setUp() {
-        app = SystemDslFactory.create();
-    }
-
-    @AfterEach
-    void tearDown() {
-        Closer.close(app);
-    }
-
+public class E2eTest extends BaseSystemTest {
     private static final String ORDER_NUMBER = "order-number";
     private static final String SKU = "sku";
 

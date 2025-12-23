@@ -1,5 +1,6 @@
 package com.optivem.eshop.systemtest.smoketests;
 
+import com.optivem.eshop.systemtest.BaseSystemTest;
 import com.optivem.eshop.systemtest.SystemDslFactory;
 import com.optivem.eshop.systemtest.core.SystemDsl;
 import com.optivem.eshop.systemtest.core.shop.ChannelType;
@@ -12,20 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-@ExtendWith(ChannelExtension.class)
-public class ShopSmokeTest {
-
-    private SystemDsl app;
-
-    @BeforeEach
-    void setUp() {
-        app = SystemDslFactory.create();
-    }
-
-    @AfterEach
-    void tearDown() {
-        Closer.close(app);
-    }
+public class ShopSmokeTest extends BaseSystemTest {
 
     @TestTemplate
     @Channel({ChannelType.UI, ChannelType.API})

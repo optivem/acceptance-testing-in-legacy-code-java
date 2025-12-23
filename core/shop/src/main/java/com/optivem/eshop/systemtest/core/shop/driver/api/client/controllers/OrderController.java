@@ -21,17 +21,17 @@ public class OrderController {
 
     public Result<PlaceOrderResponse, Error> placeOrder(PlaceOrderRequest request) {
         return httpClient.post(ENDPOINT, request, PlaceOrderResponse.class)
-                .mapFailure(ProblemDetailConverter::toError);
+                .mapError(ProblemDetailConverter::toError);
     }
 
     public Result<GetOrderResponse, Error> viewOrder(String orderNumber) {
         return httpClient.get(ENDPOINT + "/" + orderNumber, GetOrderResponse.class)
-                .mapFailure(ProblemDetailConverter::toError);
+                .mapError(ProblemDetailConverter::toError);
     }
 
     public Result<Void, Error> cancelOrder(String orderNumber) {
         return httpClient.post(ENDPOINT + "/" + orderNumber + "/cancel")
-                .mapFailure(ProblemDetailConverter::toError);
+                .mapError(ProblemDetailConverter::toError);
     }
 }
 

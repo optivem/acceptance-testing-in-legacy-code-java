@@ -18,6 +18,6 @@ public class RealProductController extends ProductController {
 
     public Result<Void, Error> createProduct(CreateProductRequest request) {
         return httpClient.post(ENDPOINT, request)
-                .mapFailure(ProblemDetailConverter::toError);
+                .mapError(ProblemDetailConverter::toError);
     }
 }

@@ -14,7 +14,7 @@ import com.optivem.lang.Result;
  */
 public class ProductController extends BaseController {
 
-    private static final String ENDPOINT = "/products";
+    private static final String ENDPOINT = "/api/products";
 
     public ProductController(JsonHttpClient<ProblemDetailResponse> httpClient) {
         super(httpClient);
@@ -22,7 +22,7 @@ public class ProductController extends BaseController {
 
     public Result<ProductDetailsResponse, Error> getProduct(String sku) {
         return httpClient.get(ENDPOINT + "/" + sku, ProductDetailsResponse.class)
-                .mapFailure(ProblemDetailConverter::toError);
+                .mapError(ProblemDetailConverter::toError);
     }
 }
 

@@ -1,5 +1,6 @@
 package com.optivem.eshop.systemtest.e2etests;
 
+import com.optivem.eshop.systemtest.BaseSystemTest;
 import com.optivem.eshop.systemtest.EnvironmentMode;
 import com.optivem.eshop.systemtest.SystemDslFactory;
 import com.optivem.eshop.systemtest.core.ExternalSystemMode;
@@ -23,25 +24,10 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.stream.Stream;
 
-@ExtendWith(ChannelExtension.class)
-public class GherkinMigratedE2eTest {
-
-    private SystemDsl app;
-    private ScenarioDsl scenario;
+public class GherkinMigratedE2eTest extends BaseSystemTest {
 
     private static final String ORDER_NUMBER = "order-number";
     private static final String SKU = "sku";
-
-    @BeforeEach
-    void setUp() {
-        app = SystemDslFactory.create();
-        scenario = new ScenarioDsl(app);
-    }
-
-    @AfterEach
-    void tearDown() {
-        Closer.close(app);
-    }
 
     @TestTemplate
     @Channel({ChannelType.UI, ChannelType.API})

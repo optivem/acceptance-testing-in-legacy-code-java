@@ -18,7 +18,7 @@ public class HealthController {
 
     public Result<Void, TaxError> checkHealth() {
         return httpClient.get(ENDPOINT)
-                .mapFailure(TaxErrorConverter::from);
+                .mapError(TaxErrorConverter::from);
     }
 }
 

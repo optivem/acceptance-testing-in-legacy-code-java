@@ -21,7 +21,7 @@ public class HealthController extends BaseController {
 
     public Result<Void, Error> checkHealth() {
         return httpClient.get(ENDPOINT)
-                .mapFailure(ProblemDetailConverter::toError);
+                .mapError(ProblemDetailConverter::toError);
     }
 }
 
