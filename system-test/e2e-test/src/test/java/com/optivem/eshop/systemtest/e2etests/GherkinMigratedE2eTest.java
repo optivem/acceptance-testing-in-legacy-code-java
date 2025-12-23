@@ -1,22 +1,13 @@
 package com.optivem.eshop.systemtest.e2etests;
 
 import com.optivem.eshop.systemtest.BaseSystemTest;
-import com.optivem.eshop.systemtest.EnvironmentMode;
-import com.optivem.eshop.systemtest.SystemDslFactory;
-import com.optivem.testing.dsl.ExternalSystemMode;
-import com.optivem.eshop.systemtest.core.SystemDsl;
-import com.optivem.eshop.systemtest.core.gherkin.ScenarioDsl;
 import com.optivem.eshop.systemtest.core.shop.ChannelType;
 import com.optivem.eshop.systemtest.core.shop.driver.dtos.enums.OrderStatus;
+import com.optivem.eshop.systemtest.e2etests.base.BaseE2eTest;
 import com.optivem.eshop.systemtest.e2etests.providers.EmptyArgumentsProvider;
-import com.optivem.lang.Closer;
 import com.optivem.testing.channels.Channel;
-import com.optivem.testing.channels.ChannelExtension;
 import com.optivem.testing.channels.DataSource;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestTemplate;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -24,7 +15,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.stream.Stream;
 
-public class GherkinMigratedE2eTest extends BaseSystemTest {
+public class GherkinMigratedE2eTest extends BaseE2eTest {
 
     private static final String ORDER_NUMBER = "order-number";
     private static final String SKU = "sku";

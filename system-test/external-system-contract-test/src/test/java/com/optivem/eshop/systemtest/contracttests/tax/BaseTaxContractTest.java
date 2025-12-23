@@ -1,14 +1,16 @@
-package com.optivem.eshop.systemtest.contracttests;
+package com.optivem.eshop.systemtest.contracttests.tax;
 
 import com.optivem.eshop.systemtest.BaseSystemTest;
+import com.optivem.eshop.systemtest.contracttests.base.BaseExternalSystemContractTest;
+import com.optivem.testing.dsl.ExternalSystemMode;
 import org.junit.jupiter.api.Test;
 
-public class TaxContractTest extends BaseSystemTest {
+public abstract class BaseTaxContractTest extends BaseExternalSystemContractTest {
+
     @Test
     void shouldBeAbleToGetTaxRate() {
         app.tax().returnsTaxRate()
-                        .country("US")
-                                .taxRate(12.30)
+                .country("US")
                 .execute()
                 .shouldSucceed();
 

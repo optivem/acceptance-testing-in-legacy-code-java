@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class SystemConfigurationLoader {
     
-    public static SystemConfiguration load(EnvironmentMode environmentMode, ExternalSystemMode externalSystemMode) {
+    public static SystemConfiguration load(Environment environmentMode, ExternalSystemMode externalSystemMode) {
         String configFile = getConfigFileName(environmentMode, externalSystemMode);
         Map<String, Object> config = loadYamlFile(configFile);
 
@@ -21,11 +21,11 @@ public class SystemConfigurationLoader {
         return new SystemConfiguration(shopUiBaseUrl, shopApiBaseUrl, erpBaseUrl, taxBaseUrl, externalSystemMode);
     }
 
-    private static String getConfigFileName(EnvironmentMode environmentMode, ExternalSystemMode externalSystemMode) {
+    private static String getConfigFileName(Environment environmentMode, ExternalSystemMode externalSystemMode) {
         // Only LOCAL and ACCEPTANCE environments can use STUB mode
         if (externalSystemMode == ExternalSystemMode.STUB &&
-            environmentMode != EnvironmentMode.LOCAL &&
-            environmentMode != EnvironmentMode.ACCEPTANCE) {
+            environmentMode != Environment.LOCAL &&
+            environmentMode != Environment.ACCEPTANCE) {
             throw new IllegalArgumentException(
                 String.format("STUB mode is only allowed for LOCAL and ACCEPTANCE environments. Cannot use STUB for %s environment.",
                     environmentMode)

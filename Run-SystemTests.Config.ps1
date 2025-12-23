@@ -7,13 +7,13 @@ $Config = @{
         # Smoke Tests
         @{  Id = "smoke-local-stub";
             Name = "Smoke Tests (Local - Stub)";
-            Command = "& .\gradlew.bat :smoke-test:clean :smoke-test:test -DenvironmentMode=local -DexternalSystemMode=stub";
+            Command = "& .\gradlew.bat :smoke-test:clean :smoke-test:test -Denvironment=local -DexternalSystemMode=stub";
             Path = "system-test";
             TestReportPath = "system-test\smoke-test\build\reports\tests\test\index.html"
             TestInstallCommands = $null; },
         @{  Id = "smoke-local-real";
             Name = "Smoke Tests (Local - Real)";
-            Command = "& .\gradlew.bat :smoke-test:clean :smoke-test:test -DenvironmentMode=local -DexternalSystemMode=real";
+            Command = "& .\gradlew.bat :smoke-test:clean :smoke-test:test -Denvironment=local -DexternalSystemMode=real";
             Path = "system-test";
             TestReportPath = "system-test\smoke-test\build\reports\tests\test\index.html"
             TestInstallCommands = $null; },
@@ -21,13 +21,7 @@ $Config = @{
         # External System Contract Tests
         @{  Id = "contract-local-stub";
             Name = "Contract Tests (Local - Stub)";
-            Command = "& .\gradlew.bat :external-system-contract-test:clean :external-system-contract-test:test -DenvironmentMode=local -DexternalSystemMode=stub";
-            Path = "system-test";
-            TestReportPath = "system-test\external-system-contract-test\build\reports\tests\test\index.html"
-            TestInstallCommands = $null; },
-        @{  Id = "contract-local-real";
-            Name = "Contract Tests (Local - Real)";
-            Command = "& .\gradlew.bat :external-system-contract-test:clean :external-system-contract-test:test -DenvironmentMode=local -DexternalSystemMode=real";
+            Command = "& .\gradlew.bat :external-system-contract-test:clean :external-system-contract-test:test -Denvironment=local";
             Path = "system-test";
             TestReportPath = "system-test\external-system-contract-test\build\reports\tests\test\index.html"
             TestInstallCommands = $null; },
@@ -36,7 +30,7 @@ $Config = @{
         @{ 
             Id = "e2e-local-real";
             Name = "E2E Tests (Local - Real)";
-            Command = "& .\gradlew.bat :e2e-test:clean :e2e-test:test -DenvironmentMode=local -DexternalSystemMode=real";
+            Command = "& .\gradlew.bat :e2e-test:clean :e2e-test:test -Denvironment=local";
             Path = "system-test";
             TestReportPath = "system-test\e2e-test\build\reports\tests\test\index.html";
             TestInstallCommands = $null; }

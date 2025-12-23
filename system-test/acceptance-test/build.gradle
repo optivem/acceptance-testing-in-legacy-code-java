@@ -31,7 +31,7 @@ tasks.named('test') {
     useJUnitPlatform()
 
     // Pass system properties from command line to test JVM
-    systemProperty 'environmentMode', System.getProperty('environmentMode')
+    systemProperty 'environment', System.getProperty('environment')
     systemProperty 'externalSystemMode', System.getProperty('externalSystemMode')
 
     // Enable parallel test execution at Gradle level

@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest;
 
-public enum EnvironmentMode {
+public enum Environment {
     LOCAL,
     ACCEPTANCE,
     QA,

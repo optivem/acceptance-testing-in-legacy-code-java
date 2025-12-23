@@ -1,9 +1,10 @@
-package com.optivem.eshop.systemtest.contracttests;
+package com.optivem.eshop.systemtest.contracttests.erp;
 
 import com.optivem.eshop.systemtest.BaseSystemTest;
+import com.optivem.eshop.systemtest.contracttests.base.BaseExternalSystemContractTest;
 import org.junit.jupiter.api.Test;
 
-public class ErpContractTest extends BaseSystemTest {
+public abstract class BaseErpContractTest extends BaseExternalSystemContractTest {
 
     @Test
     void shouldBeAbleToGetProduct() {
