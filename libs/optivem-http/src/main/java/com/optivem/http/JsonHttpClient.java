@@ -26,6 +26,8 @@ public class JsonHttpClient<E> {
         this.errorType = errorType;
     }
 
+    // GET Methods
+
     public <T> Result<T, E> get(String path, Class<T> responseType) {
         var httpResponse = doGet(path);
         return getResultOrFailure(httpResponse, responseType);
@@ -41,15 +43,26 @@ public class JsonHttpClient<E> {
         return getResultOrFailure(httpResponse, responseType);
     }
 
+    // POST Methods
+
     public <T> Result<Void, E> post(String path, Object requestBody) {
         var httpResponse = doPost(path, requestBody);
         return getResultOrFailure(httpResponse, Void.class);
+    }
+
+    public <T> Result<T, E> post(String path, Class<T> responseType) {
+        var httpResponse = doPost(path);
+        return getResultOrFailure(httpResponse, responseType);
     }
 
     public Result<Void, E> post(String path) {
         var httpResponse = doPost(path);
         return getResultOrFailure(httpResponse, Void.class);
     }
+
+    // TODO: VJ: Add PUT, DELETE methods as needed
+
+    // TODO: VJ: Add isolated tests for JsonHttpClient
 
     // Private helper methods
 

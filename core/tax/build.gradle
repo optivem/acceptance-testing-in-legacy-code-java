@@ -19,8 +19,8 @@ dependencies {
     api project(':core:commons')
     api project(':libs:optivem-http')
     api project(':libs:optivem-testing-dsl')
+    api project(':libs:optivem-wiremock')
 
-    implementation 'org.wiremock:wiremock-standalone:3.10.0'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.17.0'
 
     api 'org.assertj:assertj-core:3.24.2'
