@@ -1,0 +1,37 @@
+package com.optivem.eshop.systemtest.core.erp.driver;
+
+import com.optivem.eshop.systemtest.core.erp.driver.dtos.GetProductRequest;
+import com.optivem.eshop.systemtest.core.erp.driver.dtos.ReturnsProductRequest;
+import com.optivem.eshop.systemtest.core.erp.driver.dtos.GetProductResponse;
+import com.optivem.eshop.systemtest.core.erp.client.ErpRealClient;
+import com.optivem.eshop.systemtest.core.erp.client.dtos.ExtProductDetailsRequest;
+import com.optivem.lang.Closer;
+import com.optivem.eshop.systemtest.core.commons.error.Error;
+import com.optivem.lang.Result;
+
+public class ErpRealDriver extends BaseErpDriver<ErpRealClient> {
+
+    private static final String DEFAULT_TITLE = "Test Product Title";
+    private static final String DEFAULT_DESCRIPTION = "Test Product Description";
+    private static final String DEFAULT_CATEGORY = "Test Category";
+    private static final String DEFAULT_BRAND = "Test Brand";
+
+    public ErpRealDriver(String baseUrl) {
+        super(new ErpRealClient(baseUrl));
+    }
+
+    @Override
+    public Result<Void, Error> returnsProduct(ReturnsProductRequest request) {
+        var createProductRequest = ExtProductDetailsRequest.builder()
+                .id(request.getSku())
+                .title(DEFAULT_TITLE)
+                .description(DEFAULT_DESCRIPTION)
+                .category(DEFAULT_CATEGORY)
+                .brand(DEFAULT_BRAND)
+                .price(request.getPrice())
+                .build();
+
+        return client.createProduct(createProductRequest);
+    }
+}
+

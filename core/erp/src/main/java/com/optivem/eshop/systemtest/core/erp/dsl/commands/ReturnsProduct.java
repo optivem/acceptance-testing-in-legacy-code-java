@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest.core.erp.dsl.commands;
 
-import com.optivem.eshop.systemtest.core.erp.driver.dtos.requests.ReturnsProductRequest;
+import com.optivem.eshop.systemtest.core.erp.driver.dtos.ReturnsProductRequest;
 import com.optivem.eshop.systemtest.core.erp.driver.ErpDriver;
 import com.optivem.testing.dsl.VoidResponseVerification;
 import com.optivem.testing.dsl.UseCaseContext;

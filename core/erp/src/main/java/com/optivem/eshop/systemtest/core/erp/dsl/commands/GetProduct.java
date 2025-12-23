@@ -1,7 +1,7 @@
 package com.optivem.eshop.systemtest.core.erp.dsl.commands;
 
-import com.optivem.eshop.systemtest.core.erp.driver.dtos.requests.GetProductRequest;
-import com.optivem.eshop.systemtest.core.erp.driver.dtos.responses.GetProductResponse;
+import com.optivem.eshop.systemtest.core.erp.driver.dtos.GetProductRequest;
+import com.optivem.eshop.systemtest.core.erp.driver.dtos.GetProductResponse;
 import com.optivem.eshop.systemtest.core.erp.driver.ErpDriver;
 import com.optivem.eshop.systemtest.core.erp.dsl.verifications.GetProductVerification;
 import com.optivem.testing.dsl.UseCaseContext;

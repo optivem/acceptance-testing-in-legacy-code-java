@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest.core.erp.dsl;
 
-import com.optivem.eshop.systemtest.core.erp.driver.real.ErpRealDriver;
+import com.optivem.eshop.systemtest.core.erp.driver.ErpRealDriver;
 import com.optivem.testing.dsl.UseCaseContext;
 
 /**

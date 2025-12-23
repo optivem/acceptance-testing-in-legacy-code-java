@@ -1,6 +1,6 @@
 package com.optivem.eshop.systemtest.core.erp.dsl.verifications;
 
-import com.optivem.eshop.systemtest.core.erp.driver.dtos.responses.GetProductResponse;
+import com.optivem.eshop.systemtest.core.erp.driver.dtos.GetProductResponse;
 import com.optivem.testing.dsl.ResponseVerification;
 import com.optivem.testing.dsl.UseCaseContext;
 

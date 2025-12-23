@@ -2,9 +2,9 @@ package com.optivem.eshop.systemtest.core.erp.driver;
 
 import com.optivem.eshop.systemtest.core.commons.driver.Driver;
 import com.optivem.eshop.systemtest.core.commons.error.Error;
-import com.optivem.eshop.systemtest.core.erp.driver.dtos.requests.GetProductRequest;
-import com.optivem.eshop.systemtest.core.erp.driver.dtos.requests.ReturnsProductRequest;
-import com.optivem.eshop.systemtest.core.erp.driver.dtos.responses.GetProductResponse;
+import com.optivem.eshop.systemtest.core.erp.driver.dtos.GetProductRequest;
+import com.optivem.eshop.systemtest.core.erp.driver.dtos.ReturnsProductRequest;
+import com.optivem.eshop.systemtest.core.erp.driver.dtos.GetProductResponse;
 import com.optivem.lang.Result;
 
 public interface ErpDriver extends Driver {
