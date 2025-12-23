@@ -15,9 +15,8 @@ public class HealthController {
         this.httpClient = httpClient;
     }
 
-    public Result<Void, SystemError> checkHealth() {
-        return httpClient.get(ENDPOINT)
-                .mapError(SystemError::from);
+    public Result<Void, ProblemDetailResponse> checkHealth() {
+        return httpClient.get(ENDPOINT);
     }
 }
 

@@ -18,19 +18,16 @@ public class OrderController {
         this.httpClient = httpClient;
     }
 
-    public Result<PlaceOrderResponse, SystemError> placeOrder(PlaceOrderRequest request) {
-        return httpClient.post(ENDPOINT, request, PlaceOrderResponse.class)
-                .mapError(SystemError::from);
+    public Result<PlaceOrderResponse, ProblemDetailResponse> placeOrder(PlaceOrderRequest request) {
+        return httpClient.post(ENDPOINT, request, PlaceOrderResponse.class);
     }
 
-    public Result<GetOrderResponse, SystemError> viewOrder(String orderNumber) {
-        return httpClient.get(ENDPOINT + "/" + orderNumber, GetOrderResponse.class)
-                .mapError(SystemError::from);
+    public Result<GetOrderResponse, ProblemDetailResponse> viewOrder(String orderNumber) {
+        return httpClient.get(ENDPOINT + "/" + orderNumber, GetOrderResponse.class);
     }
 
-    public Result<Void, SystemError> cancelOrder(String orderNumber) {
-        return httpClient.post(ENDPOINT + "/" + orderNumber + "/cancel")
-                .mapError(SystemError::from);
+    public Result<Void, ProblemDetailResponse> cancelOrder(String orderNumber) {
+        return httpClient.post(ENDPOINT + "/" + orderNumber + "/cancel");
     }
 }
 

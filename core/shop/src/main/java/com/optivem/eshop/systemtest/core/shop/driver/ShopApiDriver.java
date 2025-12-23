@@ -24,22 +24,22 @@ public class ShopApiDriver implements ShopDriver {
 
     @Override
     public Result<Void, SystemError> goToShop() {
-        return apiClient.health().checkHealth();
+        return apiClient.health().checkHealth().mapError(SystemError::from);
     }
 
     @Override
     public Result<PlaceOrderResponse, SystemError> placeOrder(PlaceOrderRequest request) {
-        return apiClient.orders().placeOrder(request);
+        return apiClient.orders().placeOrder(request).mapError(SystemError::from);
     }
 
     @Override
     public Result<Void, SystemError> cancelOrder(String orderNumber) {
-        return apiClient.orders().cancelOrder(orderNumber);
+        return apiClient.orders().cancelOrder(orderNumber).mapError(SystemError::from);
     }
 
     @Override
     public Result<GetOrderResponse, SystemError> viewOrder(String orderNumber) {
-        return apiClient.orders().viewOrder(orderNumber);
+        return apiClient.orders().viewOrder(orderNumber).mapError(SystemError::from);
     }
 
     @Override
