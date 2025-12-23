@@ -1,17 +1,16 @@
-package com.optivem.eshop.systemtest.core.shop.driver.ui;
+package com.optivem.eshop.systemtest.core.shop.driver;
 
-import com.optivem.eshop.systemtest.core.shop.driver.dtos.requests.PlaceOrderRequest;
-import com.optivem.eshop.systemtest.core.shop.driver.ui.client.ShopUiClient;
-import com.optivem.eshop.systemtest.core.shop.driver.ui.client.pages.HomePage;
-import com.optivem.eshop.systemtest.core.shop.driver.ui.client.pages.NewOrderPage;
-import com.optivem.eshop.systemtest.core.shop.driver.ui.client.pages.OrderHistoryPage;
-import com.optivem.eshop.systemtest.core.shop.driver.dtos.responses.GetOrderResponse;
-import com.optivem.eshop.systemtest.core.shop.driver.dtos.responses.PlaceOrderResponse;
-import com.optivem.eshop.systemtest.core.shop.driver.dtos.enums.OrderStatus;
+import com.optivem.eshop.systemtest.core.shop.client.dtos.PlaceOrderRequest;
+import com.optivem.eshop.systemtest.core.shop.client.ui.ShopUiClient;
+import com.optivem.eshop.systemtest.core.shop.client.ui.pages.HomePage;
+import com.optivem.eshop.systemtest.core.shop.client.ui.pages.NewOrderPage;
+import com.optivem.eshop.systemtest.core.shop.client.ui.pages.OrderHistoryPage;
+import com.optivem.eshop.systemtest.core.shop.client.dtos.GetOrderResponse;
+import com.optivem.eshop.systemtest.core.shop.client.dtos.PlaceOrderResponse;
+import com.optivem.eshop.systemtest.core.shop.client.dtos.enums.OrderStatus;
 import com.optivem.eshop.systemtest.core.commons.error.Error;
 import com.optivem.lang.Result;
 import com.optivem.eshop.systemtest.core.commons.error.Results;
-import com.optivem.eshop.systemtest.core.shop.driver.ShopDriver;
 
 import java.util.Objects;
 

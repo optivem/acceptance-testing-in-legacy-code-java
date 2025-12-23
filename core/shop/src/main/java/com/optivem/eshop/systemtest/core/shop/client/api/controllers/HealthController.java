@@ -1,4 +1,4 @@
-package com.optivem.eshop.systemtest.core.shop.driver.api.client.controllers;
+package com.optivem.eshop.systemtest.core.shop.client.api.controllers;
 
 import com.optivem.eshop.systemtest.core.commons.error.Error;
 import com.optivem.eshop.systemtest.core.commons.error.ProblemDetailResponse;

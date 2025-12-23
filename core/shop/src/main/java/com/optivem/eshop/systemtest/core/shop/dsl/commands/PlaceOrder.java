@@ -1,8 +1,8 @@
 package com.optivem.eshop.systemtest.core.shop.dsl.commands;
 
 import com.optivem.eshop.systemtest.core.shop.driver.ShopDriver;
-import com.optivem.eshop.systemtest.core.shop.driver.dtos.requests.PlaceOrderRequest;
-import com.optivem.eshop.systemtest.core.shop.driver.dtos.responses.PlaceOrderResponse;
+import com.optivem.eshop.systemtest.core.shop.client.dtos.PlaceOrderRequest;
+import com.optivem.eshop.systemtest.core.shop.client.dtos.PlaceOrderResponse;
 import com.optivem.testing.dsl.UseCaseContext;
 import com.optivem.eshop.systemtest.core.shop.dsl.commands.base.BaseShopCommand;
 import com.optivem.eshop.systemtest.core.shop.dsl.commands.base.ShopUseCaseResult;

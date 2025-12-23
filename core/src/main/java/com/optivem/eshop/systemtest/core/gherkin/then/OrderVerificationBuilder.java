@@ -1,7 +1,7 @@
 package com.optivem.eshop.systemtest.core.gherkin.then;
 
 import com.optivem.eshop.systemtest.core.SystemDsl;
-import com.optivem.eshop.systemtest.core.shop.driver.dtos.enums.OrderStatus;
+import com.optivem.eshop.systemtest.core.shop.client.dtos.enums.OrderStatus;
 
 public class OrderVerificationBuilder {
     private final SystemDsl app;

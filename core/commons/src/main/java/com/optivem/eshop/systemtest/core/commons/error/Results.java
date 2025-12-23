@@ -19,10 +19,6 @@ public final class Results {
         return Result.failure(Error.of(message));
     }
 
-    public static <T> Result<T, Error> failure(String message, Error.FieldError... fieldErrors) {
-        return Result.failure(Error.of(message, fieldErrors));
-    }
-
     public static <T> Result<T, Error> failure(Error error) {
         return Result.failure(error);
     }

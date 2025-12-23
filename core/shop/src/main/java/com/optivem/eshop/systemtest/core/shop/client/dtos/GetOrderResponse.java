@@ -1,6 +1,6 @@
-package com.optivem.eshop.systemtest.core.shop.driver.dtos.responses;
+package com.optivem.eshop.systemtest.core.shop.client.dtos;
 
-import com.optivem.eshop.systemtest.core.shop.driver.dtos.enums.OrderStatus;
+import com.optivem.eshop.systemtest.core.shop.client.dtos.enums.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
