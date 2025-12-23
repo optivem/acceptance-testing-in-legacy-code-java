@@ -1,8 +1,8 @@
-package com.optivem.eshop.systemtest.core.erp.client.base;
+package com.optivem.eshop.systemtest.core.erp.client.common;
 
 import com.optivem.eshop.systemtest.core.commons.error.ProblemDetailResponse;
-import com.optivem.eshop.systemtest.core.erp.client.base.controllers.HealthController;
-import com.optivem.eshop.systemtest.core.erp.client.base.controllers.ProductController;
+import com.optivem.eshop.systemtest.core.erp.client.common.controllers.HealthController;
+import com.optivem.eshop.systemtest.core.erp.client.common.controllers.ProductController;
 import com.optivem.http.JsonHttpClient;
 import com.optivem.lang.Closer;
 
@@ -22,6 +22,7 @@ public abstract class BaseErpClient<T extends ProductController> implements Auto
     protected BaseErpClient(String baseUrl,
             Function<JsonHttpClient<ProblemDetailResponse>, T> productControllerFactory) {
         this.httpClient = HttpClient.newHttpClient();
+        // TODO: VJ: Actually, this is not the response, it's instead some Error
         var jsonHttpClient = new JsonHttpClient<>(httpClient, baseUrl, ProblemDetailResponse.class);
 
         this.healthController = new HealthController(jsonHttpClient);

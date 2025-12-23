@@ -1,6 +1,5 @@
-package com.optivem.eshop.systemtest.core.erp.client.base.dtos.responses;
+package com.optivem.eshop.systemtest.core.erp.client.common.dtos;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,11 +11,11 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class ExternalProductDetailsResponse {
+public class ExtProductDetailsResponse {
     private String id;
     private String title;
     private String description;
     private BigDecimal price;
+    private String category;
+    private String brand;
 }
-

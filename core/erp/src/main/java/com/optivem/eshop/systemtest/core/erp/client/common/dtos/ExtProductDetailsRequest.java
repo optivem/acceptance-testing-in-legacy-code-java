@@ -1,11 +1,11 @@
-package com.optivem.eshop.systemtest.core.erp.client.real.dtos.requests;
+package com.optivem.eshop.systemtest.core.erp.client.common.dtos;
 
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class CreateProductRequest {
+public class ExtProductDetailsRequest {
     private String id;
     private String title;
     private String description;

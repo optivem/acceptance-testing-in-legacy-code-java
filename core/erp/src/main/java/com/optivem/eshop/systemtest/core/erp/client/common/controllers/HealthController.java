@@ -1,9 +1,9 @@
-package com.optivem.eshop.systemtest.core.erp.client.base.controllers;
+package com.optivem.eshop.systemtest.core.erp.client.common.controllers;
 
 import com.optivem.eshop.systemtest.core.commons.error.Error;
 import com.optivem.eshop.systemtest.core.commons.error.ProblemDetailConverter;
 import com.optivem.eshop.systemtest.core.commons.error.ProblemDetailResponse;
-import com.optivem.eshop.systemtest.core.erp.client.base.controllers.base.BaseController;
+import com.optivem.eshop.systemtest.core.commons.clients.api.controllers.BaseController;
 import com.optivem.http.JsonHttpClient;
 import com.optivem.lang.Result;
 
@@ -11,7 +11,7 @@ import com.optivem.lang.Result;
  * Health controller for checking ERP system health.
  * Shared between real and stub implementations.
  */
-public class HealthController extends BaseController {
+public class HealthController extends BaseController<ProblemDetailResponse> {
 
     private static final String ENDPOINT = "/health";
 

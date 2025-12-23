@@ -5,14 +5,10 @@ import com.optivem.eshop.systemtest.core.erp.driver.dtos.requests.GetProductRequ
 import com.optivem.eshop.systemtest.core.erp.driver.dtos.requests.ReturnsProductRequest;
 import com.optivem.eshop.systemtest.core.erp.driver.dtos.responses.GetProductResponse;
 import com.optivem.eshop.systemtest.core.erp.client.real.ErpRealClient;
-import com.optivem.eshop.systemtest.core.erp.client.real.dtos.requests.CreateProductRequest;
+import com.optivem.eshop.systemtest.core.erp.client.common.dtos.ExtProductDetailsRequest;
 import com.optivem.lang.Closer;
 import com.optivem.eshop.systemtest.core.commons.error.Error;
-import com.optivem.http.JsonHttpClient;
-import com.optivem.eshop.systemtest.core.commons.error.ProblemDetailResponse;
 import com.optivem.lang.Result;
-
-import java.net.http.HttpClient;
 
 public class ErpRealDriver implements ErpDriver {
 
@@ -34,7 +30,7 @@ public class ErpRealDriver implements ErpDriver {
 
     @Override
     public Result<Void, Error> returnsProduct(ReturnsProductRequest request) {
-        var createProductRequest = CreateProductRequest.builder()
+        var createProductRequest = ExtProductDetailsRequest.builder()
                 .id(request.getSku())
                 .title(DEFAULT_TITLE)
                 .description(DEFAULT_DESCRIPTION)
