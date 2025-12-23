@@ -15,11 +15,11 @@ public class GetTaxVerification extends ResponseVerification<GetTaxResponse, Use
         super(response, context);
     }
 
-    public GetTaxVerification country(String expectedCountryAliasOrValue) {
-        var expectedCountry = getExpectedCountry(expectedCountryAliasOrValue);
+    public GetTaxVerification country(String expectedCountryAlias) {
+        var expectedCountry = getExpectedCountry(expectedCountryAlias);
         var actualCountry = response.getCountry();
         assertThat(actualCountry)
-                .withFailMessage("Expected country to be '%s', but was '%s'", expectedCountryAliasOrValue, actualCountry)
+                .withFailMessage("Expected country to be '%s', but was '%s'", expectedCountryAlias, actualCountry)
                 .isEqualTo(expectedCountry);
         return this;
     }
