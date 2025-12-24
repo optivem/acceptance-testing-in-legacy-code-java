@@ -12,10 +12,13 @@ import java.time.Instant;
 
 public class ReturnsTime extends BaseClockCommand<Void, VoidResponseVerification<UseCaseContext>> {
 
+    private static final Instant DEFAULT_TIME = Instant.parse("2025-12-24T10:00:00Z");
+
     private Instant time;
 
     public ReturnsTime(ClockDriver driver, UseCaseContext context) {
         super(driver, context);
+        time(DEFAULT_TIME);
     }
 
     public ReturnsTime time(Instant time) {

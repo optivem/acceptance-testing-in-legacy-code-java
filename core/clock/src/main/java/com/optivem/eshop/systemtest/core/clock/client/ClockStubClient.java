@@ -39,7 +39,7 @@ public class ClockStubClient implements AutoCloseable {
     }
 
     public void configureGetTime(GetTimeResponse response) {
-        wireMockClient.configureGet("/api/time", 200, response);
+        wireMockClient.configureGet("/clock/api/time", 200, response);
     }
 
     public Result<Void, ExtClockErrorResponse> checkHealth() {

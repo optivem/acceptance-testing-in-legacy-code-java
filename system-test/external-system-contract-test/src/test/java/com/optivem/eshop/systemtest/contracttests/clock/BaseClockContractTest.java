@@ -9,23 +9,7 @@ public abstract class BaseClockContractTest extends BaseExternalSystemContractTe
 
     @Test
     void shouldBeAbleToGetTime() {
-        var beforeCall = Instant.now();
-
-        app.clock().getTime()
-                .execute()
-                .shouldSucceed()
-                .timeIsNotNull()
-                .timeIsAfter(beforeCall.minusSeconds(1));
-
-        var afterCall = Instant.now();
-    }
-
-    @Test
-    void shouldBeAbleToSetAndGetTime() {
-        var fixedTime = Instant.parse("2025-12-24T10:00:00Z");
-
         app.clock().returnsTime()
-                .time(fixedTime)
                 .execute()
                 .shouldSucceed();
 

@@ -29,4 +29,11 @@ public class ShopSmokeTest extends BaseSystemTest {
                 .execute()
                 .shouldSucceed();
     }
+
+    @Test
+    void shouldBeAbleToGoToClock() {
+        app.clock().goToClock()
+                .execute()
+                .shouldSucceed();
+    }
 }

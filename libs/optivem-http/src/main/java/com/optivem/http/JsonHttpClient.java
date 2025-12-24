@@ -1,6 +1,7 @@
 package com.optivem.http;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.optivem.lang.Result;
 import org.springframework.http.HttpStatus;
 
@@ -13,16 +14,27 @@ public class JsonHttpClient<E> {
 
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String APPLICATION_JSON = "application/json";
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     private final HttpClient httpClient;
     private final String baseUrl;
     private final Class<E> errorType;
 
-    public JsonHttpClient(HttpClient httpClient, String baseUrl, Class<E> errorType) {
+    public JsonHttpClient(HttpClient httpClient, String baseUrl, Class<E> errorType, ObjectMapper objectMapper) {
         this.httpClient = httpClient;
         this.baseUrl = baseUrl;
         this.errorType = errorType;
+        this.objectMapper = objectMapper;
+    }
+
+    public JsonHttpClient(HttpClient httpClient, String baseUrl, Class<E> errorType) {
+        this(httpClient, baseUrl, errorType, createObjectMapper());
+    }
+
+    private static ObjectMapper createObjectMapper() {
+        var mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        return mapper;
     }
 
     // GET Methods
