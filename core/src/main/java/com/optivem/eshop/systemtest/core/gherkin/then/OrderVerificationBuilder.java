@@ -48,7 +48,7 @@ public class OrderVerificationBuilder {
         return this;
     }
 
-    public OrderVerificationBuilder hasOriginalPrice(double expectedOriginalPrice) {
+    public OrderVerificationBuilder shouldHaveOriginalPrice(double expectedOriginalPrice) {
         app.shop().viewOrder()
                 .orderNumber(orderNumber)
                 .execute()
@@ -57,8 +57,8 @@ public class OrderVerificationBuilder {
         return this;
     }
 
-    public OrderVerificationBuilder hasOriginalPrice(String expectedOriginalPrice) {
-        return hasOriginalPrice(Double.parseDouble(expectedOriginalPrice));
+    public OrderVerificationBuilder shouldHaveOriginalPrice(String expectedOriginalPrice) {
+        return shouldHaveOriginalPrice(Double.parseDouble(expectedOriginalPrice));
     }
 
     public OrderVerificationBuilder hasTotalPrice(double expectedTotalPrice) {
