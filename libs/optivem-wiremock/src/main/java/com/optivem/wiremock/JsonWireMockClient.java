@@ -21,10 +21,10 @@ public class JsonWireMockClient {
     }
 
     public JsonWireMockClient(WireMock wireMock) {
-        this(wireMock, createDefaultObjectMapper());
+        this(wireMock, createObjectMapper());
     }
 
-    private static ObjectMapper createDefaultObjectMapper() {
+    private static ObjectMapper createObjectMapper() {
         var mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         return mapper;
