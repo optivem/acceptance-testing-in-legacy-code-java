@@ -10,6 +10,8 @@ public class GivenClause {
     private final SystemDsl app;
     private final List<ProductBuilder> products = new ArrayList<>();
     private final List<OrderBuilder> orders = new ArrayList<>();
+    private final List<ClockBuilder> clocks = new ArrayList<>();
+    private final List<TaxRateBuilder> taxRates = new ArrayList<>();
 
     public GivenClause(SystemDsl app) {
         this.app = app;
@@ -27,12 +29,32 @@ public class GivenClause {
         return orderBuilder;
     }
 
+    public ClockBuilder clock() {
+        var clockBuilder = new ClockBuilder(this);
+        clocks.add(clockBuilder);
+        return clockBuilder;
+    }
+
+    public TaxRateBuilder taxRate() {
+        var taxRateBuilder = new TaxRateBuilder(this);
+        taxRates.add(taxRateBuilder);
+        return taxRateBuilder;
+    }
+
     public EmptyGivenClause noProducts() {
         // No products to create, return clause that allows .when()
         return new EmptyGivenClause(app);
     }
 
     public WhenClause when() {
+        // Execute all clock setups
+        for (var clock : clocks) {
+            app.clock().returnsTime()
+                    .time(clock.getTime())
+                    .execute()
+                    .shouldSucceed();
+        }
+
         // Execute all product creations
         for (var product : products) {
             app.erp().returnsProduct()
@@ -41,6 +63,16 @@ public class GivenClause {
                     .execute()
                     .shouldSucceed();
         }
+
+        // Execute all tax rate setups
+        for (var taxRate : taxRates) {
+            app.tax().returnsTaxRate()
+                    .country(taxRate.getCountry())
+                    .taxRate(taxRate.getTaxRate())
+                    .execute()
+                    .shouldSucceed();
+        }
+
         // Execute all order placements
         for (var order : orders) {
             app.shop().placeOrder()

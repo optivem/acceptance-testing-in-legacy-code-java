@@ -1,57 +1,41 @@
 package com.optivem.eshop.systemtest.acceptancetests.v7;
 
-import com.optivem.eshop.systemtest.base.v5.BaseSystemDslTest;
+import com.optivem.eshop.systemtest.acceptancetests.v7.base.BaseAcceptanceTest;
 import com.optivem.eshop.systemtest.core.shop.ChannelType;
 import com.optivem.testing.channels.Channel;
-import com.optivem.testing.dsl.ExternalSystemMode;
 import org.junit.jupiter.api.TestTemplate;
 
 import java.time.Instant;
 
-public class AcceptanceTest extends BaseSystemDslTest {
-
-    @Override
-    protected ExternalSystemMode getFixedExternalSystemMode() {
-        return ExternalSystemMode.STUB;
-    }
+public class AcceptanceTest extends BaseAcceptanceTest {
 
     @TestTemplate
-    @Channel({ ChannelType.UI, ChannelType.API })
+    @Channel({ChannelType.UI, ChannelType.API})
     void shouldPlaceOrderWithCorrectOriginalPrice() {
-        app.clock().returnsTime()
-                .time(Instant.parse("2025-12-24T17:01:00Z"))
-                .execute()
-                .shouldSucceed();
-
-        app.erp().returnsProduct()
-                .sku("SKU-123")
-                .unitPrice(20.00)
-                .execute()
-                .shouldSucceed();
-
-        app.tax().returnsTaxRate()
-                .country("GORA")
-                .taxRate(0.05)
-                .execute()
-                .shouldSucceed();
-
-        app.tax().getTaxRate()
-                .country("GORA")
-                .execute()
+        scenario
+                .given()
+                .clock()
+                .withTime(Instant.parse("2025-12-24T17:01:00Z"))
+                .and()
+                .product()
+                .withSku("SKU-123")
+                .withUnitPrice(20.00)
+                .and()
+                .taxRate()
+                .withCountry("GORA")
+                .withTaxRate(0.05)
+                .when()
+                .placeOrder()
+                .withOrderNumber("ORDER-1001")
+                .withSku("SKU-123")
+                .withQuantity(5)
+                .withCountry("GORA")
+                .then()
                 .shouldSucceed()
-                .country("GORA")
-                .taxRate(0.05);
-
-        app.shop().placeOrder().orderNumber("ORDER-1001")
-                .sku("SKU-123")
-                .quantity(5)
-                .country("GORA")
-                .execute()
-                .shouldSucceed();
-
-        app.shop().viewOrder().orderNumber("ORDER-1001").execute()
-                .shouldSucceed()
-                .originalPrice(100.00)
-                .discountRate(0.15);
+                .and()
+                .order("ORDER-1001")
+                .shouldHaveOriginalPrice(100.00)
+                .hasDiscountRate(0.15);
     }
 }
+

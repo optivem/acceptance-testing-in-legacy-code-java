@@ -88,6 +88,15 @@ public class OrderVerificationBuilder {
         return this;
     }
 
+    public OrderVerificationBuilder hasDiscountRate(double expectedDiscountRate) {
+        app.shop().viewOrder()
+                .orderNumber(orderNumber)
+                .execute()
+                .shouldSucceed()
+                .discountRate(expectedDiscountRate);
+        return this;
+    }
+
     public OrderVerificationBuilder hasDiscountAmountGreaterThanOrEqualToZero() {
         app.shop().viewOrder()
                 .orderNumber(orderNumber)
