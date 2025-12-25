@@ -3,6 +3,7 @@ package com.optivem.eshop.systemtest.e2etests.v6;
 import com.optivem.eshop.systemtest.base.v6.BaseScenarioDslTest;
 import com.optivem.eshop.systemtest.core.shop.ChannelType;
 import com.optivem.eshop.systemtest.core.shop.client.dtos.enums.OrderStatus;
+import com.optivem.eshop.systemtest.e2etests.commons.constants.Defaults;
 import com.optivem.eshop.systemtest.e2etests.commons.providers.EmptyArgumentsProvider;
 import com.optivem.testing.channels.Channel;
 import com.optivem.testing.channels.DataSource;
@@ -15,10 +16,11 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.stream.Stream;
 
+import static com.optivem.eshop.systemtest.e2etests.commons.constants.Defaults.ORDER_NUMBER;
+import static com.optivem.eshop.systemtest.e2etests.commons.constants.Defaults.SKU;
+
 public class GherkinMigratedE2eTest extends BaseScenarioDslTest {
 
-    private static final String ORDER_NUMBER = "order-number";
-    private static final String SKU = "sku";
 
     @Override
     protected ExternalSystemMode getFixedExternalSystemMode() {
