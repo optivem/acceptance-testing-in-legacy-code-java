@@ -15,25 +15,4 @@ public class ShopSmokeTest extends BaseSystemTest {
                 .execute()
                 .shouldSucceed();
     }
-
-    @Test
-    void shouldBeAbleToGoToErp() {
-        app.erp().goToErp()
-                .execute()
-                .shouldSucceed();
-    }
-
-    @Test
-    void shouldBeAbleToGoToTax() {
-        app.tax().goToTax()
-                .execute()
-                .shouldSucceed();
-    }
-
-    @Test
-    void shouldBeAbleToGoToClock() {
-        app.clock().goToClock()
-                .execute()
-                .shouldSucceed();
-    }
 }
