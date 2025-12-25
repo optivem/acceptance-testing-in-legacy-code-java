@@ -1,7 +1,7 @@
 package com.optivem.eshop.systemtest.e2etests.v6;
 
-import com.optivem.eshop.systemtest.base.v6.BaseScenarioDslTest;
 import com.optivem.eshop.systemtest.core.shop.ChannelType;
+import com.optivem.eshop.systemtest.e2etests.v6.base.BaseE2eTest;
 import com.optivem.testing.channels.Channel;
 import com.optivem.testing.channels.DataSource;
 import org.junit.jupiter.api.TestTemplate;
@@ -9,7 +9,7 @@ import org.junit.jupiter.api.TestTemplate;
 import static com.optivem.eshop.systemtest.e2etests.commons.constants.Defaults.ORDER_NUMBER;
 import static com.optivem.eshop.systemtest.e2etests.commons.constants.Defaults.SKU;
 
-public class CancelOrderNegativeTest extends BaseScenarioDslTest {
+public class CancelOrderNegativeTest extends BaseE2eTest {
 
     @TestTemplate
     @Channel({ChannelType.API})

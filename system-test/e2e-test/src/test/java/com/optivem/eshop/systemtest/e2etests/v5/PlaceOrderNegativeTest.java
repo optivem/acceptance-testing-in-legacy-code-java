@@ -8,9 +8,9 @@ import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import static com.optivem.eshop.systemtest.e2etests.commons.constants.Defaults.SKU;
+
 public class PlaceOrderNegativeTest extends BaseE2eTest {
-    private static final String ORDER_NUMBER = "order-number";
-    private static final String SKU = "sku";
 
     @TestTemplate
     @Channel({ChannelType.UI, ChannelType.API})

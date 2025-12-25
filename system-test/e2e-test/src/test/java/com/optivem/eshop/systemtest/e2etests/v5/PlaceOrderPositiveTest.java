@@ -7,9 +7,10 @@ import com.optivem.testing.channels.Channel;
 import com.optivem.testing.channels.DataSource;
 import org.junit.jupiter.api.TestTemplate;
 
+import static com.optivem.eshop.systemtest.e2etests.commons.constants.Defaults.ORDER_NUMBER;
+import static com.optivem.eshop.systemtest.e2etests.commons.constants.Defaults.SKU;
+
 public class PlaceOrderPositiveTest extends BaseE2eTest {
-    private static final String ORDER_NUMBER = "order-number";
-    private static final String SKU = "sku";
 
     @TestTemplate
     @Channel({ChannelType.UI, ChannelType.API})
