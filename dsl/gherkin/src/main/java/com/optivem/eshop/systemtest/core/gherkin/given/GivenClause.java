@@ -1,6 +1,7 @@
 package com.optivem.eshop.systemtest.core.gherkin.given;
 
 import com.optivem.eshop.systemtest.core.SystemDsl;
+import com.optivem.eshop.systemtest.core.gherkin.ScenarioDsl;
 import com.optivem.eshop.systemtest.core.gherkin.when.WhenClause;
 
 import java.util.ArrayList;
@@ -8,13 +9,16 @@ import java.util.List;
 
 public class GivenClause {
     private final SystemDsl app;
+    private final ScenarioDsl scenario;
     private final List<ProductBuilder> products = new ArrayList<>();
     private final List<OrderBuilder> orders = new ArrayList<>();
+    private final List<OrderBuilder> cancelledOrders = new ArrayList<>();
     private final List<ClockBuilder> clocks = new ArrayList<>();
     private final List<TaxRateBuilder> taxRates = new ArrayList<>();
 
-    public GivenClause(SystemDsl app) {
+    public GivenClause(SystemDsl app, ScenarioDsl scenario) {
         this.app = app;
+        this.scenario = scenario;
     }
 
     public ProductBuilder product() {
@@ -26,6 +30,12 @@ public class GivenClause {
     public OrderBuilder order() {
         var orderBuilder = new OrderBuilder(this);
         orders.add(orderBuilder);
+        return orderBuilder;
+    }
+
+    public OrderBuilder cancelledOrder() {
+        var orderBuilder = new OrderBuilder(this);
+        cancelledOrders.add(orderBuilder);
         return orderBuilder;
     }
 
@@ -43,7 +53,7 @@ public class GivenClause {
 
     public EmptyGivenClause noProducts() {
         // No products to create, return clause that allows .when()
-        return new EmptyGivenClause(app);
+        return new EmptyGivenClause(app, scenario);
     }
 
     public WhenClause when() {
@@ -64,8 +74,12 @@ public class GivenClause {
                     .shouldSucceed();
         }
 
-        // Collect all unique countries from orders
-        var countriesInOrders = orders.stream()
+        // Collect all unique countries from orders (including cancelled orders)
+        var allOrders = new ArrayList<OrderBuilder>();
+        allOrders.addAll(orders);
+        allOrders.addAll(cancelledOrders);
+
+        var countriesInOrders = allOrders.stream()
                 .map(OrderBuilder::getCountry)
                 .distinct()
                 .toList();
@@ -105,6 +119,23 @@ public class GivenClause {
                     .execute()
                     .shouldSucceed();
         }
-        return new WhenClause(app);
+
+        // Execute all cancelled order placements and cancellations
+        for (var order : cancelledOrders) {
+            app.shop().placeOrder()
+                    .orderNumber(order.getOrderNumber())
+                    .sku(order.getSku())
+                    .quantity(order.getQuantity())
+                    .country(order.getCountry())
+                    .execute()
+                    .shouldSucceed();
+
+            app.shop().cancelOrder()
+                    .orderNumber(order.getOrderNumber())
+                    .execute()
+                    .shouldSucceed();
+        }
+
+        return new WhenClause(app, scenario);
     }
 }

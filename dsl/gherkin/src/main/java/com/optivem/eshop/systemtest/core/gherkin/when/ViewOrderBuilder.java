@@ -1,14 +1,17 @@
 package com.optivem.eshop.systemtest.core.gherkin.when;
 
 import com.optivem.eshop.systemtest.core.SystemDsl;
+import com.optivem.eshop.systemtest.core.gherkin.ScenarioDsl;
 import com.optivem.eshop.systemtest.core.gherkin.then.ThenClause;
 
 public class ViewOrderBuilder {
     private final SystemDsl app;
+    private final ScenarioDsl scenario;
     private String orderNumber;
 
-    public ViewOrderBuilder(SystemDsl app) {
+    public ViewOrderBuilder(SystemDsl app, ScenarioDsl scenario) {
         this.app = app;
+        this.scenario = scenario;
     }
 
     public ViewOrderBuilder withOrderNumber(String orderNumber) {
@@ -21,6 +24,6 @@ public class ViewOrderBuilder {
                 .orderNumber(orderNumber)
                 .execute();
 
-        return new ThenClause(app, orderNumber, result);
+        return new ThenClause(app, scenario, orderNumber, result);
     }
 }

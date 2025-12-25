@@ -31,24 +31,18 @@ public class CancelOrderNegativeTest extends BaseAcceptanceTest {
     @TestTemplate
     @Channel({ChannelType.API})
     void shouldNotCancelAlreadyCancelledOrder() {
+        // First, place and cancel an order
         scenario
                 .given()
                 .product()
                 .withSku(SKU)
                 .and().taxRate().withCountry("US").withTaxRate(0.0)
-                .and().order()
+                .and()
+                .cancelledOrder()
                 .withOrderNumber(ORDER_NUMBER)
                 .withSku(SKU)
-                .when()
-                .cancelOrder()
-                .withOrderNumber(ORDER_NUMBER)
-                .then()
-                .shouldSucceed();
-
-        // Second cancellation should fail
-        scenario
-                .given()
-                .noProducts()
+                .withQuantity(5)
+                .withCountry("US")
                 .when()
                 .cancelOrder()
                 .withOrderNumber(ORDER_NUMBER)

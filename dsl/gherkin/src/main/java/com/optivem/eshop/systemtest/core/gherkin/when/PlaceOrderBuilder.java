@@ -1,6 +1,7 @@
 package com.optivem.eshop.systemtest.core.gherkin.when;
 
 import com.optivem.eshop.systemtest.core.SystemDsl;
+import com.optivem.eshop.systemtest.core.gherkin.ScenarioDsl;
 import com.optivem.eshop.systemtest.core.gherkin.then.ThenClause;
 
 public class PlaceOrderBuilder {
@@ -9,6 +10,7 @@ public class PlaceOrderBuilder {
     private static final String DEFAULT_COUNTRY = "US";
 
     private final SystemDsl app;
+    private final ScenarioDsl scenario;
     private String orderNumber;
     private String sku = DEFAULT_SKU;
     private String quantityString;
@@ -18,8 +20,9 @@ public class PlaceOrderBuilder {
     private boolean quantityExplicitlySet = false;
     private boolean countryExplicitlySet = false;
 
-    public PlaceOrderBuilder(SystemDsl app) {
+    public PlaceOrderBuilder(SystemDsl app, ScenarioDsl scenario) {
         this.app = app;
+        this.scenario = scenario;
     }
 
     public PlaceOrderBuilder withOrderNumber(String orderNumber) {
@@ -92,6 +95,6 @@ public class PlaceOrderBuilder {
 
         var result = placeOrder.execute();
 
-        return new ThenClause(app, orderNumber, result);
+        return new ThenClause(app, scenario, orderNumber, result);
     }
 }

@@ -1,24 +1,28 @@
 package com.optivem.eshop.systemtest.core.gherkin.then;
 
 import com.optivem.eshop.systemtest.core.SystemDsl;
+import com.optivem.eshop.systemtest.core.gherkin.ScenarioDsl;
 import com.optivem.eshop.systemtest.core.shop.dsl.commands.base.ShopUseCaseResult;
 
 public class ThenClause {
     private final SystemDsl app;
+    private final ScenarioDsl scenario;
     private final String orderNumber;
     private final ShopUseCaseResult<?, ?> result;
 
-    public ThenClause(SystemDsl app, String orderNumber) {
-        this(app, orderNumber, null);
+    public ThenClause(SystemDsl app, ScenarioDsl scenario, String orderNumber) {
+        this(app, scenario, orderNumber, null);
     }
 
-    public ThenClause(SystemDsl app, String orderNumber, ShopUseCaseResult<?, ?> result) {
+    public ThenClause(SystemDsl app, ScenarioDsl scenario, String orderNumber, ShopUseCaseResult<?, ?> result) {
         this.app = app;
+        this.scenario = scenario;
         this.orderNumber = orderNumber;
         this.result = result;
     }
 
     public SuccessVerificationBuilder shouldSucceed() {
+        scenario.markAsExecuted();
         if (result != null) {
             result.shouldSucceed();
         }
@@ -26,6 +30,7 @@ public class ThenClause {
     }
 
     public FailureVerificationBuilder shouldFail() {
+        scenario.markAsExecuted();
         return new FailureVerificationBuilder(app, orderNumber, result);
     }
 }

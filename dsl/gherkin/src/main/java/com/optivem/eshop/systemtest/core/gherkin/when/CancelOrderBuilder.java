@@ -1,14 +1,17 @@
 package com.optivem.eshop.systemtest.core.gherkin.when;
 
 import com.optivem.eshop.systemtest.core.SystemDsl;
+import com.optivem.eshop.systemtest.core.gherkin.ScenarioDsl;
 import com.optivem.eshop.systemtest.core.gherkin.then.ThenClause;
 
 public class CancelOrderBuilder {
     private final SystemDsl app;
+    private final ScenarioDsl scenario;
     private String orderNumber;
 
-    public CancelOrderBuilder(SystemDsl app) {
+    public CancelOrderBuilder(SystemDsl app, ScenarioDsl scenario) {
         this.app = app;
+        this.scenario = scenario;
     }
 
     public CancelOrderBuilder withOrderNumber(String orderNumber) {
@@ -22,6 +25,6 @@ public class CancelOrderBuilder {
                 .orderNumber(orderNumber)
                 .execute();
 
-        return new ThenClause(app, orderNumber);
+        return new ThenClause(app, scenario, orderNumber);
     }
 }
