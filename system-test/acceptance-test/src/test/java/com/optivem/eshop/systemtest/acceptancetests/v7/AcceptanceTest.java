@@ -1,4 +1,4 @@
-package com.optivem.eshop.systemtest.acceptancetests;
+package com.optivem.eshop.systemtest.acceptancetests.v7;
 
 import com.optivem.eshop.systemtest.base.v5.BaseSystemDslTest;
 import com.optivem.eshop.systemtest.core.shop.ChannelType;
