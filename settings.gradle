@@ -9,6 +9,8 @@ include 'libs:optivem-testing-channels'
 include 'libs:optivem-testing-dsl'
 include 'libs:optivem-wiremock'
 
+include 'test-infrastructure'
+
 include 'dsl'
 include 'dsl:system'
 include 'dsl:gherkin'

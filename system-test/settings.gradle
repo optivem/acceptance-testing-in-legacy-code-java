@@ -1,6 +1,5 @@
 rootProject.name = 'system-test'
 
-include 'test-infrastructure'
 include 'acceptance-test'
 include 'smoke-test'
 include 'e2e-test'
@@ -20,6 +19,7 @@ includeBuild('..') {
         substitute module('com.optivem.eshop.systemtest:core-erp') using project(':core:erp')
         substitute module('com.optivem.eshop.systemtest:core-shop') using project(':core:shop')
         substitute module('com.optivem.eshop.systemtest:core-tax') using project(':core:tax')
+        substitute module('com.optivem.eshop.systemtest:test-infrastructure') using project(':test-infrastructure')
     }
 }
 
