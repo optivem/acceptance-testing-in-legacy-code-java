@@ -31,23 +31,15 @@ public class CancelOrderNegativeTest extends BaseE2eTest {
     @TestTemplate
     @Channel({ChannelType.API})
     void shouldNotCancelAlreadyCancelledOrder() {
+        // First, place and cancel an order
         scenario
                 .given()
                 .product()
                 .withSku(SKU)
-                .and().order()
+                .and()
+                .cancelledOrder()
                 .withOrderNumber(ORDER_NUMBER)
                 .withSku(SKU)
-                .when()
-                .cancelOrder()
-                .withOrderNumber(ORDER_NUMBER)
-                .then()
-                .shouldSucceed();
-
-        // Second cancellation should fail
-        scenario
-                .given()
-                .noProducts()
                 .when()
                 .cancelOrder()
                 .withOrderNumber(ORDER_NUMBER)

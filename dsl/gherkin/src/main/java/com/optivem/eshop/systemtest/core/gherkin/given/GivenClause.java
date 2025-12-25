@@ -66,7 +66,6 @@ public class GivenClause {
         // If there are orders but no clock configured, set up a default clock
         if (!allOrders.isEmpty() && clocks.isEmpty()) {
             app.clock().returnsTime()
-                    .time(java.time.Instant.parse("2024-01-01T12:00:00Z"))
                     .execute()
                     .shouldSucceed();
         }
