@@ -3,24 +3,27 @@ package com.optivem.eshop.systemtest.core.gherkin.given;
 import com.optivem.eshop.systemtest.core.SystemDsl;
 import com.optivem.eshop.systemtest.core.gherkin.ScenarioDsl;
 import com.optivem.eshop.systemtest.core.gherkin.when.WhenClause;
+import com.optivem.eshop.systemtest.core.shop.dsl.commands.CancelOrder;
 import com.optivem.eshop.systemtest.core.shop.dsl.commands.PlaceOrder;
 
 public class OrderBuilder {
     private final GivenClause givenClause;
     private final SystemDsl app;
     private final PlaceOrder placeOrder;
-    private String orderNumber;
-    private String country; // Keep for cross-cutting logic in GivenClause
+    private final CancelOrder cancelOrder;
+    private boolean isCancelled;
 
     public OrderBuilder(GivenClause givenClause, SystemDsl app) {
         this.givenClause = givenClause;
         this.app = app;
         this.placeOrder = app.shop().placeOrder();
-        // placeOrder has default country "US"
+        this.cancelOrder = app.shop().cancelOrder();
+        this.isCancelled = false;
     }
 
     public OrderBuilder withOrderNumber(String orderNumber) {
-        this.orderNumber = orderNumber;
+        this.placeOrder.orderNumber(orderNumber);
+        this.cancelOrder.orderNumber(orderNumber);
         return this;
     }
 
@@ -35,8 +38,12 @@ public class OrderBuilder {
     }
 
     public OrderBuilder withCountry(String country) {
-        this.country = country;
         placeOrder.country(country);
+        return this;
+    }
+
+    public OrderBuilder cancelled() {
+        isCancelled = true;
         return this;
     }
 
@@ -49,21 +56,10 @@ public class OrderBuilder {
     }
 
     void execute(SystemDsl app) {
-        placeOrder.orderNumber(orderNumber)
-                .execute()
-                .shouldSucceed();
-    }
+        placeOrder.execute().shouldSucceed();
 
-    void executeAndCancel(SystemDsl app) {
-        execute(app);
-        app.shop().cancelOrder()
-                .orderNumber(this.orderNumber)
-                .execute()
-                .shouldSucceed();
-    }
-
-    String getCountry() {
-        // If country was explicitly set, return it; otherwise return the default from PlaceOrder
-        return country != null ? country : "US";
+        if(isCancelled) {
+            cancelOrder.execute().shouldSucceed();
+        }
     }
 }

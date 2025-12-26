@@ -7,7 +7,6 @@ import com.optivem.eshop.systemtest.core.tax.dsl.commands.ReturnsTaxRate;
 public class TaxRateBuilder {
     private final GivenClause givenClause;
     private final ReturnsTaxRate returnsTaxRate;
-    private String country; // Keep for cross-cutting logic in GivenClause
 
     public TaxRateBuilder(GivenClause givenClause, SystemDsl app) {
         this.givenClause = givenClause;
@@ -15,7 +14,6 @@ public class TaxRateBuilder {
     }
 
     public TaxRateBuilder withCountry(String country) {
-        this.country = country;
         returnsTaxRate.country(country);
         return this;
     }
@@ -35,10 +33,6 @@ public class TaxRateBuilder {
 
     void execute(SystemDsl app) {
         returnsTaxRate.execute().shouldSucceed();
-    }
-
-    String getCountry() {
-        return country;
     }
 }
 
