@@ -25,25 +25,25 @@ public class GivenClause {
     }
 
     public ProductBuilder product() {
-        var productBuilder = new ProductBuilder(this, app);
+        var productBuilder = new ProductBuilder(this);
         products.add(productBuilder);
         return productBuilder;
     }
 
     public OrderBuilder order() {
-        var orderBuilder = new OrderBuilder(this, app);
+        var orderBuilder = new OrderBuilder(this);
         orders.add(orderBuilder);
         return orderBuilder;
     }
 
     public ClockBuilder clock() {
-        var clockBuilder = new ClockBuilder(this, app);
+        var clockBuilder = new ClockBuilder(this);
         clocks.add(clockBuilder);
         return clockBuilder;
     }
 
     public TaxRateBuilder taxRate() {
-        var taxRateBuilder = new TaxRateBuilder(this, app);
+        var taxRateBuilder = new TaxRateBuilder(this);
         taxRates.add(taxRateBuilder);
         return taxRateBuilder;
     }

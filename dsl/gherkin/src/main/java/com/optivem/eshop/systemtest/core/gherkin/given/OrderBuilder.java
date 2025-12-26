@@ -3,42 +3,37 @@ package com.optivem.eshop.systemtest.core.gherkin.given;
 import com.optivem.eshop.systemtest.core.SystemDsl;
 import com.optivem.eshop.systemtest.core.gherkin.ScenarioDsl;
 import com.optivem.eshop.systemtest.core.gherkin.when.WhenClause;
-import com.optivem.eshop.systemtest.core.shop.dsl.commands.CancelOrder;
-import com.optivem.eshop.systemtest.core.shop.dsl.commands.PlaceOrder;
 
 public class OrderBuilder {
     private final GivenClause givenClause;
-    private final SystemDsl app;
-    private final PlaceOrder placeOrder;
-    private final CancelOrder cancelOrder;
+    private String orderNumber;
+    private String sku;
+    private int quantity = 1;
+    private String country = "US";
     private boolean isCancelled;
 
-    public OrderBuilder(GivenClause givenClause, SystemDsl app) {
+    public OrderBuilder(GivenClause givenClause) {
         this.givenClause = givenClause;
-        this.app = app;
-        this.placeOrder = app.shop().placeOrder();
-        this.cancelOrder = app.shop().cancelOrder();
         this.isCancelled = false;
     }
 
     public OrderBuilder withOrderNumber(String orderNumber) {
-        this.placeOrder.orderNumber(orderNumber);
-        this.cancelOrder.orderNumber(orderNumber);
+        this.orderNumber = orderNumber;
         return this;
     }
 
     public OrderBuilder withSku(String sku) {
-        placeOrder.sku(sku);
+        this.sku = sku;
         return this;
     }
 
     public OrderBuilder withQuantity(int quantity) {
-        placeOrder.quantity(quantity);
+        this.quantity = quantity;
         return this;
     }
 
     public OrderBuilder withCountry(String country) {
-        placeOrder.country(country);
+        this.country = country;
         return this;
     }
 
@@ -56,10 +51,23 @@ public class OrderBuilder {
     }
 
     void execute(SystemDsl app) {
-        placeOrder.execute().shouldSucceed();
+        app.shop().placeOrder()
+                .orderNumber(this.orderNumber)
+                .sku(this.sku)
+                .quantity(this.quantity)
+                .country(this.country)
+                .execute()
+                .shouldSucceed();
 
         if(isCancelled) {
-            cancelOrder.execute().shouldSucceed();
+            app.shop().cancelOrder()
+                    .orderNumber(this.orderNumber)
+                    .execute()
+                    .shouldSucceed();
         }
+    }
+
+    String getCountry() {
+        return country;
     }
 }
