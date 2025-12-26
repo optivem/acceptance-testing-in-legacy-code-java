@@ -14,6 +14,7 @@ public class CancelOrderBuilder {
     public CancelOrderBuilder(SystemDsl app, ScenarioDsl scenario) {
         this.app = app;
         this.scenario = scenario;
+        
         withOrderNumber(DEFAULT_ORDER_NUMBER);
     }
 
@@ -23,7 +24,6 @@ public class CancelOrderBuilder {
     }
 
     public ThenClause then() {
-        // Execute the cancel order
         var result = app.shop().cancelOrder()
                 .orderNumber(orderNumber)
                 .execute();

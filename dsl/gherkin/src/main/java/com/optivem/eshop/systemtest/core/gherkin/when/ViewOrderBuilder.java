@@ -15,6 +15,7 @@ public class ViewOrderBuilder {
     public ViewOrderBuilder(SystemDsl app, ScenarioDsl scenario) {
         this.app = app;
         this.scenario = scenario;
+        
         withOrderNumber(DEFAULT_ORDER_NUMBER);
     }
 
