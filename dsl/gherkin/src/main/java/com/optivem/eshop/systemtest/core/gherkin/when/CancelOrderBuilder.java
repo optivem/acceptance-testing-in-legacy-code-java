@@ -24,10 +24,10 @@ public class CancelOrderBuilder {
 
     public ThenClause then() {
         // Execute the cancel order
-        app.shop().cancelOrder()
+        var result = app.shop().cancelOrder()
                 .orderNumber(orderNumber)
                 .execute();
 
-        return new ThenClause(app, scenario, orderNumber);
+        return new ThenClause(app, scenario, orderNumber, result);
     }
 }

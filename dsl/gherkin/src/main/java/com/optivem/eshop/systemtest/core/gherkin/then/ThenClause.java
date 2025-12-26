@@ -33,7 +33,7 @@ public class ThenClause {
 
     public FailureVerificationBuilder shouldFail() {
         scenario.markAsExecuted();
-        return new FailureVerificationBuilder(app, orderNumber, result);
+        return new FailureVerificationBuilder(app, scenario, orderNumber, result);
     }
 
     public OrderVerificationBuilder order(String orderNumber) {

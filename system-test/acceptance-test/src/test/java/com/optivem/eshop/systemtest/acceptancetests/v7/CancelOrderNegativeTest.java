@@ -29,7 +29,9 @@ public class CancelOrderNegativeTest extends BaseAcceptanceTest {
         scenario
                 .given().order().withStatus(OrderStatus.CANCELLED)
                 .when().cancelOrder()
-                .then().shouldFail().errorMessage("Order has already been cancelled");
+                .then().shouldFail().errorMessage("Order has already been cancelled")
+                .and().order().hasStatus(OrderStatus.CANCELLED);
     }
+
 }
 
