@@ -43,7 +43,13 @@ tasks.named('test') {
     systemProperty 'externalSystemMode', System.getProperty('externalSystemMode')
 
     // Enable parallel test execution at Gradle level
-    maxParallelForks = Runtime.runtime.availableProcessors()
+    // But run isolated tests sequentially to avoid interference
+    def includeTags = System.getProperty('includeTags')
+    if (includeTags?.contains('isolated')) {
+        maxParallelForks = 1
+    } else {
+        maxParallelForks = Runtime.runtime.availableProcessors()
+    }
 
     testLogging {
         events "passed", "skipped", "failed"
