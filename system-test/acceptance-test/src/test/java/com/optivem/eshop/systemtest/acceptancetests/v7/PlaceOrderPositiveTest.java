@@ -4,7 +4,10 @@ import com.optivem.eshop.systemtest.acceptancetests.v7.base.BaseAcceptanceTest;
 import com.optivem.eshop.systemtest.core.shop.ChannelType;
 import com.optivem.testing.channels.Channel;
 import com.optivem.testing.channels.DataSource;
+import com.optivem.testing.time.Time;
 import org.junit.jupiter.api.TestTemplate;
+
+import java.time.Instant;
 
 public class PlaceOrderPositiveTest extends BaseAcceptanceTest {
 
@@ -15,7 +18,7 @@ public class PlaceOrderPositiveTest extends BaseAcceptanceTest {
                 .given().product().withSku("ABC").withUnitPrice(20.00)
                 .and().taxRate().withCountry("US").withTaxRate(0.10)
                 .when().placeOrder().withSku("ABC").withQuantity(5).withCountry("US")
-                .then().shouldSucceed();;
+                .then().shouldSucceed();
     }
 
     @TestTemplate
@@ -95,6 +98,16 @@ public class PlaceOrderPositiveTest extends BaseAcceptanceTest {
         scenario
                 .when().placeOrder()
                 .then().order().hasTotalPriceGreaterThanZero();
+    }
+
+    @TestTemplate
+    @Channel({ChannelType.UI, ChannelType.API})
+    @Time
+    void discountRateShouldBe15percentWhenTimeAfter5pm() {
+        scenario
+                .given().clock().withTime(Instant.parse("2025-12-24T17:01:00Z"))
+                .when().placeOrder()
+                .then().order().hasDiscountRate(0.15);
     }
 }
 
