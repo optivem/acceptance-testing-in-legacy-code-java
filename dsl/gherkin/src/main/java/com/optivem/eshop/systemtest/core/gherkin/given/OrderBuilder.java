@@ -3,16 +3,20 @@ package com.optivem.eshop.systemtest.core.gherkin.given;
 import com.optivem.eshop.systemtest.core.SystemDsl;
 import com.optivem.eshop.systemtest.core.gherkin.ScenarioDsl;
 import com.optivem.eshop.systemtest.core.gherkin.when.WhenClause;
+import com.optivem.eshop.systemtest.core.shop.dsl.commands.PlaceOrder;
 
 public class OrderBuilder {
     private final GivenClause givenClause;
+    private final SystemDsl app;
+    private final PlaceOrder placeOrder;
     private String orderNumber;
-    private String sku;
-    private int quantity = 1; // Default to 1 if not specified
-    private String country = "US"; // Default country
+    private String country; // Keep for cross-cutting logic in GivenClause
 
-    public OrderBuilder(GivenClause givenClause) {
+    public OrderBuilder(GivenClause givenClause, SystemDsl app) {
         this.givenClause = givenClause;
+        this.app = app;
+        this.placeOrder = app.shop().placeOrder();
+        // placeOrder has default country "US"
     }
 
     public OrderBuilder withOrderNumber(String orderNumber) {
@@ -21,17 +25,18 @@ public class OrderBuilder {
     }
 
     public OrderBuilder withSku(String sku) {
-        this.sku = sku;
+        placeOrder.sku(sku);
         return this;
     }
 
     public OrderBuilder withQuantity(int quantity) {
-        this.quantity = quantity;
+        placeOrder.quantity(quantity);
         return this;
     }
 
     public OrderBuilder withCountry(String country) {
         this.country = country;
+        placeOrder.country(country);
         return this;
     }
 
@@ -44,11 +49,7 @@ public class OrderBuilder {
     }
 
     void execute(SystemDsl app) {
-        app.shop().placeOrder()
-                .orderNumber(this.orderNumber)
-                .sku(this.sku)
-                .quantity(this.quantity)
-                .country(this.country)
+        placeOrder.orderNumber(orderNumber)
                 .execute()
                 .shouldSucceed();
     }
@@ -62,6 +63,7 @@ public class OrderBuilder {
     }
 
     String getCountry() {
-        return country;
+        // If country was explicitly set, return it; otherwise return the default from PlaceOrder
+        return country != null ? country : "US";
     }
 }

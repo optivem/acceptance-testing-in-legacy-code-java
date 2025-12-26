@@ -1,20 +1,22 @@
 package com.optivem.eshop.systemtest.core.gherkin.given;
 
 import com.optivem.eshop.systemtest.core.SystemDsl;
+import com.optivem.eshop.systemtest.core.clock.dsl.commands.ReturnsTime;
 import com.optivem.eshop.systemtest.core.gherkin.when.WhenClause;
 
 import java.time.Instant;
 
 public class ClockBuilder {
     private final GivenClause givenClause;
-    private Instant time;
+    private final ReturnsTime returnsTime;
 
-    public ClockBuilder(GivenClause givenClause) {
+    public ClockBuilder(GivenClause givenClause, SystemDsl app) {
         this.givenClause = givenClause;
+        this.returnsTime = app.clock().returnsTime();
     }
 
     public ClockBuilder withTime(Instant time) {
-        this.time = time;
+        returnsTime.time(time);
         return this;
     }
 
@@ -27,11 +29,7 @@ public class ClockBuilder {
     }
 
     void execute(SystemDsl app) {
-        var clockSetup = app.clock().returnsTime();
-        if (this.time != null) {
-            clockSetup.time(this.time);
-        }
-        clockSetup.execute().shouldSucceed();
+        returnsTime.execute().shouldSucceed();
     }
 }
 

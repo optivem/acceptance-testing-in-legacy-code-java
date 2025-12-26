@@ -22,31 +22,31 @@ public class GivenClause {
     }
 
     public ProductBuilder product() {
-        var productBuilder = new ProductBuilder(this);
+        var productBuilder = new ProductBuilder(this, app);
         products.add(productBuilder);
         return productBuilder;
     }
 
     public OrderBuilder order() {
-        var orderBuilder = new OrderBuilder(this);
+        var orderBuilder = new OrderBuilder(this, app);
         orders.add(orderBuilder);
         return orderBuilder;
     }
 
     public OrderBuilder cancelledOrder() {
-        var orderBuilder = new OrderBuilder(this);
+        var orderBuilder = new OrderBuilder(this, app);
         cancelledOrders.add(orderBuilder);
         return orderBuilder;
     }
 
     public ClockBuilder clock() {
-        var clockBuilder = new ClockBuilder(this);
+        var clockBuilder = new ClockBuilder(this, app);
         clocks.add(clockBuilder);
         return clockBuilder;
     }
 
     public TaxRateBuilder taxRate() {
-        var taxRateBuilder = new TaxRateBuilder(this);
+        var taxRateBuilder = new TaxRateBuilder(this, app);
         taxRates.add(taxRateBuilder);
         return taxRateBuilder;
     }

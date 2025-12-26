@@ -2,23 +2,26 @@ package com.optivem.eshop.systemtest.core.gherkin.given;
 
 import com.optivem.eshop.systemtest.core.SystemDsl;
 import com.optivem.eshop.systemtest.core.gherkin.when.WhenClause;
+import com.optivem.eshop.systemtest.core.tax.dsl.commands.ReturnsTaxRate;
 
 public class TaxRateBuilder {
     private final GivenClause givenClause;
-    private String country;
-    private double taxRate;
+    private final ReturnsTaxRate returnsTaxRate;
+    private String country; // Keep for cross-cutting logic in GivenClause
 
-    public TaxRateBuilder(GivenClause givenClause) {
+    public TaxRateBuilder(GivenClause givenClause, SystemDsl app) {
         this.givenClause = givenClause;
+        this.returnsTaxRate = app.tax().returnsTaxRate();
     }
 
     public TaxRateBuilder withCountry(String country) {
         this.country = country;
+        returnsTaxRate.country(country);
         return this;
     }
 
     public TaxRateBuilder withTaxRate(double taxRate) {
-        this.taxRate = taxRate;
+        returnsTaxRate.taxRate(taxRate);
         return this;
     }
 
@@ -31,11 +34,7 @@ public class TaxRateBuilder {
     }
 
     void execute(SystemDsl app) {
-        app.tax().returnsTaxRate()
-                .country(this.country)
-                .taxRate(this.taxRate)
-                .execute()
-                .shouldSucceed();
+        returnsTaxRate.execute().shouldSucceed();
     }
 
     String getCountry() {

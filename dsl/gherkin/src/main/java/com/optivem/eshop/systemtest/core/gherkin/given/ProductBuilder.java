@@ -1,29 +1,30 @@
 package com.optivem.eshop.systemtest.core.gherkin.given;
 
 import com.optivem.eshop.systemtest.core.SystemDsl;
+import com.optivem.eshop.systemtest.core.erp.dsl.commands.ReturnsProduct;
 import com.optivem.eshop.systemtest.core.gherkin.when.WhenClause;
 
 public class ProductBuilder {
     private final GivenClause givenClause;
-    private String sku;
-    private double unitPrice;
+    private final ReturnsProduct returnsProduct;
 
-    public ProductBuilder(GivenClause givenClause) {
+    public ProductBuilder(GivenClause givenClause, SystemDsl app) {
         this.givenClause = givenClause;
+        this.returnsProduct = app.erp().returnsProduct();
     }
 
     public ProductBuilder withSku(String sku) {
-        this.sku = sku;
+        returnsProduct.sku(sku);
         return this;
     }
 
     public ProductBuilder withUnitPrice(double unitPrice) {
-        this.unitPrice = unitPrice;
+        returnsProduct.unitPrice(unitPrice);
         return this;
     }
 
     public ProductBuilder withUnitPrice(String unitPrice) {
-        this.unitPrice = Double.parseDouble(unitPrice);
+        returnsProduct.unitPrice(unitPrice);
         return this;
     }
 
@@ -36,10 +37,6 @@ public class ProductBuilder {
     }
 
     void execute(SystemDsl app) {
-        app.erp().returnsProduct()
-                .sku(this.sku)
-                .unitPrice(this.unitPrice)
-                .execute()
-                .shouldSucceed();
+        returnsProduct.execute().shouldSucceed();
     }
 }
