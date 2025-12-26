@@ -8,7 +8,7 @@ import static com.optivem.eshop.systemtest.core.gherkin.GherkinDefaults.*;
 public class TaxRateBuilder {
     private final GivenClause givenClause;
     private String country;
-    private double taxRate;
+    private String taxRate;
 
     public TaxRateBuilder(GivenClause givenClause) {
         this.givenClause = givenClause;
@@ -21,9 +21,13 @@ public class TaxRateBuilder {
         return this;
     }
 
-    public TaxRateBuilder withTaxRate(double taxRate) {
+    public TaxRateBuilder withTaxRate(String taxRate) {
         this.taxRate = taxRate;
         return this;
+    }
+
+    public TaxRateBuilder withTaxRate(double taxRate) {
+        return withTaxRate(String.valueOf(taxRate));
     }
 
     public GivenClause and() {

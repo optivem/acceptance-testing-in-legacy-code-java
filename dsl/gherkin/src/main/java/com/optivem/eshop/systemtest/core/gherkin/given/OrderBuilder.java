@@ -10,7 +10,7 @@ public class OrderBuilder {
 
     private String orderNumber;
     private String sku;
-    private int quantity;
+    private String quantity;
     private String country;
     private boolean isCancelled;
 
@@ -34,9 +34,13 @@ public class OrderBuilder {
         return this;
     }
 
-    public OrderBuilder withQuantity(int quantity) {
+    public OrderBuilder withQuantity(String quantity) {
         this.quantity = quantity;
         return this;
+    }
+
+    public OrderBuilder withQuantity(int quantity) {
+        return withQuantity(String.valueOf(quantity));
     }
 
     public OrderBuilder withCountry(String country) {

@@ -4,6 +4,8 @@ import com.optivem.eshop.systemtest.core.SystemDsl;
 import com.optivem.eshop.systemtest.core.gherkin.ScenarioDsl;
 import com.optivem.eshop.systemtest.core.gherkin.then.ThenClause;
 
+import static com.optivem.eshop.systemtest.core.gherkin.GherkinDefaults.DEFAULT_ORDER_NUMBER;
+
 public class CancelOrderBuilder {
     private final SystemDsl app;
     private final ScenarioDsl scenario;
@@ -12,6 +14,7 @@ public class CancelOrderBuilder {
     public CancelOrderBuilder(SystemDsl app, ScenarioDsl scenario) {
         this.app = app;
         this.scenario = scenario;
+        withOrderNumber(DEFAULT_ORDER_NUMBER);
     }
 
     public CancelOrderBuilder withOrderNumber(String orderNumber) {

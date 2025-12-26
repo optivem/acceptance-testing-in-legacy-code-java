@@ -25,12 +25,9 @@ public class CancelOrderNegativeTest extends BaseAcceptanceTest {
     @TestTemplate
     @Channel({ChannelType.API})
     void shouldNotCancelAlreadyCancelledOrder() {
-        // First, place and cancel an order
         scenario
-                .given().product().withSku(SKU)
-                .and().taxRate().withCountry("US").withTaxRate(0.0)
-                .and().order().withOrderNumber(ORDER_NUMBER).withSku(SKU).withQuantity(5).withCountry("US").cancelled()
-                .when().cancelOrder().withOrderNumber(ORDER_NUMBER)
+                .given().order().cancelled()
+                .when().cancelOrder()
                 .then().shouldFail().errorMessage("Order has already been cancelled");
     }
 }

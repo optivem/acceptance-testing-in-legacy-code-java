@@ -53,6 +53,18 @@ public class GivenClause {
             clock.execute(app);
         }
 
+        // If we have orders but no products, add a default product
+        if (!orders.isEmpty() && products.isEmpty()) {
+            var defaultProduct = new ProductBuilder(this);
+            products.add(defaultProduct);
+        }
+
+        // If we have orders but no tax rates, add a default tax rate
+        if (!orders.isEmpty() && taxRates.isEmpty()) {
+            var defaultTaxRate = new TaxRateBuilder(this);
+            taxRates.add(defaultTaxRate);
+        }
+
         for (var product : products) {
             product.execute(app);
         }
@@ -66,5 +78,13 @@ public class GivenClause {
         }
 
         return new WhenClause(app, scenario);
+    }
+
+    public boolean hasProducts() {
+        return !products.isEmpty();
+    }
+
+    public boolean hasTaxRates() {
+        return !taxRates.isEmpty();
     }
 }
