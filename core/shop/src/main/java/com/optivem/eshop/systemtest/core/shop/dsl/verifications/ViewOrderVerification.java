@@ -167,5 +167,12 @@ public class ViewOrderVerification extends ResponseVerification<GetOrderResponse
                 .isGreaterThan(BigDecimal.ZERO);
         return this;
     }
+
+    public void orderNumberHasPrefix(String expectedPrefix) {
+        var actualOrderNumber = response.getOrderNumber();
+        assertThat(actualOrderNumber)
+                .withFailMessage("Expected order number to start with '%s', but was: %s", expectedPrefix, actualOrderNumber)
+                .startsWith(expectedPrefix);
+    }
 }
 

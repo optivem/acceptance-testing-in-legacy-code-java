@@ -2,58 +2,40 @@ package com.optivem.eshop.systemtest.core.gherkin.then;
 
 import com.optivem.eshop.systemtest.core.SystemDsl;
 import com.optivem.eshop.systemtest.core.shop.client.dtos.enums.OrderStatus;
+import com.optivem.eshop.systemtest.core.shop.dsl.verifications.ViewOrderVerification;
 
 public class OrderVerificationBuilder {
-    private final SystemDsl app;
-    private final String orderNumber;
+    private final ViewOrderVerification orderVerification;
 
     public OrderVerificationBuilder(SystemDsl app, String orderNumber) {
-        this.app = app;
-        this.orderNumber = orderNumber;
+        this.orderVerification = app.shop().viewOrder()
+                .orderNumber(orderNumber)
+                .execute()
+                .shouldSucceed();
     }
 
     public OrderVerificationBuilder hasSku(String expectedSku) {
-        app.shop().viewOrder()
-                .orderNumber(orderNumber)
-                .execute()
-                .shouldSucceed()
-                .sku(expectedSku);
+        orderVerification.sku(expectedSku);
         return this;
     }
 
     public OrderVerificationBuilder hasQuantity(int expectedQuantity) {
-        app.shop().viewOrder()
-                .orderNumber(orderNumber)
-                .execute()
-                .shouldSucceed()
-                .quantity(expectedQuantity);
+        orderVerification.quantity(expectedQuantity);
         return this;
     }
 
     public OrderVerificationBuilder hasCountry(String expectedCountry) {
-        app.shop().viewOrder()
-                .orderNumber(orderNumber)
-                .execute()
-                .shouldSucceed()
-                .country(expectedCountry);
+        orderVerification.country(expectedCountry);
         return this;
     }
 
     public OrderVerificationBuilder hasUnitPrice(double expectedUnitPrice) {
-        app.shop().viewOrder()
-                .orderNumber(orderNumber)
-                .execute()
-                .shouldSucceed()
-                .unitPrice(expectedUnitPrice);
+        orderVerification.unitPrice(expectedUnitPrice);
         return this;
     }
 
     public OrderVerificationBuilder shouldHaveOriginalPrice(double expectedOriginalPrice) {
-        app.shop().viewOrder()
-                .orderNumber(orderNumber)
-                .execute()
-                .shouldSucceed()
-                .originalPrice(expectedOriginalPrice);
+        orderVerification.originalPrice(expectedOriginalPrice);
         return this;
     }
 
@@ -62,90 +44,52 @@ public class OrderVerificationBuilder {
     }
 
     public OrderVerificationBuilder hasTotalPrice(double expectedTotalPrice) {
-        app.shop().viewOrder()
-                .orderNumber(orderNumber)
-                .execute()
-                .shouldSucceed()
-                .totalPriceGreaterThanZero();
+        orderVerification.totalPriceGreaterThanZero();
         return this;
     }
 
     public OrderVerificationBuilder hasStatus(OrderStatus expectedStatus) {
-        app.shop().viewOrder()
-                .orderNumber(orderNumber)
-                .execute()
-                .shouldSucceed()
-                .status(expectedStatus);
+        orderVerification.status(expectedStatus);
         return this;
     }
 
     public OrderVerificationBuilder hasDiscountRateGreaterThanOrEqualToZero() {
-        app.shop().viewOrder()
-                .orderNumber(orderNumber)
-                .execute()
-                .shouldSucceed()
-                .discountRateGreaterThanOrEqualToZero();
+        orderVerification.discountRateGreaterThanOrEqualToZero();
         return this;
     }
 
     public OrderVerificationBuilder hasDiscountRate(double expectedDiscountRate) {
-        app.shop().viewOrder()
-                .orderNumber(orderNumber)
-                .execute()
-                .shouldSucceed()
-                .discountRate(expectedDiscountRate);
+        orderVerification.discountRate(expectedDiscountRate);
         return this;
     }
 
     public OrderVerificationBuilder hasDiscountAmountGreaterThanOrEqualToZero() {
-        app.shop().viewOrder()
-                .orderNumber(orderNumber)
-                .execute()
-                .shouldSucceed()
-                .discountAmountGreaterThanOrEqualToZero();
+        orderVerification.discountAmountGreaterThanOrEqualToZero();
         return this;
     }
 
     public OrderVerificationBuilder hasSubtotalPriceGreaterThanZero() {
-        app.shop().viewOrder()
-                .orderNumber(orderNumber)
-                .execute()
-                .shouldSucceed()
-                .subtotalPriceGreaterThanZero();
+        orderVerification.subtotalPriceGreaterThanZero();
         return this;
     }
 
     public OrderVerificationBuilder hasTaxRateGreaterThanOrEqualToZero() {
-        app.shop().viewOrder()
-                .orderNumber(orderNumber)
-                .execute()
-                .shouldSucceed()
-                .taxRateGreaterThanOrEqualToZero();
+        orderVerification.taxRateGreaterThanOrEqualToZero();
         return this;
     }
 
     public OrderVerificationBuilder hasTaxAmountGreaterThanOrEqualToZero() {
-        app.shop().viewOrder()
-                .orderNumber(orderNumber)
-                .execute()
-                .shouldSucceed()
-                .taxAmountGreaterThanOrEqualToZero();
+        orderVerification.taxAmountGreaterThanOrEqualToZero();
         return this;
     }
 
     public OrderVerificationBuilder hasTotalPriceGreaterThanZero() {
-        app.shop().viewOrder()
-                .orderNumber(orderNumber)
-                .execute()
-                .shouldSucceed()
-                .totalPriceGreaterThanZero();
+        orderVerification.totalPriceGreaterThanZero();
         return this;
     }
 
     public OrderVerificationBuilder expectOrderNumberPrefix(String expectedPrefix) {
-        if (!orderNumber.startsWith(expectedPrefix)) {
-            throw new AssertionError("Expected order number to start with '" + expectedPrefix + "' but was: " + orderNumber);
-        }
+        orderVerification.orderNumberHasPrefix(expectedPrefix);
         return this;
     }
 }

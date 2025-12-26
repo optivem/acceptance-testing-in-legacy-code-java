@@ -1,5 +1,7 @@
 package com.optivem.eshop.systemtest.core.gherkin.when;
 
+import static com.optivem.eshop.systemtest.core.gherkin.GherkinDefaults.DEFAULT_ORDER_NUMBER;
+
 import com.optivem.eshop.systemtest.core.SystemDsl;
 import com.optivem.eshop.systemtest.core.gherkin.ScenarioDsl;
 import com.optivem.eshop.systemtest.core.gherkin.then.ThenClause;
@@ -13,7 +15,7 @@ public class ViewOrderBuilder {
     public ViewOrderBuilder(SystemDsl app, ScenarioDsl scenario) {
         this.app = app;
         this.scenario = scenario;
-        withOrderNumber(orderNumber);
+        withOrderNumber(DEFAULT_ORDER_NUMBER);
     }
 
     public ViewOrderBuilder withOrderNumber(String orderNumber) {
