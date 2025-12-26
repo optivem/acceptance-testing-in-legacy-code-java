@@ -26,6 +26,7 @@ dependencies {
     api project(':libs:optivem-testing-channels')
     api project(':libs:optivem-testing-dsl')
     api project(':libs:optivem-testing-time')
+    api project(':libs:optivem-testing-isolation')
     api project(':core')
 
     implementation 'org.springframework.boot:spring-boot-starter'

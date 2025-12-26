@@ -1,5 +1,6 @@
 package com.optivem.testing.time;
 
+import com.optivem.testing.isolation.Isolated;
 import org.junit.jupiter.api.Tag;
 
 import java.lang.annotation.ElementType;
@@ -21,6 +22,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Tag("time")
+@Isolated("Time-dependent test")
 public @interface Time {
     /**
      * Whether this test requires controlled time setup.
