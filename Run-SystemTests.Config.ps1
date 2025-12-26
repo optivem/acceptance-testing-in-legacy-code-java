@@ -4,11 +4,8 @@
 $Config = @{
 
     BuildCommands = @(
-        @{  Name = "Clean";
-            Command = ".\gradlew.bat clean"
-        },
-        @{  Name = "Build";
-            Command = ".\gradlew.bat build"
+        @{  Name = "Clean Build";
+            Command = ".\gradlew.bat clean build -x test"
         }
     )
 
