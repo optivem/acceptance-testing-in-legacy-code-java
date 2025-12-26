@@ -45,7 +45,7 @@ public class PlaceOrderPositiveTest extends BaseAcceptanceTest {
     void orderPrefixShouldBeORD() {
         scenario
                 .when().placeOrder()
-                .then().shouldSucceed().verify(com.optivem.eshop.systemtest.core.shop.dsl.verifications.PlaceOrderVerification.class, v -> v.orderNumberStartsWith("ORD-"))
+                .then().shouldSucceed().expectOrderNumberPrefix("ORD-")
                 .and().order().expectOrderNumberPrefix("ORD-");
     }
 
